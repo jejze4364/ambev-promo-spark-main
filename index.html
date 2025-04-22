@@ -631,55 +631,40 @@ function updateSelectionCounter(questionIndex, selectedCount, required) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3);
 
-  // Encontra a embalagem preferida
   const packEntries = Object.entries(scores).filter(([k]) => k.startsWith('lt') || k === 'ln');
   const pack = packEntries.length > 0 ? packEntries.sort((a, b) => b[1] - a[1])[0][0] : 'lt350';
-  
-  // Preparar dados para salvar no Firebase
+
   const dataToSave = {
-    respostas: respostas, // As respostas do usuário
+    respostas: respostas,
     resultados: {
       cervejas: topBeers.map(([beer]) => friendlyNames[beer]),
       embalagem: friendlyNames[pack]
     },
-    scores: scores // Pontuações
+    scores: scores
   };
 
-  // Tentar salvar os dados
-  saveDataToFirebase(dataToSave)
-    .then(success => {
-      if (success) {
-        // Mostrar sucesso no console ou na tela
-        console.log("Dados salvos com sucesso no Firebase!");
+  saveDataToFirebase(dataToSave).then(success => {
+    if (success) getData();
+  });
 
-        // Após salvar, buscar os dados salvos para verificar
-        getData(); // Chama a função que busca e exibe os dados no console
-      }
-    });
-      
   container.innerHTML = `
     <div class="results-container">
       <div class="results-header">
         <h2>Seu Perfil Cervejeiro</h2>
         <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
       </div>
-      
+
       <div class="action-buttons">
         <a href="Inicial.html" class="btn-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Conheça o Projeto
         </a>
-        <a href="promocoes.html" class="btn-secondary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          Conheça as Promoções
+        <a href="promocoes.html" class="btn-promo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Conheça as Promoções <span class="btn-indicator">→</span>
         </a>
       </div>
-      
+
       <div class="results-section">
         <h3>Cervejas Ideais Para Você</h3>
         <div class="beer-list">
@@ -698,65 +683,28 @@ function updateSelectionCounter(questionIndex, selectedCount, required) {
           `).join('')}
         </div>
       </div>
-      
+
       <div class="share-section">
         <h3>Compartilhe Seu Resultado</h3>
         <div class="share-buttons">
-        <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-  </svg>
-  Facebook
-</a>
-
-<a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-  </svg>
-  WhatsApp
-</a>
-
-<a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 448 512" fill="none">
-    <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 
-      114.9-51.3 114.9-114.9S287.6 141 224.1 141zm0 189.6c-41.2 0-74.7-33.5-74.7-74.7 
-      0-41.2 33.5-74.7 74.7-74.7s74.7 33.5 74.7 74.7c0 41.2-33.5 74.7-74.7 
-      74.7zm146.4-194.3c0 14.9-12 26.9-26.9 
-      26.9s-26.9-12-26.9-26.9 12-26.9 
-      26.9-26.9 26.9 12 26.9 26.9zm76.1 
-      27.2c-1.7-35.7-9.9-67.3-36.2-93.5S379.1 
-      0 343.4 1.7c-35.7-1.7-142.8-1.7-178.5 
-      0-35.7-1.7-67.3 9.9-93.5 36.2S0 
-      100.9 1.7 136.6c-1.7 35.7-1.7 142.8 
-      0 178.5-1.7 35.7 9.9 67.3 36.2 
-      93.5s57.8 37.9 93.5 36.2c35.7 
-      1.7 142.8 1.7 178.5 0 35.7 
-      1.7 67.3-9.9 93.5-36.2s37.9-57.8 
-      36.2-93.5c1.7-35.7 1.7-142.8 
-      0-178.5zM398.8 388c-7.8 19.6-22.9 
-      34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 
-      9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 
-      9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 
-      29.5-11.7 99.5-9 132.1-9s102.7-2.6 
-      132.1 9c19.6 7.8 34.7 22.9 
-      42.6 42.6 11.7 29.5 9 99.5 9 
-      132.1s2.7 102.7-9 132.1z"/>
-  </svg>
-  Instagram
-</a>
-
+          <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+          </a>
+          <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-8.5-8.5 8.38 8.38 0 0 1 3.8.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            WhatsApp
+          </a>
+          <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 114.9-114.9S287.6 141 224.1 141z"/></svg>
+            Instagram
+          </a>
         </div>
       </div>
-      
+
       <div class="try-again-section">
         <button class="btn-outline" onclick="location.reload()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21.5 2v6h-6"></path>
-            <path d="M3.37 7.9A10 10 0 0 1 19.3 3.7"></path>
-            <path d="M2.5 2v6h6"></path>
-            <path d="M20.63 16.1A10 10 0 0 1 4.7 20.3"></path>
-            <path d="M2.5 22v-6h6"></path>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 2v6h6"/></svg>
           Fazer o Teste Novamente
         </button>
       </div>
@@ -764,263 +712,12 @@ function updateSelectionCounter(questionIndex, selectedCount, required) {
   `;
 
   setTimeout(() => {
-  document.querySelector('.facebook')?.addEventListener('click', () => {
-    window.open('https://www.facebook.com', '_blank');
-  });
-
-  document.querySelector('.whatsapp')?.addEventListener('click', () => {
-    window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank');
-  });
-
-  document.querySelector('.instagram')?.addEventListener('click', () => {
-    window.open('https://www.instagram.com', '_blank');
-  });
-}, 100);
-
-
-  // Adicionando o estilo para os resultados
-  const styleElement = document.createElement('style');
-  styleElement.textContent = `
-    .results-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-    
-    .results-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    
-    .results-header h2 {
-      font-size: 2.5rem;
-      color: var(--primary-color, #f7a800);
-      margin-bottom: 1rem;
-    }
-    
-    .action-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-    
-    .btn-primary, .btn-secondary {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary, .btn-secondary {
-      background-color: var(--secondary-color, #304c5f);
-      color: #fff;
-    }
-    
-    .btn-primary:hover, .btn-secondary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    .results-section, .packaging-section, .share-section, .try-again-section {
-      margin-bottom: 3rem;
-    }
-    
-    .results-section h3, .packaging-section h3, .share-section h3 {
-      font-size: 1.5rem;
-      color: var(--primary-color, #f7a800);
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-    
-    .beer-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-    
-    .beer-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: transform 0.3s ease;
-      position: relative;
-    }
-    
-    .beer-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .top-match {
-      border: 2px solid var(--primary-color, #f7a800);
-    }
-    
-    .beer-image {
-      position: relative;
-      padding-top: 56.25%;
-      background-color: #f5f5f5;
-      overflow: hidden;
-    }
-    
-    .beer-image img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .match-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: var(--primary-color, #f7a800);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-    
-    .beer-info {
-      padding: 1.5rem;
-    }
-    
-    .beer-info h4 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-    
-    .beer-info p {
-      color: #666;
-      margin-bottom: 1rem;
-    }
-    
-    .match-percent {
-      font-weight: bold;
-      color: var(--primary-color, #f7a800);
-    }
-    
-    .packaging-card {
-      display: flex;
-      align-items: center;
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    
-    .packaging-image {
-      flex: 0 0 120px;
-      background-color: #f5f5f5;
-      height: 150px;
-    }
-    
-    .packaging-image img {
-      width:      100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .packaging-info {
-      padding: 1.5rem;
-    }
-    
-    .packaging-info h4 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-    
-    .packaging-info p {
-      color: #666;
-    }
-    
-    .share-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-    
-    .share-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.7rem 1.2rem;
-      border-radius: 8px;
-      border: none;
-      font-weight: 600;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .share-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    .facebook {
-      background-color: #3b5998;
-    }
-    
-    .whatsapp {
-      background-color: #25d366;
-    }
-    
-    .twitter {
-      background-color: #1da1f2;
-    }
-    
-    .try-again-section {
-      text-align: center;
-    }
-    
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      border: 2px solid var(--primary-color, #f7a800);
-      background: transparent;
-      color: var(--primary-color, #f7a800);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-outline:hover {
-      background-color: var(--primary-color, #f7a800);
-      color: white;
-    }
-    
-    @media (max-width: 768px) {
-      .action-buttons, .share-buttons {
-        flex-direction: column;
-      }
-      
-      .packaging-card {
-        flex-direction: column;
-      }
-      
-      .packaging-image {
-        width: 100%;
-        flex-basis: auto;
-      }
-    }
-  `;
-  document.head.appendChild(styleElement);
+    document.querySelector('.facebook')?.addEventListener('click', () => window.open('https://www.facebook.com', '_blank'));
+    document.querySelector('.whatsapp')?.addEventListener('click', () => window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank'));
+    document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
+  }, 100);
 }
+
   </script>
 </body>
 
