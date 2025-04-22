@@ -388,7 +388,7 @@ const beerDescriptions = {
   ]
 },
 
-// Pergunta 5 - Zero álcool com pontuação revisada
+// Pergunta 5 - Zero álcool com pontuação refinada para garantir mix de recomendações
 {
   question: "Você tem interesse em opções zero álcool?",
   description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
@@ -417,12 +417,18 @@ const beerDescriptions = {
     { 
       text: "Estou aberto a experimentar opções zero", 
       scores: { 
-        budzero: 20, coronacero: 20, brahmazero: 20, 
-        michelob: 10, stellapg: 10,
-        bud: 10, corona: 10, brahma: 10,
-        stella: 10, spaten: 10, becks: 10,
-        antarctica: 10, skol: 10, bohemia: 10, 
-        patagonia: 10, colorado: 10, original: 10
+        // Cervejas zero álcool recebem pontuação positiva, mas moderada
+        budzero: 30, coronacero: 35, brahmazero: 30,
+        
+        // Cervejas com álcool recebem pontuação ligeiramente maior
+        // para garantir que pelo menos uma apareça nas recomendações
+        bud: 25, corona: 25, brahma: 25,
+        stella: 25, spaten: 25, becks: 25,
+        antarctica: 25, skol: 25, bohemia: 25, 
+        patagonia: 25, colorado: 25, original: 25,
+        
+        // Opções intermediárias
+        michelob: 30, stellapg: 30
       } 
     }
   ],
