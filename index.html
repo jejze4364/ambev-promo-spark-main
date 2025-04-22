@@ -96,8 +96,6 @@
    // Inicializa o Firebase
    const app = firebase.initializeApp(firebaseConfig);
   const analytics = firebase.analytics();
-  const db = firebase.firestore();
-
   function saveDataToFirebase(data) {
   // Gere um ID único para este registro
   const surveyId = "survey_" + new Date().getTime();
@@ -316,68 +314,38 @@ function getData() {
   options: [
     {
       text: "Churrasco com amigos e família",
-      scores: {
-        antarctica: 2, brahma: 2, spaten: 4, corona: 4, bud: 3,
-        stella: 1, stellapg: 2, budzero: 3, coronacero: 4, becks: 3,
-        brahmazero: 1, colorado: 3, patagonia: 1, michelob: 2, skol: 1, bohemia: 4
-      }
+      scores: { antarctica: 2, brahma: 2, spaten: 4, corona: 4, bud: 3, stella: 1, stellapg: 2, budzero: 3, coronacero: 4, becks: 3, brahmazero: 1, colorado: 3, patagonia: 1, michelob: 2, skol: 1, bohemia: 4 }
     },
     {
       text: "Happy hours e eventos corporativos",
-      scores: {
-        antarctica: 1, brahma: 4, spaten: 3, corona: 2, bud: 3,
-        stella: 2, stellapg: 3, budzero: 3, coronacero: 4, becks: 2,
-        brahmazero: 4, colorado: 1, patagonia: 1, michelob: 4, skol: 3, bohemia: 1
-      }
+      scores: { antarctica: 1, brahma: 4, spaten: 3, corona: 2, bud: 3, stella: 2, stellapg: 3, budzero: 3, coronacero: 4, becks: 2, brahmazero: 4, colorado: 1, patagonia: 1, michelob: 4, skol: 3, bohemia: 1 }
     },
     {
       text: "Festas e celebrações",
-      scores: {
-        antarctica: 1, brahma: 3, spaten: 3, corona: 2, bud: 2,
-        stella: 2, stellapg: 3, budzero: 2, coronacero: 4, becks: 4,
-        brahmazero: 4, colorado: 1, patagonia: 4, michelob: 2, skol: 1, bohemia: 1
-      }
+      scores: { antarctica: 1, brahma: 3, spaten: 3, corona: 2, bud: 2, stella: 2, stellapg: 3, budzero: 2, coronacero: 4, becks: 4, brahmazero: 4, colorado: 1, patagonia: 4, michelob: 2, skol: 1, bohemia: 1 }
     },
     {
       text: "Momentos ao ar livre (praia, piscina)",
-      scores: {
-        antarctica: 3, brahma: 3, spaten: 4, corona: 1, bud: 2,
-        stella: 2, stellapg: 4, budzero: 3, coronacero: 1, becks: 4,
-        brahmazero: 3, colorado: 1, patagonia: 2, michelob: 1, skol: 4, bohemia: 1
-      }
+      scores: { antarctica: 3, brahma: 3, spaten: 4, corona: 1, bud: 2, stella: 2, stellapg: 4, budzero: 3, coronacero: 1, becks: 4, brahmazero: 3, colorado: 1, patagonia: 2, michelob: 1, skol: 4, bohemia: 1 }
     },
     {
       text: "Jantares e Harmonizações",
-      scores: {
-        antarctica: 2, brahma: 4, spaten: 2, corona: 3, bud: 1,
-        stella: 3, stellapg: 2, budzero: 4, coronacero: 1, becks: 4,
-        brahmazero: 2, colorado: 2, patagonia: 4, michelob: 3, skol: 4, bohemia: 3
-      }
+      scores: { antarctica: 2, brahma: 4, spaten: 2, corona: 3, bud: 1, stella: 3, stellapg: 2, budzero: 4, coronacero: 1, becks: 4, brahmazero: 2, colorado: 2, patagonia: 4, michelob: 3, skol: 4, bohemia: 3 }
     },
     {
       text: "Assistindo a jogos de futebol",
-      scores: {
-        antarctica: 1, brahma: 2, spaten: 1, corona: 2, bud: 1,
-        stella: 3, stellapg: 2, budzero: 3, coronacero: 4, becks: 1,
-        brahmazero: 3, colorado: 2, patagonia: 4, michelob: 3, skol: 3, bohemia: 4
-      }
+      scores: { antarctica: 1, brahma: 2, spaten: 1, corona: 2, bud: 1, stella: 3, stellapg: 2, budzero: 3, coronacero: 4, becks: 1, brahmazero: 3, colorado: 2, patagonia: 4, michelob: 3, skol: 3, bohemia: 4 }
     },
     {
       text: "Encontros românticos",
-      scores: {
-        antarctica: 4, brahma: 2, spaten: 2, corona: 3, bud: 2,
-        stella: 2, stellapg: 1, budzero: 4, coronacero: 1, becks: 2,
-        brahmazero: 4, colorado: 1, patagonia: 3, michelob: 3, skol: 4, bohemia: 1
-      }
+      scores: { antarctica: 4, brahma: 2, spaten: 2, corona: 3, bud: 2, stella: 2, stellapg: 1, budzero: 4, coronacero: 1, becks: 2, brahmazero: 4, colorado: 1, patagonia: 3, michelob: 3, skol: 4, bohemia: 1 }
     },
     {
       text: "Relaxando em casa após o trabalho",
-      scores: {
-        antarctica: 2, brahma: 4, spaten: 2, corona: 1, bud: 3,
-        stella: 1, stellapg: 3, budzero: 1, coronacero: 4, becks: 3,
-        brahmazero: 4, colorado: 2, patagonia: 1, michelob: 1, skol: 4, bohemia: 4
-      }
-    },
+      scores: { antarctica: 2, brahma: 4, spaten: 2, corona: 1, bud: 3, stella: 1, stellapg: 3, budzero: 1, coronacero: 4, becks: 3, brahmazero: 4, colorado: 2, patagonia: 1, michelob: 1, skol: 4, bohemia: 4 }
+    }
+  ]
+},
 {
   question: "Você tem interesse em opções zero álcool?",
   description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
@@ -716,7 +684,7 @@ function updateSelectionCounter(questionIndex, selectedCount, required) {
           ${topBeers.map(([beer], index) => `
             <div class="beer-card ${index === 0 ? 'top-match' : ''}">
               <div class="beer-image">
-                <img src="https://placehold.co/150x240" alt="${friendlyNames[beer]}" />
+                <img src="img/${beer}.jpg" alt="${friendlyNames[beer]}" />
                 ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
               </div>
               <div class="beer-info">
