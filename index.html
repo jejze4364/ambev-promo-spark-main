@@ -233,45 +233,48 @@ const beerDescriptions = {
 
         multipleChoice: false
       },
-      {
+      // Pergunta 2 - Faixa etária
+{
   question: "Qual a sua faixa etária?",
   description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
   options: [
     {
       text: "18 a 27 anos",
       scores: {
-        antarctica: 3, brahma: 2, spaten: 4, corona: 2, bud: 2,
-        stella: 4, stellapg: 1, budzero: 4, coronacero: 3, becks: 2,
-        brahmazero: 2, colorado: 1, patagonia: 2, michelob: 1, skol: 3, bohemia: 4
+        skol: 5, antarctica: 3, brahma: 3, spaten: 4, corona: 5, bud: 5,
+        stella: 3, budzero: 2, coronacero: 2, becks: 4, brahmazero: 2,
+        colorado: 4, patagonia: 3, michelob: 4, bohemia: 2, stellapg: 2, original: 2
       }
     },
     {
       text: "28 a 37 anos",
       scores: {
-        antarctica: 4, brahma: 4, spaten: 3, corona: 4, bud: 3,
-        stella: 3, stellapg: 2, budzero: 3, coronacero: 2, becks: 4,
-        brahmazero: 3, colorado: 4, patagonia: 3, michelob: 2, skol: 4, bohemia: 2
+        skol: 3, antarctica: 3, brahma: 4, spaten: 5, corona: 4, bud: 4,
+        stella: 5, budzero: 3, coronacero: 3, becks: 5, brahmazero: 3,
+        colorado: 5, patagonia: 5, michelob: 5, bohemia: 4, stellapg: 4, original: 4
       }
     },
     {
       text: "38 a 45 anos",
       scores: {
-        antarctica: 2, brahma: 3, spaten: 2, corona: 1, bud: 1,
-        stella: 2, stellapg: 3, budzero: 1, coronacero: 4, becks: 3,
-        brahmazero: 1, colorado: 3, patagonia: 1, michelob: 4, skol: 1, bohemia: 3
+        skol: 2, antarctica: 4, brahma: 5, spaten: 4, corona: 3, bud: 3,
+        stella: 4, budzero: 4, coronacero: 4, becks: 3, brahmazero: 4,
+        colorado: 3, patagonia: 4, michelob: 3, bohemia: 5, stellapg: 5, original: 5
       }
     },
     {
       text: "Acima de 45 anos",
       scores: {
-        antarctica: 1, brahma: 1, spaten: 1, corona: 3, bud: 4,
-        stella: 1, stellapg: 4, budzero: 2, coronacero: 1, becks: 1,
-        brahmazero: 4, colorado: 2, patagonia: 4, michelob: 3, skol: 2, bohemia: 1
+        skol: 1, antarctica: 5, brahma: 4, spaten: 3, corona: 2, bud: 2,
+        stella: 3, budzero: 5, coronacero: 5, becks: 2, brahmazero: 5,
+        colorado: 2, patagonia: 3, michelob: 2, bohemia: 4, stellapg: 5, original: 5
       }
     }
   ],
   multipleChoice: false
 },
+
+// Pergunta 3 - Faixa de preço
 {
   question: "Quanto você normalmente gasta em uma cerveja no mercado?",
   description: "Valor médio por unidade que você costuma pagar.",
@@ -279,40 +282,44 @@ const beerDescriptions = {
     {
       text: "Até R$ 5,00 por unidade",
       scores: {
-        antarctica: 4, brahma: 4, skol: 4,
-        spaten: 2, stella: 2, brahmazero: 4, bohemia: 4,
-        bud: 4, budzero: 4
+        antarctica: 5, brahma: 5, skol: 5, bohemia: 4, original: 4,
+        spaten: 2, stella: 1, brahmazero: 3, 
+        bud: 3, budzero: 2, becks: 2,
+        corona: 1, coronacero: 1, stellapg: 1, patagonia: 1, michelob: 1, colorado: 1
       }
     },
     {
       text: "Entre R$ 6,00 e R$ 7,99",
       scores: {
-        antarctica: 3, brahma: 3, skol: 3,
-        spaten: 4, stella: 4, brahmazero: 3, bohemia: 3,
-        bud: 4, budzero: 4, becks: 4,
-        corona: 3, coronacero: 3, stellapg: 3, patagonia: 2, michelob: 2, colorado: 2
+        antarctica: 4, brahma: 4, skol: 4, bohemia: 5, original: 5,
+        spaten: 5, stella: 3, brahmazero: 5, 
+        bud: 5, budzero: 4, becks: 4,
+        corona: 2, coronacero: 2, stellapg: 2, patagonia: 2, michelob: 2, colorado: 2
       }
     },
     {
       text: "Entre R$ 8,00 e R$ 9,99",
       scores: {
-        antarctica: 2, brahma: 2, skol: 2,
-        spaten: 4, stella: 4, brahmazero: 2, bohemia: 4,
-        bud: 2, budzero: 2, becks: 4,
-        corona: 4, coronacero: 4, stellapg: 3, patagonia: 3, michelob: 3, colorado: 3
+        antarctica: 2, brahma: 2, skol: 2, bohemia: 3, original: 3,
+        spaten: 4, stella: 5, brahmazero: 4, 
+        bud: 4, budzero: 5, becks: 5,
+        corona: 5, coronacero: 5, stellapg: 4, patagonia: 4, michelob: 4, colorado: 4
       }
     },
     {
       text: "R$ 10,00 ou mais",
       scores: {
-        spaten: 3, stella: 3,
+        antarctica: 1, brahma: 1, skol: 1, bohemia: 2, original: 2,
+        spaten: 3, stella: 5, brahmazero: 2, 
         bud: 3, budzero: 3, becks: 4,
-        corona: 3, coronacero: 3, stellapg: 4, patagonia: 4, michelob: 4, colorado: 4
+        corona: 5, coronacero: 5, stellapg: 5, patagonia: 5, michelob: 5, colorado: 5
       }
     }
   ],
   multipleChoice: false
 },
+
+// Pergunta 4 - Ocasiões
 {
   question: "Em quais ocasiões você mais gosta de apreciar uma cerveja?(Escolha 3)",
   description: "Selecione as 3 principais ocasiões que combinam com o seu estilo.",
@@ -322,59 +329,105 @@ const beerDescriptions = {
   options: [
     {
       text: "Churrasco com amigos e família",
-      scores: { antarctica: 4, brahma: 4, brahmazero: 4, skol: 4, bohemia: 4 }
+      scores: { 
+        antarctica: 5, brahma: 5, skol: 5, bohemia: 4, original: 5,
+        spaten: 4, bud: 3, michelob: 3, budzero: 3, brahmazero: 3
+      }
     },
     {
       text: "Happy hours e eventos corporativos",
-      scores: { spaten: 4, stella: 4, stellapg: 4, budzero: 4, coronacero: 4, becks: 4, brahmazero: 4, colorado: 4, patagonia: 4, michelob: 4 }
+      scores: { 
+        spaten: 5, stella: 5, stellapg: 5, becks: 5, 
+        corona: 4, bud: 4,
+        budzero: 4, coronacero: 4, brahmazero: 4, michelob: 5
+      }
     },
     {
       text: "Festas e celebrações",
-      scores: { bud: 4, stella: 3, stellapg: 3, budzero: 4, becks: 4, brahmazero: 4}
+      scores: { 
+        bud: 5, stella: 4, skol: 5, corona: 5, brahma: 4,
+        budzero: 3, coronacero: 3, becks: 4, brahmazero: 3
+      }
     },
     {
       text: "Momentos ao ar livre (praia, piscina)",
-      scores: { corona: 4, budzero: 3, coronacero: 4, brahmazero: 3, michelob: 4 }
+      scores: { 
+        corona: 5, coronacero: 5, skol: 4, brahma: 3, 
+        budzero: 4, brahmazero: 4, michelob: 5, antarctica: 3, bud: 4
+      }
     },
     {
       text: "Jantares e Harmonizações",
-      scores: { stella: 4, stellapg: 4, colorado: 4, patagonia: 4 }
+      scores: { 
+        stella: 5, stellapg: 5, colorado: 5, patagonia: 5,
+        becks: 4, bohemia: 4, spaten: 4, original: 4
+      }
     },
     {
       text: "Assistindo a jogos de futebol",
-      scores: { antarctica: 4, brahma: 4, spaten: 3, budzero: 3, coronacero: 3, brahmazero: 3 }
+      scores: { 
+        antarctica: 5, brahma: 5, skol: 5, bud: 4, spaten: 3,
+        budzero: 4, coronacero: 3, brahmazero: 4
+      }
     },
     {
       text: "Encontros românticos",
-      scores: { stella: 4, stellapg: 4, colorado: 4, patagonia: 4 }
+      scores: { 
+        stella: 5, stellapg: 5, colorado: 5, patagonia: 5,
+        becks: 4, bohemia: 3, spaten: 3, corona: 4
+      }
     },
     {
       text: "Relaxando em casa após o trabalho",
-      scores: { antarctica: 4, brahma: 4, spaten: 4, corona: 4, bud: 4 }
+      scores: { 
+        antarctica: 4, brahma: 4, spaten: 4, bud: 4,
+        bohemia: 5, original: 5, coronacero: 3, brahmazero: 3,
+        budzero: 3, michelob: 4
+      }
     }
   ]
-   }, // <-- ISSO FALTAVA
+},
+
+// Pergunta 5 - Zero álcool com pontuação revisada
 {
   question: "Você tem interesse em opções zero álcool?",
   description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
   options: [
-    { text: "Sim, prefiro cervejas zero álcool", scores: { budzero: 30, coronacero: 30, brahmazero: 30 } },
-    { text: "Não, prefiro cervejas tradicionais", scores: { } },
-    { text: "Estou aberto a experimentar opções zero", scores: { budzero: 20, coronacero: 20, brahmazero: 20, michelob: 20, stellapg: 20 } }
+    { 
+      text: "Sim, prefiro cervejas zero álcool", 
+      scores: { 
+        budzero: 50, coronacero: 50, brahmazero: 50, 
+        bud: -100, corona: -100, brahma: -100,
+        stella: -100, spaten: -100, becks: -100, 
+        antarctica: -100, skol: -100, bohemia: -100,
+        patagonia: -100, colorado: -100, original: -100,
+        michelob: -50, stellapg: -30
+      } 
+    },
+    { 
+      text: "Não, prefiro cervejas tradicionais", 
+      scores: { 
+        budzero: -200, coronacero: -200, brahmazero: -200, 
+        michelob: -100, stellapg: -30,
+        bud: 15, corona: 15, brahma: 15, stella: 15, spaten: 15,
+        becks: 15, antarctica: 15, skol: 15, bohemia: 15, 
+        patagonia: 15, colorado: 15, original: 15
+      } 
+    },
+    { 
+      text: "Estou aberto a experimentar opções zero", 
+      scores: { 
+        budzero: 20, coronacero: 20, brahmazero: 20, 
+        michelob: 10, stellapg: 10,
+        bud: 10, corona: 10, brahma: 10,
+        stella: 10, spaten: 10, becks: 10,
+        antarctica: 10, skol: 10, bohemia: 10, 
+        patagonia: 10, colorado: 10, original: 10
+      } 
+    }
   ],
   multipleChoice: false
-  },
-{
-        question: "Qual sua embalagem preferida para a cerveja?",
-        description: "Cada formato preserva características únicas da bebida e se adapta a diferentes momentos.",
-        options: [
-          { text: "Lata 350ml - Prática e resfria rapidamente", scores: { lt350: 25 } },
-          { text: "Long Neck - Ideal para servir diretamente no copo", scores: { ln: 25 } },
-          { text: "Latão 473ml - Maior volume para compartilhar", scores: { lt473: 25 } },
-          { text: "Latinha 269ml/275ml - Perfeita para não esquentar", scores: { lt279: 25 } }
-        ],
-        multipleChoice: false
-      }
+}
     ];
 
     function verifyAge(ok) {
