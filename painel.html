@@ -17,6 +17,7 @@
   <!-- Chart.js para visualizações -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="painel.css">
+
 </head>
 
 <body>
@@ -38,7 +39,6 @@
               </svg>
               Dashboard
             </a>
-          </li>
           </li>
           <li class="nav-item">
             <a href="Inicial.html" class="nav-link">
@@ -67,7 +67,27 @@
       <header class="dashboard-header">
         <h1 class="dashboard-title">Dashboard</h1>
         
-        <div class="date-range">
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btn-export-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Exportar Tudo
+          </button>
+          <button class="btn btn-secondary" id="btn-advanced-filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filtros Avançados
+          </button>
+        </div>
+      </header>
+
+      <!-- Filtros básicos -->
+      <section class="filters-section">
+        <div class="filter-group">
           <label for="date-filter">Período:</label>
           <select id="date-filter" onchange="updateDashboardData()">
             <option value="7">Últimos 7 dias</option>
@@ -77,7 +97,37 @@
             <option value="all">Todo o período</option>
           </select>
         </div>
-      </header>
+        
+        <div class="filter-group">
+          <label for="region-filter">Região:</label>
+          <select id="region-filter" onchange="updateDashboardData()">
+            <option value="all" selected>Todas as regiões</option>
+            <!-- Preenchido dinamicamente -->
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="age-filter">Faixa etária:</label>
+          <select id="age-filter" onchange="updateDashboardData()">
+            <option value="all" selected>Todas as idades</option>
+            <option value="18-24">18-24 anos</option>
+            <option value="25-34">25-34 anos</option>
+            <option value="35-44">35-44 anos</option>
+            <option value="45+">45+ anos</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="price-filter">Ticket médio:</label>
+          <select id="price-filter" onchange="updateDashboardData()">
+            <option value="all" selected>Todos os valores</option>
+            <option value="5">Até R$ 5,00</option>
+            <option value="8">R$ 6,00 a R$ 7,99</option>
+            <option value="10">R$ 8,00 a R$ 9,99</option>
+            <option value="10+">R$ 10,00 ou mais</option>
+          </select>
+        </div>
+      </section>
 
       <!-- Indicadores Principais (KPIs) -->
       <section class="key-metrics">
@@ -162,6 +212,29 @@
             Calculando...
           </div>
         </div>
+        
+        <!-- Nova métrica para Cervejas Zero -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <h3 class="metric-title">Interesse em Zero</h3>
+            <div class="metric-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="interesse-zero" class="metric-value">Carregando...</div>
+          <div id="interesse-zero-trend" class="metric-trend">          
+            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            Calculando...
+          </div>
+        </div>
       </section>
 
       <!-- Gráficos e Rankings -->
@@ -170,11 +243,16 @@
           <div class="chart-header">
             <h3 class="chart-title">Evolução de Respostas</h3>
             <div class="chart-actions">
-              <button class="chart-action-btn">
+              <select id="chart-type" onchange="updateDashboardData()">
+                <option value="hora">Por hora</option>
+                <option value="dia">Por dia</option>
+                <option value="mensal" selected>Por mês</option>
+              </select>
+              <button class="chart-action-btn" id="toggle-chart-view">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <circle cx="19" cy="12" r="1"></circle>
-                  <circle cx="5" cy="12" r="1"></circle>
+                  <path d="M12 20V10"></path>
+                  <path d="M18 20V4"></path>
+                  <path d="M6 20v-4"></path>
                 </svg>
               </button>
             </div>
@@ -188,11 +266,11 @@
           <div class="rankings-header">
             <h3 class="rankings-title">Cervejas Preferidas</h3>
             <div class="chart-actions">
-              <button class="chart-action-btn">
+              <button class="chart-action-btn" id="refresh-ranking">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <circle cx="19" cy="12" r="1"></circle>
-                  <circle cx="5" cy="12" r="1"></circle>
+                  <path d="M23 4v6h-6"></path>
+                  <path d="M1 20v-6h6"></path>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
                 </svg>
               </button>
             </div>
@@ -211,30 +289,64 @@
         </div>
       </section>
 
+      <section class="charts-section">
+        <div class="chart-container" style="width: 100%;">
+          <div class="chart-header">
+            <h3 class="chart-title">Interesse em Cerveja Zero</h3>
+            <div style="display: flex; gap: 1rem;">
+              <select id="zero-region-filter" onchange="updateDashboardData()">
+                <option value="all">Todas as regiões</option>
+                <!-- preenchido dinamicamente -->
+              </select>
+              <select id="zero-age-filter" onchange="updateDashboardData()">
+                <option value="all">Todas idades</option>
+                <option value="18-24">18-24</option>
+                <option value="25-34">25-34</option>
+                <option value="35-44">35-44</option>
+                <option value="45+">45+</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-content">
+            <canvas id="zeroInterestChart"></canvas>
+          </div>
+        </div>
+      </section>
+      
+      
+
       <!-- Heatmap -->
       <section class="heatmap-section">
         <div class="chart-header">
           <h3 class="chart-title">Engajamento por Região</h3>
-          <button class="export-button" onclick="exportData()">Exportar Dados</button>
+          <button class="btn btn-primary" onclick="exportRegionalData()">Exportar Tabela</button>
         </div>
-        <table class="heatmap-table">
-          <thead>
-            <tr>
-              <th>Região</th>
-              <th>Respostas</th>
-              <th>Taxa Conversão</th>
-              <th>Cervejas Preferidas</th>
-              <th>Idade Média</th>
-              <th>Ticket Médio</th>
-              <th>Data/Hora</th>
-            </tr>
-          </thead>          
-          <tbody id="engajamento-regiao">
-            <tr>
-              <td colspan="4">Carregando dados de regiões...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="heatmap-table">
+            <thead>
+              <tr>
+                <th>Região</th>
+                <th>Respostas</th>
+                <th>
+                  Interesse Zero
+                  <span class="info-tooltip">
+                    <span class="tooltip-icon">ⓘ</span>
+                    <span class="tooltip-text">Pessoas que responderam positivamente sobre cervejas zero álcool</span>
+                  </span>
+                </th>
+                <th>Cervejas Preferidas</th>
+                <th>Idade Média</th>
+                <th>Ticket Médio</th>
+                <th>Data/Hora</th>
+              </tr>
+            </thead>          
+            <tbody id="engajamento-regiao">
+              <tr>
+                <td colspan="7">Carregando dados de regiões...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <footer class="dashboard-footer">
@@ -243,7 +355,102 @@
     </main>
   </div>
 
-  <!-- Script para Firebase e carregamento de dados -->
+  <!-- Modal de Filtros Avançados -->
+  <div id="advanced-filters-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Filtros Avançados</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="filter-group">
+          <label>Intervalo de Datas:</label>
+          <div style="display: flex; gap: 10px;">
+            <input type="date" id="date-start" class="date-picker">
+            <input type="date" id="date-end" class="date-picker">
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <label>Regiões:</label>
+          <div class="checkbox-group" id="region-checkboxes">
+            <!-- Preenchido dinamicamente -->
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <label>Cervejas:</label>
+          <div class="checkbox-group" id="beer-checkboxes">
+            <!-- Preenchido dinamicamente -->
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <label>Interesse em Zero:</label>
+          <select id="zero-filter">
+            <option value="all">Todos</option>
+            <option value="sim">Prefere zero álcool</option>
+            <option value="talvez">Aberto a experimentar</option>
+            <option value="nao">Não tem interesse</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" id="reset-filters">Limpar Filtros</button>
+        <button class="btn btn-primary" id="apply-filters">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Exportação -->
+  <div id="export-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Exportar Dados</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="filter-group">
+          <label>Selecione os dados para exportar:</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="export-all" checked>
+              <label for="export-all">Todos os dados</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="export-respostas">
+              <label for="export-respostas">Apenas respostas</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="export-resultados">
+              <label for="export-resultados">Apenas resultados</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="export-metadata">
+              <label for="export-metadata">Incluir metadados</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <label>Formato:</label>
+          <select id="export-format">
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" id="cancel-export">Cancelar</button>
+        <button class="btn btn-success" id="confirm-export">Exportar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Firebase config
     const firebaseConfig = {
@@ -262,324 +469,376 @@
   
     let allSurveyData = [];
     let responsesChart = null;
+    let zeroInterestChart = null;
   
-    document.addEventListener('DOMContentLoaded', () => {
-      updateDashboardData();
-      initChartSelector();
-    });
-  
-    function updateDashboardData() {
-      const selectedDays = document.getElementById('date-filter').value;
-  
-      if (allSurveyData.length === 0) {
-        fetchAllSurveyData().then(data => {
-          const filteredData = filterDataByPeriod(data, selectedDays);
-          updateDashboard(filteredData);
-        });
-      } else {
-        const filteredData = filterDataByPeriod(allSurveyData, selectedDays);
-        updateDashboard(filteredData);
-      }
-    }
-  
-    function fetchAllSurveyData() {
-      return db.collection("pesquisas")
-        .orderBy("timestamp", "desc")
-        .get()
-        .then(snapshot => {
-          allSurveyData = [];
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            data.id = doc.id;
-            allSurveyData.push(data);
-          });
-          return allSurveyData;
-        });
-    }
-  
-    function filterDataByPeriod(data, days) {
-      if (days === 'all') return data;
-      const cutoff = new Date();
-      cutoff.setDate(cutoff.getDate() - parseInt(days));
-      return data.filter(d => (d.timestamp instanceof Date ? d.timestamp : d.timestamp.toDate()) >= cutoff);
-    }
-  
-    function calculateTrends(current, previous) {
-      const trends = {};
-  
-      const currentConversions = current.filter(i => i.resultados).length;
-      const previousConversions = previous.filter(i => i.resultados).length;
-  
-      const currentShares = current.filter(i => i.compartilhado).length;
-      const previousShares = previous.filter(i => i.compartilhado).length;
-  
-      const getAvg = (arr, keyMap) => {
-        const values = arr.map(keyMap).filter(n => !isNaN(n));
-        return values.length ? values.reduce((a, b) => a + b) / values.length : 0;
-      };
-  
-      const gastoMap = {
-        "Até R$ 5,00 por unidade": 5,
-        "Entre R$ 6,00 e R$ 7,99": 7,
-        "Entre R$ 8,00 e R$ 9,99": 9,
-        "R$ 10,00 ou mais": 10
-      };
-  
-      const avg = (c, p) => ({
-        current: c.toFixed(1),
-        previous: p.toFixed(1),
-        change: p ? (((c - p) / p) * 100).toFixed(1) : 0
-      });
-  
-      trends.totalPesquisas = avg(current.length, previous.length);
-      trends.taxaConversao = avg(currentConversions / current.length * 100, previousConversions / previous.length * 100);
-      trends.tempoMedio = avg(getAvg(current, () => 180), getAvg(previous, () => 180));
-      trends.compartilhamentos = avg(currentShares, previousShares);
-      trends.idadeMedia = avg(getAvg(current, i => parseInt(i.respostas?.pergunta2)), getAvg(previous, i => parseInt(i.respostas?.pergunta2)));
-      trends.ticketMedio = avg(getAvg(current, i => gastoMap[i.respostas?.pergunta3] || 0), getAvg(previous, i => gastoMap[i.respostas?.pergunta3] || 0));
-  
-      return trends;
-    }
-  
-    function updateDashboard(data) {
-      const days = document.getElementById('date-filter').value;
-      const d = parseInt(days === 'all' ? 365 : days);
-      const now = new Date();
-      const prevStart = new Date(now);
-      const prevEnd = new Date(now);
-      prevStart.setDate(now.getDate() - d * 2);
-      prevEnd.setDate(now.getDate() - d);
-  
-      const prevData = allSurveyData.filter(i => {
-        const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
-        return t >= prevStart && t <= prevEnd;
-      });
-  
-      const trends = calculateTrends(data, prevData);
-  
-      setMetric('total-pesquisas', trends.totalPesquisas);
-      setMetric('taxa-conversao', trends.taxaConversao);
-      setMetric('tempo-medio', trends.tempoMedio, true);
-      setMetric('compartilhamentos', trends.compartilhamentos);
-      setMetric('idade-media', trends.idadeMedia);
-      setMetric('ticket-medio', trends.ticketMedio);
-  
-      renderChart(data);
-      renderCervejaRanking(data);
-      renderRegionalEngajamento(data);
-    }
-  
-    function setMetric(id, { current, change }, invert = false) {
-      const main = document.getElementById(id);
-      const trend = document.getElementById(`${id}-trend`);
-      const val = invert ? parseFloat(change) <= 0 : parseFloat(change) >= 0;
-  
-      if (main) main.textContent = `${current}`;
-      if (trend) {
-        trend.textContent = `${change}% vs D-1`;
-        trend.className = `metric-trend ${val ? 'trend-up' : 'trend-down'}`;
-        const icon = trend.querySelector('svg');
-        if (icon) icon.innerHTML = val ? '<polyline points="18 15 12 9 6 15"></polyline>' : '<polyline points="6 9 12 15 18 9"></polyline>';
-      }
-    }
-  
-    function renderChart(data) {
-      const type = document.getElementById('chart-type')?.value || 'mensal';
-      const { labels, values } = prepareChartData(data, type);
-  
-      if (responsesChart) responsesChart.destroy();
-  
-      const ctx = document.getElementById('responsesChart').getContext('2d');
-      responsesChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Respostas',
-            data: values,
-            fill: true,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 2,
-            tension: 0.3,
-            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: { color: 'rgba(0, 0, 0, 0.05)' }
-            },
-            x: {
-              grid: { display: false }
-            }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              titleColor: '#333',
-              bodyColor: '#666',
-              borderColor: 'rgba(0, 0, 0, 0.1)',
-              borderWidth: 1,
-              padding: 10,
-              displayColors: false
-            }
-          }
-        }
-      });
-    }
-  
-    function prepareChartData(data, type = 'mensal') {
-      const counts = {};
-      data.forEach(i => {
-        const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
-        let key = '';
-        if (type === 'hora') key = `${t.getHours().toString().padStart(2, '0')}h`;
-        else if (type === 'dia') key = `${t.getDate().toString().padStart(2, '0')}/${(t.getMonth()+1).toString().padStart(2, '0')}`;
-        else key = `${t.getMonth()+1}/${t.getFullYear()}`;
-        counts[key] = (counts[key] || 0) + 1;
-      });
-      const keys = Object.keys(counts).sort();
-      return { labels: keys, values: keys.map(k => counts[k]) };
-    }
-  
-    function initChartSelector() {
-      const header = document.querySelector('.chart-header');
-      if (header) {
-        const select = document.createElement('select');
-        select.id = 'chart-type';
-        select.innerHTML = `
-          <option value="hora">Por hora</option>
-          <option value="dia">Por dia</option>
-          <option value="mensal" selected>Por mês</option>
-        `;
-        select.onchange = updateDashboardData;
-        header.appendChild(select);
-      }
-    }
-  
-    function renderCervejaRanking(data) {
-      const ranking = {};
-      data.forEach(item => {
-        if (item.resultados?.cervejas) {
-          item.resultados.cervejas.forEach(c => {
-            const name = c.toLowerCase().trim();
-            ranking[name] = (ranking[name] || 0) + 1;
-          });
-        }
-      });
-      const total = data.length;
-      const sorted = Object.entries(ranking).sort((a, b) => b[1] - a[1]).slice(0, 5);
-      const container = document.getElementById('cervejas-preferidas');
-      container.innerHTML = '';
-      sorted.forEach(([name, count], i) => {
-        container.innerHTML += `
-          <li class="product-rank-item">
-            <div class="product-info">
-              <span class="product-rank">${i + 1}</span>
-              <div class="product-img"><img src="https://via.placeholder.com/50" alt="${name}"></div>
-              <span class="product-name">${name}</span>
-            </div>
-            <span class="product-percent">${((count / total) * 100).toFixed(1)}%</span>
-          </li>`;
-      });
-    }
-  
-    function renderRegionalEngajamento(data) {
-  const regionMap = {};
-
-  data.forEach(item => {
-    const regiao = item.respostas?.pergunta1 || "Desconhecida";
-    const timestamp = item.timestamp instanceof Date ? item.timestamp : item.timestamp?.toDate?.() || new Date();
-
-    const idade = parseInt(item.respostas?.pergunta2);
     const gastoMap = {
       "Até R$ 5,00 por unidade": 5,
       "Entre R$ 6,00 e R$ 7,99": 7,
       "Entre R$ 8,00 e R$ 9,99": 9,
       "R$ 10,00 ou mais": 10
     };
-    const gasto = gastoMap[item.respostas?.pergunta3] || 0;
-    const cervejas = item.resultados?.cervejas?.join(", ") || "-";
+  
+    const zeroMap = {
+      "Sim, prefiro cervejas zero álcool": 1,
+      "Estou aberto a experimentar opções zero": 0.5,
+      "Não, prefiro cervejas tradicionais": 0
+    };
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchAllData().then(() => {
+        fillDynamicFilters();
+        updateDashboardData();
+        setupModalLogic();
+        document.getElementById("apply-filters").addEventListener("click", () => {
+          updateDashboardData();
+          closeModal("advanced-filters-modal");
+        });
+        document.getElementById("reset-filters").addEventListener("click", () => {
+          document.getElementById("region-filter").value = "all";
+          document.getElementById("age-filter").value = "all";
+          document.getElementById("price-filter").value = "all";
+          document.getElementById("zero-filter").value = "all";
+          updateDashboardData();
+        });
+      });
+    });
+    const tempos = data.map(i => {
+  const inicio = i.startTime?.toDate?.() || i.startTime;
+  const fim = i.timestamp?.toDate?.() || i.timestamp;
+  if (inicio && fim && inicio instanceof Date && fim instanceof Date) {
+    return (fim - inicio) / 1000;
+  }
+  return null;
+}).filter(v => typeof v === "number");
 
-    if (!regionMap[regiao]) {
-      regionMap[regiao] = {
-        respostas: 0,
-        conversoes: 0,
-        totalIdade: 0,
-        totalGasto: 0,
+document.getElementById("tempo-medio").innerText = tempos.length ? `${(tempos.reduce((a, b) => a + b) / tempos.length).toFixed(0)}s` : "-";
+
+    async function fetchAllData() {
+      const snapshot = await db.collection("pesquisas").get();
+      allSurveyData = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        data.id = doc.id;
+        allSurveyData.push(data);
+      });
+    }
+  
+    function fillDynamicFilters() {
+      const regions = new Set();
+      const beers = new Set();
+      allSurveyData.forEach(item => {
+        const regiao = item.respostas?.pergunta1;
+        if (regiao) regions.add(regiao);
+        item.resultados?.cervejas?.forEach(c => beers.add(c));
+      });
+  
+      const regionSelect = document.getElementById("region-filter");
+      regions.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r;
+        opt.textContent = r;
+        regionSelect.appendChild(opt);
+      });
+  
+      const regionCheck = document.getElementById("region-checkboxes");
+      const beerCheck = document.getElementById("beer-checkboxes");
+  
+      regions.forEach(r => {
+        regionCheck.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${r}" checked> ${r}</label>`;
+      });
+  
+      beers.forEach(c => {
+        beerCheck.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${c}" checked> ${c}</label>`;
+      });
+    }
+  
+    function updateDashboardData() {
+      const days = parseInt(document.getElementById("date-filter").value);
+      const region = document.getElementById("region-filter").value;
+      const age = document.getElementById("age-filter").value;
+      const price = document.getElementById("price-filter").value;
+      const zeroFilter = document.getElementById("zero-filter")?.value || "all";
+      const type = document.getElementById("chart-type")?.value || "mensal";
+  
+      const now = new Date();
+      const cutoff = new Date(now);
+      cutoff.setDate(cutoff.getDate() - days);
+  
+      const filtered = allSurveyData.filter(i => {
+        const d = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
+        if (d < cutoff) return false;
+        if (region !== "all" && i.respostas?.pergunta1 !== region) return false;
+        const idade = parseInt(i.respostas?.pergunta2);
+        if (age === "18-24" && (idade < 18 || idade > 24)) return false;
+        if (age === "25-34" && (idade < 25 || idade > 34)) return false;
+        if (age === "35-44" && (idade < 35 || idade > 44)) return false;
+        if (age === "45+" && idade < 45) return false;
+        const gasto = gastoMap[i.respostas?.pergunta3];
+        if (price === "5" && gasto > 5) return false;
+        if (price === "8" && (gasto < 6 || gasto > 7.99)) return false;
+        if (price === "10" && (gasto < 8 || gasto > 9.99)) return false;
+        if (price === "10+" && gasto < 10) return false;
+        const zero = i.respostas?.pergunta5;
+        if (zeroFilter === "sim" && zero !== "Sim, prefiro cervejas zero álcool") return false;
+        if (zeroFilter === "talvez" && zero !== "Estou aberto a experimentar opções zero") return false;
+        if (zeroFilter === "nao" && zero !== "Não, prefiro cervejas tradicionais") return false;
+        return true;
+      });
+  
+      renderKPIs(filtered);
+      renderChart(filtered, type);
+      renderRanking(filtered);
+      renderRegionalTable(filtered);
+      renderZeroChart(filtered);
+      const zeroRegion = document.getElementById("zero-region-filter")?.value || "all";
+const zeroAge = document.getElementById("zero-age-filter")?.value || "all";
+
+const filteredZeroData = filtered.filter(i => {
+  if (zeroRegion !== "all" && i.respostas?.pergunta1 !== zeroRegion) return false;
+  const idade = parseInt(i.respostas?.pergunta2);
+  if (zeroAge === "18-24" && (idade < 18 || idade > 24)) return false;
+  if (zeroAge === "25-34" && (idade < 25 || idade > 34)) return false;
+  if (zeroAge === "35-44" && (idade < 35 || idade > 44)) return false;
+  if (zeroAge === "45+" && idade < 45) return false;
+  return true;
+});
+
+renderZeroChart(filteredZeroData);
+
+    }
+  
+    function renderKPIs(data) {
+  const idade = data.map(i => parseInt(i.respostas?.pergunta2)).filter(Number);
+  const gasto = data.map(i => gastoMap[i.respostas?.pergunta3]).filter(Number);
+  const interesse = data.map(i => zeroMap[i.respostas?.pergunta5]).filter(Number);
+
+  const tempos = data.map(i => {
+    const inicio = i.startTime?.toDate?.() || i.startTime;
+    const fim = i.timestamp?.toDate?.() || i.timestamp;
+    if (inicio && fim && inicio instanceof Date && fim instanceof Date) {
+      return (fim - inicio) / 1000;
+    }
+    return null;
+  }).filter(v => typeof v === "number");
+
+  document.getElementById("total-pesquisas").innerText = data.length;
+  document.getElementById("idade-media").innerText = idade.length ? (idade.reduce((a, b) => a + b) / idade.length).toFixed(1) : "-";
+  document.getElementById("tempo-medio").innerText = tempos.length ? `${(tempos.reduce((a, b) => a + b) / tempos.length).toFixed(0)}s` : "-";
+  document.getElementById("ticket-medio").innerText = gasto.length ? `R$ ${(gasto.reduce((a, b) => a + b) / gasto.length).toFixed(2)}` : "-";
+  document.getElementById("interesse-zero").innerText = interesse.length ? `${(interesse.reduce((a, b) => a + b) / interesse.length * 100).toFixed(1)}%` : "-";
+}
+
+  
+    function renderChart(data, type) {
+      const labels = [];
+      const values = {};
+  
+      data.forEach(i => {
+        const d = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
+        let key = '';
+        if (type === 'hora') key = `${d.getHours().toString().padStart(2, '0')}h`;
+        else if (type === 'dia') key = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+        else key = `${d.getMonth() + 1}/${d.getFullYear()}`;
+        values[key] = (values[key] || 0) + 1;
+      });
+  
+      const sortedKeys = Object.keys(values).sort();
+      const chartData = sortedKeys.map(k => values[k]);
+  
+      if (responsesChart) responsesChart.destroy();
+  
+      const ctx = document.getElementById("responsesChart").getContext("2d");
+      responsesChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: sortedKeys,
+          datasets: [{
+            label: "Respostas",
+            data: chartData,
+            fill: true,
+            backgroundColor: "rgba(0, 123, 255, 0.2)",
+            borderColor: "rgba(0, 123, 255, 1)",
+            tension: 0.3
+          }]
+        }
+      });
+    }
+  
+    function renderRanking(data) {
+      const beers = {};
+      data.forEach(i => {
+        i.resultados?.cervejas?.forEach(c => {
+          beers[c] = (beers[c] || 0) + 1;
+        });
+      });
+  
+      const sorted = Object.entries(beers).sort((a, b) => b[1] - a[1]);
+      const container = document.getElementById("cervejas-preferidas");
+      container.innerHTML = "";
+  
+      sorted.slice(0, 5).forEach(([c, v], i) => {
+        container.innerHTML += `
+          <li class="product-rank-item">
+            <div class="product-info">
+              <span class="product-rank">${i + 1}</span>
+              <div class="product-img"><img src="https://via.placeholder.com/50" alt="${c}"></div>
+              <span class="product-name">${c}</span>
+            </div>
+            <span class="product-percent">${((v / data.length) * 100).toFixed(1)}%</span>
+          </li>`;
+      });
+    }
+  
+    function renderZeroChart(data) {
+  const labels = [
+    "Prefere Zero",
+    "Aberto a Experimentar",
+    "Prefere Tradicional"
+  ];
+  const rawLabels = [
+    "Sim, prefiro cervejas zero álcool",
+    "Estou aberto a experimentar opções zero",
+    "Não, prefiro cervejas tradicionais"
+  ];
+  const counts = [0, 0, 0];
+  data.forEach(i => {
+    const v = i.respostas?.pergunta5;
+    if (v === rawLabels[0]) counts[0]++;
+    else if (v === rawLabels[1]) counts[1]++;
+    else if (v === rawLabels[2]) counts[2]++;
+  });
+
+  if (zeroInterestChart) zeroInterestChart.destroy();
+
+  const ctx = document.getElementById("zeroInterestChart").getContext("2d");
+  zeroInterestChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Número de Respostas",
+        data: counts,
+        backgroundColor: ["#2ecc71", "#f1c40f", "#e74c3c"],
+        borderRadius: 8,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          label: ctx => `${ctx.raw} resposta(s)`
+        }}
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      }
+    }
+  });
+}
+
+    function renderRegionalTable(data) {
+  const map = {};
+
+  data.forEach(i => {
+    const r = i.respostas?.pergunta1 || "Desconhecida";
+    if (!map[r]) {
+      map[r] = {
+        total: 0,
+        idade: [],
+        gasto: [],
+        zero: [],
         cervejas: [],
-        timestamps: []
+        datas: []
       };
     }
 
-    regionMap[regiao].respostas++;
-    if (item.resultados) regionMap[regiao].conversoes++;
-    if (!isNaN(idade)) {
-  regionMap[regiao].totalIdade += idade;
-  regionMap[regiao].contadorIdade = (regionMap[regiao].contadorIdade || 0) + 1;
+    map[r].total++;
+
+    // Idade
+    const idade = parseInt(i.respostas?.pergunta2);
+    if (!isNaN(idade)) map[r].idade.push(idade);
+
+    // Gasto
+    const g = gastoMap[i.respostas?.pergunta3];
+    if (g) map[r].gasto.push(g);
+
+    // Cerveja Zero (normalizado)
+    const zero = i.respostas?.pergunta5;
+if (zeroMap[zero] !== undefined) {
+  map[r].zero.push(zeroMap[zero]);
 }
-    if (!isNaN(gasto)) regionMap[regiao].totalGasto += gasto;
-    if (cervejas !== "-") regionMap[regiao].cervejas.push(cervejas);
-    regionMap[regiao].timestamps.push(timestamp);
+
+
+
+    // Cervejas
+    map[r].cervejas.push(...(i.resultados?.cervejas || []));
+
+    // Timestamp
+    const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
+    map[r].datas.push(t);
   });
 
-  const tbody = document.getElementById('engajamento-regiao');
-  tbody.innerHTML = '';
+  const tbody = document.getElementById("engajamento-regiao");
+  tbody.innerHTML = "";
 
-  Object.entries(regionMap).forEach(([regiao, r]) => {
-    const taxa = r.respostas ? ((r.conversoes / r.respostas) * 100).toFixed(1) : 0;
-    const idadeMedia = r.totalIdade && r.contadorIdade ? (r.totalIdade / r.contadorIdade).toFixed(1) : '-';
-    const ticketMedio = r.totalGasto && r.respostas ? `R$ ${(r.totalGasto / r.respostas).toFixed(2)}` : '-';
-    const cervejaCount = {};
-r.cervejas.forEach(nome => {
-  nome.split(',').forEach(c => {
-    const limpo = c.trim().toLowerCase();
-    cervejaCount[limpo] = (cervejaCount[limpo] || 0) + 1;
+  Object.entries(map).forEach(([reg, v]) => {
+  const cervejasCount = {};
+  v.cervejas.forEach(c => {
+    cervejasCount[c] = (cervejasCount[c] || 0) + 1;
   });
+  const topBeer = Object.entries(cervejasCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
+  const data = new Date(Math.max(...v.datas.map(d => new Date(d))));
+
+  tbody.innerHTML += `
+    <tr>
+      <td>${reg}</td>
+      <td>${v.total}</td>
+      <td>${v.zero.length ? v.zero.filter(z => z === 1).length : 0}</td>
+      <td>${topBeer}</td>
+      <td>${v.idade.length ? (v.idade.reduce((a, b) => a + b) / v.idade.length).toFixed(1) : "-"}</td>
+      <td>${v.gasto.length ? `R$ ${(v.gasto.reduce((a, b) => a + b) / v.gasto.length).toFixed(2)}` : "-"}</td>
+      <td>${data.toLocaleString("pt-BR")}</td>
+    </tr>`;
 });
-const cervejasMaisClicadas = Object.entries(cervejaCount)
-  .sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
-    const dataUltimaResposta = r.timestamps.length ? new Date(Math.max(...r.timestamps.map(t => new Date(t)))).toLocaleString("pt-BR") : '-';
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${regiao}</td>
-        <td>${r.respostas}</td>
-        <td>${taxa}%</td>
-        <td>${cervejasMaisClicadas}</td>
-        <td>${idadeMedia}</td>
-        <td>${ticketMedio}</td>
-        <td>${dataUltimaResposta}</td>
-      </tr>
-    `;
-  });
 }
-function exportData() {
-  const table = document.querySelector(".heatmap-table");
-  const rows = Array.from(table.querySelectorAll("tr"));
-  const csv = rows.map(row => 
-    Array.from(row.querySelectorAll("th, td"))
-      .map(cell => `"${cell.innerText}"`)
-      .join(",")
-  ).join("\n");
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", "engajamento_por_regiao.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
+    function exportRegionalData() {
+      const table = document.querySelector(".heatmap-table");
+      const rows = [...table.querySelectorAll("tr")];
+      const csv = rows.map(row => [...row.querySelectorAll("th, td")].map(cell => `"${cell.innerText}"`).join(",")).join("\n");
+  
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "engajamento_por_regiao.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  
+    function setupModalLogic() {
+      document.querySelectorAll(".modal-close").forEach(btn => {
+        btn.onclick = () => btn.closest(".modal").style.display = "none";
+      });
+  
+      document.getElementById("btn-advanced-filters").onclick = () => {
+        document.getElementById("advanced-filters-modal").style.display = "flex";
+      };
+  
+      window.onclick = function(event) {
+        document.querySelectorAll(".modal").forEach(modal => {
+          if (event.target === modal) modal.style.display = "none";
+        });
+      };
+    }
+  
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
   </script>
-</body>
-
-</html>
+  
