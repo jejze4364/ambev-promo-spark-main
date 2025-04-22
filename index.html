@@ -96,6 +96,8 @@
    // Inicializa o Firebase
    const app = firebase.initializeApp(firebaseConfig);
   const analytics = firebase.analytics();
+  const db = firebase.firestore();
+
   function saveDataToFirebase(data) {
   // Gere um ID único para este registro
   const surveyId = "survey_" + new Date().getTime();
@@ -345,7 +347,7 @@ function getData() {
       scores: { antarctica: 2, brahma: 4, spaten: 2, corona: 1, bud: 3, stella: 1, stellapg: 3, budzero: 1, coronacero: 4, becks: 3, brahmazero: 4, colorado: 2, patagonia: 1, michelob: 1, skol: 4, bohemia: 4 }
     }
   ]
-},
+   }, // <-- ISSO FALTAVA
 {
   question: "Você tem interesse em opções zero álcool?",
   description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
