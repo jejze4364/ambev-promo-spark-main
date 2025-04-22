@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Executivo | Ambev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+
+  <!-- Chart.js para visualizações -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="painel.css">
+</head>
+
+<body>
+  <!-- HTML OMITIDO PARA BREVIDADE (mantém o mesmo até a parte dos scripts) -->
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
+      authDomain: "pesquisa-8a0f9.firebaseapp.com",
+      projectId: "pesquisa-8a0f9",
+      storageBucket: "pesquisa-8a0f9.appspot.com",
+      messagingSenderId: "453188166697",
+      appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+      measurementId: "G-H34QHPSPS1"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.analytics();
+    const db = firebase.firestore();
+
+    let allSurveyData = [];
+    let responsesChart = null;
+
+    function fetchAllSurveyData() {
+      return db.collection("pesquisas")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then((querySnapshot) => {
+          allSurveyData = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            data.id = doc.id;
+            allSurveyData.push(data);
+          });
+          return allSurveyData;
+        })
+        .catch((error) => {
+          console.error("Erro ao obter dados do Firestore:", error);
+          return [];
+        });
+    }
+
+    function filterDataByPeriod(data, days) {
+      if (days === 'all') return data;
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      return data.filter(item => {
+        const timestamp = item.timestamp instanceof Date ?
+          item.timestamp :
+          item.timestamp?.toDate ? item.timestamp.toDate() : null;
+        return timestamp && timestamp >= cutoffDate;
+      });
+    }
+
+    function getCervejaRanking(data) {
+      const cervejaCounter = {};
+      data.forEach(item => {
+        if (item.resultados?.cervejas) {
+          item.resultados.cervejas.forEach(cerveja => {
+            cervejaCounter[cerveja] = (cervejaCounter[cerveja] || 0) + 1;
+          });
+        }
+      });
+      let cervejaRanking = Object.entries(cervejaCounter).map(([name, count]) => {
+        return {
+          name,
+          count,
+          percent: (count / data.length * 100).toFixed(1)
+        };
+      });
+      cervejaRanking.sort((a, b) => b.count - a.count);
+      return cervejaRanking.slice(0, 5);
+    }
+
+    function getRegionalData(data) {
+      const regions = {
+        'Sudeste': { respostas: 0, conversoes: 0, compartilhamentos: 0 },
+        'Sul': { respostas: 0, conversoes: 0, compartilhamentos: 0 },
+        'Nordeste': { respostas: 0, conversoes: 0, compartilhamentos: 0 },
+        'Centro-Oeste': { respostas: 0, conversoes: 0, compartilhamentos: 0 },
+        'Norte': { respostas: 0, conversoes: 0, compartilhamentos: 0 }
+      };
+      data.forEach(item => {
+        const regiao = item.respostas?.regiao;
+        if (regiao && regions[regiao]) {
+          regions[regiao].respostas++;
+          if (item.resultados && Object.keys(item.resultados).length > 0) {
+            regions[regiao].conversoes++;
+          }
+          if (item.compartilhado) {
+            regions[regiao].compartilhamentos++;
+          }
+        }
+      });
+      Object.keys(regions).forEach(region => {
+        const total = regions[region].respostas;
+        regions[region].taxaConversao = total > 0
+          ? Math.round((regions[region].conversoes / total) * 100)
+          : 0;
+      });
+      return regions;
+    }
+
+    function updateDashboardData() {
+      const selectedDays = document.getElementById('date-filter').value;
+      if (allSurveyData.length === 0) {
+        fetchAllSurveyData().then(data => {
+          const filteredData = filterDataByPeriod(data, selectedDays);
+          updateDashboard(filteredData);
+        });
+      } else {
+        const filteredData = filterDataByPeriod(allSurveyData, selectedDays);
+        updateDashboard(filteredData);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDashboardData();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Aproveite as melhores promoções de cerveja no Esportanos. Cupons, ofertas e descontos exclusivos." />
+        <title>Promoções de Cerveja | Esportanos</title>
+      
+        <!-- Fonte Inter para modernização -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+      
+        <!-- Estilos externos -->
+        <link rel="stylesheet" href="promocoes.css" />
+      
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      
+        <!-- Estilos críticos inline -->
+        <style>
+          body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9fafb;
+            color: #111827;
+          }
+      
+          .app-container {
+            padding-bottom: 80px;
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+      
+          footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111827;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+            z-index: 10;
+          }
+      
+          .footer-link {
+            text-align: center;
+            font-size: 0.85rem;
+            text-decoration: none;
+            color: white;
+          }
+      
+          .footer-link i {
+            font-size: 1.2rem;
+            display: block;
+          }
+      
+          .footer-link.active,
+          .footer-link:hover {
+            color: #facc15;
+          }
+      
+          .footer-spacer {
+            height: 80px;
+          }
+        </style>
+      </head>      
+<body>
+    <div class="app-container">
+        <!-- Header com navegação -->
+        <header class="app-header">
+            <div class="header-content">
+                <a href="Inicial.html" class="back-btn" aria-label="Voltar para página inicial">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>Promoções</h1>
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" aria-label="3 notificações não lidas">3</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner principal rotativo -->
+        <div class="promo-carousel-container">
+            <div class="promo-carousel" id="banner-carousel">
+                <div class="promo-slide active">
+                    <div class="countdown-banner">
+                        <div class="countdown-content">
+                            <div class="countdown-text">
+                                <h2>Promo Relâmpago!</h2>
+                                <p>Brahma Duplo Malte com 30% OFF</p>
+                            </div>
+                            <div class="countdown-timer">
+                                <div class="time-block">
+                                    <span id="hours">05</span>
+                                    <span class="time-label">horas</span>
+                                </div>
+                                <div class="time-separator">:</div>
+                                <div class="time-block">
+                                    <span id="minutes">32</span>
+                                    <span class="time-label">min</span>
+                                </div>
+                                <div class="time-separator">:</div>
+                                <div class="time-block">
+                                    <span id="seconds">18</span>
+                                    <span class="time-label">seg</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="promo-btn pulse-animation">APROVEITAR</button>
+                    </div>
+                </div>
+                <div class="promo-slide">
+                    <div class="partner-banner ze-delivery">
+                        <div class="partner-content">
+                            <img src="ze-delivery-logo.png" alt="Zé Delivery" class="partner-logo" width="120" height="60" data-original-src="ze-delivery-logo.png" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'60\'%3E%3Crect width=\'120\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'12\' fill=\'%23888\'%3EZé Delivery%3C/text%3E%3C/svg%3E';">
+                            <div class="partner-text">
+                                <h3>Troque aqui, compre e receba pelo Zé!</h3>
+                                <p>Ganhe R$15 OFF no primeiro pedido</p>
+                            </div>
+                        </div>
+                        <button class="promo-btn">CONECTAR</button>
+                    </div>
+                </div>
+                <div class="promo-slide">
+                    <div class="partner-banner bees">
+                        <div class="partner-content">
+                            <img src="bees-logo.png" alt="Bees" class="partner-logo" width="120" height="60" data-original-src="bees-logo.png" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'60\'%3E%3Crect width=\'120\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'12\' fill=\'%23888\'%3EBees%3C/text%3E%3C/svg%3E';">
+                            <div class="partner-text">
+                                <h3>Tem CNPJ?</h3>
+                                <p>Descontos exclusivos no app Bees!</p>
+                            </div>
+                        </div>
+                        <button class="promo-btn">ACESSAR</button>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls" role="tablist">
+                <span class="carousel-dot active" data-index="0" role="tab" aria-selected="true" tabindex="0"></span>
+                <span class="carousel-dot" data-index="1" role="tab" aria-selected="false" tabindex="-1"></span>
+                <span class="carousel-dot" data-index="2" role="tab" aria-selected="false" tabindex="-1"></span>
+            </div>
+        </div>
+
+        <!-- Abas de categorias -->
+        <div class="promo-tabs" role="tablist">
+            <button class="tab-btn active" data-category="all" role="tab" aria-selected="true">Todas</button>
+            <button class="tab-btn" data-category="exclusive" role="tab" aria-selected="false">Exclusivas</button>
+            <button class="tab-btn" data-category="cashback" role="tab" aria-selected="false">Cashback</button>
+            <button class="tab-btn" data-category="missions" role="tab" aria-selected="false">Missões</button>
+        </div>
+
+        <!-- Barra de pesquisa e filtros -->
+        <div class="search-container">
+            <div class="search-bar">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="text" placeholder="Buscar promoções..." aria-label="Buscar promoções">
+            </div>
+            <button class="filter-btn" aria-label="Filtrar promoções">
+                <i class="fas fa-filter" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Seção de cupons -->
+        <section class="promo-section" data-category="coupon">
+            <div class="section-header">
+                <h2>Seus Cupons</h2>
+                <a href="#" class="see-all">Ver todos <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="coupons-container">
+                <div class="coupon">
+                    <div class="coupon-content">
+                        <div class="coupon-brand">
+                            <img src="brahma.jpg" alt="Brahma" width="60" height="60" data-original-src="brahma.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EBrahma%3C/text%3E%3C/svg%3E';">
+                        </div>
+                        <div class="coupon-details">
+                            <h3>20% OFF</h3>
+                            <p>Em Brahma Duplo Malte</p>
+                            <span class="coupon-expiry">Expira em 2 dias</span>
+                        </div>
+                    </div>
+                    <div class="coupon-action">
+                        <button class="use-coupon">USAR</button>
+                    </div>
+                </div>
+                
+                <div class="coupon">
+                    <div class="coupon-content">
+                        <div class="coupon-brand">
+                            <img src="budweiser.jpg" alt="Budweiser" width="60" height="60" data-original-src="budweiser.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EBudweiser%3C/text%3E%3C/svg%3E';">
+                        </div>
+                        <div class="coupon-details">
+                            <h3>R$10 OFF</h3>
+                            <p>Em compras acima de R$50</p>
+                            <span class="coupon-expiry">Expira hoje!</span>
+                        </div>
+                    </div>
+                    <div class="coupon-action">
+                        <button class="use-coupon urgent">USAR AGORA</button>
+                    </div>
+                </div>
+                
+                <div class="coupon new-coupon" data-category="exclusive">
+                    <div class="coupon-content">
+                        <div class="coupon-brand">
+                            <img src="corona.jpg" alt="Corona" width="60" height="60" data-original-src="corona.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3ECorona%3C/text%3E%3C/svg%3E';">
+                        </div>
+                        <div class="coupon-details">
+                            <div class="new-tag">NOVO</div>
+                            <h3>Leve 6, Pague 5</h3>
+                            <p>Em Corona Long Neck</p>
+                            <span class="coupon-expiry">Válido por 7 dias</span>
+                            <span class="exclusiva" style="display:none">Exclusiva</span>
+                        </div>
+                    </div>
+                    <div class="coupon-action">
+                        <button class="use-coupon">USAR</button>
+                    </div>
+                </div>
+
+                <div class="coupon" data-category="cashback">
+                    <div class="coupon-content">
+                        <div class="coupon-brand">
+                            <img src="patagonia.jpg" alt="Patagonia" width="60" height="60" data-original-src="patagonia.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'%3E%3Crect width=\'60\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EPatagonia%3C/text%3E%3C/svg%3E';">
+                        </div>
+                        <div class="coupon-details">
+                            <h3>5% Cashback</h3>
+                            <p>Em Patagonia 600ml</p>
+                            <span class="coupon-expiry">Válido por 5 dias</span>
+                        </div>
+                    </div>
+                    <div class="coupon-action">
+                        <button class="use-coupon">USAR</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de missões -->
+        <section class="promo-section missions-section" data-category="missions">
+            <div class="section-header">
+                <h2>Missões Ativas</h2>
+                <a href="#" class="see-all">Ver todas <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="missions-container">
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <img src="stella.jpg" alt="Stella Artois" class="mission-brand" width="80" height="40" data-original-src="stella.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'40\'%3E%3Crect width=\'80\' height=\'40\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EStella Artois%3C/text%3E%3C/svg%3E';">
+                        <div class="mission-reward">
+                            <i class="fas fa-gift" aria-hidden="true"></i>
+                            <span>1 Stella Grátis</span>
+                        </div>
+                    </div>
+                    <div class="mission-body">
+                        <h3>Desafio Stella</h3>
+                        <p>Compre 5 Stella Artois em 30 dias</p>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <div class="mission-progress">
+                            <span>3/5</span>
+                            <span>60% completo</span>
+                        </div>
+                    </div>
+                    <button class="mission-btn">CONTINUAR</button>
+                </div>
+
+                <div class="mission-card">
+                    <div class="mission-header">
+                        <img src="spaten.jpg" alt="Spaten" class="mission-brand" width="80" height="40" data-original-src="spaten.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'40\'%3E%3Crect width=\'80\' height=\'40\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3ESpaten%3C/text%3E%3C/svg%3E';">
+                        <div class="mission-reward">
+                            <i class="fas fa-percent" aria-hidden="true"></i>
+                            <span>30% OFF</span>
+                        </div>
+                    </div>
+                    <div class="mission-body">
+                        <h3>Experimentador Spaten</h3>
+                        <p>Experimente 3 tipos de Spaten</p>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <div class="mission-progress">
+                            <span>1/3</span>
+                            <span>33% completo</span>
+                        </div>
+                    </div>
+                    <button class="mission-btn">CONTINUAR</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ofertas por perfil -->
+        <section class="promo-section" data-category="recommendation">
+            <div class="section-header">
+                <h2>Recomendado para Você</h2>
+                <a href="#" class="see-all">Ver todas <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="profile-recommendations">
+                <div class="profile-badge">
+                    <div class="badge-icon">
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                    </div>
+                    <span>Amante de IPA</span>
+                </div>
+                <div class="recommended-items">
+                    <div class="promo-item">
+                        <div class="discount-tag">20% OFF</div>
+                        <img src="colorado.jpg" alt="Colorado" class="promo-img" width="100" height="120" data-original-src="colorado.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'120\'%3E%3Crect width=\'100\' height=\'120\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EColorado%3C/text%3E%3C/svg%3E';">
+                        <div class="promo-details">
+                            <h3>Colorado IPA</h3>
+                            <p class="promo-price">
+                                <span class="original-price">R$9,90</span>
+                                <span class="current-price">R$7,92</span>
+                            </p>
+                            <button class="add-to-cart">ADICIONAR</button>
+                        </div>
+                    </div>
+                    <div class="promo-item">
+                        <div class="discount-tag">15% OFF</div>
+                        <img src="patagonia.jpg" alt="Patagonia" class="promo-img" width="100" height="120" data-original-src="patagonia.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'120\'%3E%3Crect width=\'100\' height=\'120\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EPatagonia%3C/text%3E%3C/svg%3E';">
+                        <div class="promo-details">
+                            <h3>Patagonia IPA</h3>
+                            <p class="promo-price">
+                                <span class="original-price">R$12,90</span>
+                                <span class="current-price">R$10,96</span>
+                            </p>
+                            <button class="add-to-cart">ADICIONAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ofertas por mercado -->
+        <section class="promo-section" data-category="market">
+            <div class="section-header">
+                <h2>Ofertas por Mercado</h2>
+                <a href="mercados.html" class="see-all">Ver todos <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="market-offers">
+                <div class="market-card">
+                    <img src="assai.jpg" alt="Assaí Atacadista" class="market-logo" width="80" height="40" data-original-src="assai.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'40\'%3E%3Crect width=\'80\' height=\'40\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EAssaí%3C/text%3E%3C/svg%3E';">
+                    <div class="market-info">
+                        <h3>Assaí</h3>
+                        <p>12 ofertas ativas</p>
+                    </div>
+                    <div class="best-offer">
+                        <span>Melhor oferta:</span>
+                        <strong>30% OFF em Brahma</strong>
+                    </div>
+                    <a href="assai-promocoes.html" class="view-offers-btn">
+                        Ver Ofertas <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+                
+                <div class="market-card">
+                    <img src="guanabara.jpg" alt="Guanabara" class="market-logo" width="80" height="40" data-original-src="guanabara.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'40\'%3E%3Crect width=\'80\' height=\'40\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3EGuanabara%3C/text%3E%3C/svg%3E';">
+                    <div class="market-info">
+                        <h3>Guanabara</h3>
+                        <p>8 ofertas ativas</p>
+                    </div>
+                    <div class="best-offer">
+                        <span>Melhor oferta:</span>
+                        <strong>Leve 6, Pague 5</strong>
+                    </div>
+                    <a href="guanabara-promocoes.html" class="view-offers-btn">
+                        Ver Ofertas <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+                
+                <div class="market-card featured-market">
+                    <div class="featured-tag">Destaque</div>
+                    <img src="carone.jpg" alt="Carone" class="market-logo" width="80" height="40" data-original-src="carone.jpg" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'40\'%3E%3Crect width=\'80\' height=\'40\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'10\' fill=\'%23888\'%3ECarone%3C/text%3E%3C/svg%3E';">
+                    <div class="market-info">
+                        <h3>Carone</h3>
+                        <p>15 ofertas ativas</p>
+                    </div>
+                    <div class="best-offer">
+                        <span>Melhor oferta:</span>
+                        <strong>40% na 2ª unidade</strong>
+                    </div>
+                    <a href="carone-promocoes.html" class="view-offers-btn featured-btn">
+                        Ver Ofertas <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Integração com Zé Delivery -->
+        <section class="promo-section delivery-integration" data-category="integration">
+            <div class="integration-card ze-delivery-section">
+                <div class="integration-content">
+                    <img src="ze-delivery-wide.png" alt="Zé Delivery" class="integration-logo" width="120" height="60" data-original-src="ze-delivery-wide.png" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'60\'%3E%3Crect width=\'120\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'12\' fill=\'%23888\'%3EZé Delivery%3C/text%3E</svg%3E';">
+                    <div class="integration-info">
+                        <h3>Receba em casa com<br>Zé Delivery</h3>
+                        <p>Aplique automaticamente os<br>mesmos descontos do app</p>
+                    </div>
+                </div>
+                <button id="connect-ze" class="connect-btn">
+                    CONECTAR <i class="fas fa-link" aria-hidden="true"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Integração com Bees -->
+        <section class="promo-section delivery-integration" data-category="integration">
+            <div class="integration-card bees-section">
+                <div class="integration-badge">EXCLUSIVO CNPJ</div>
+                <div class="integration-content">
+                    <img src="bees-wide.png" alt="Bees" class="integration-logo" width="120" height="60" data-original-src="bees-wide.png" onerror="this.onerror=null; this.classList.add('error'); this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'60\'%3E%3Crect width=\'120\' height=\'60\' fill=\'%23f2f2f2\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'12\' fill=\'%23888\'%3EBees%3C/text%3E%3C/svg%3E';">
+                    <div class="integration-info">
+                        <h3>Compre no atacado<br>com Bees</h3>
+                        <p>Preços especiais para<br>seu estabelecimento</p>
+                    </div>
+                </div>
+                <button id="connect-bees" class="connect-btn">
+                    CONECTAR <i class="fas fa-link" aria-hidden="true"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Espaço para footer fixo -->
+        <div class="footer-spacer" style="height: 80px;"></div>
+
+        <!-- Rodapé -->
+        <footer class="app-footer">
+            <a href="Inicial.html" class="footer-link">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="escolha_cerveja.html" class="footer-link">
+                <i class="fas fa-beer"></i>
+                <span>Cervejas</span>
+            </a>
+            <a href="promocoes.html" class="footer-link active">
+                <i class="fas fa-percent"></i>
+                <span>Promoções</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Script com tratamento de erros -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                initCarousel();
+                initCountdown();
+                initTabs();
+                initIntegrationButtons();
+            } catch (error) {
+                console.error('Erro na inicialização:', error);
+                recoverEssentialFunctions();
+            }
+        });
+
+        function initCarousel() {
+            const carousel = document.getElementById('banner-carousel');
+            const slides = carousel.querySelectorAll('.promo-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentSlide = 0;
+            let interval;
+
+            function changeSlide(index) {
+                if (index >= slides.length) index = 0;
+                if (index < 0) index = slides.length - 1;
+
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                    dot.setAttribute('aria-selected', 'false');
+                    dot.tabIndex = -1;
+                });
+
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+                dots[index].setAttribute('aria-selected', 'true');
+                dots[index].tabIndex = 0;
+
+                currentSlide = index;
+            }
+
+            function startAutoSlide() {
+                interval = setInterval(() => {
+                    changeSlide(currentSlide + 1);
+                }, 5000);
+            }
+
+            // Adiciona interação com touch para dispositivos móveis
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+
+            function handleSwipe() {
+                const minSwipeDistance = 50;
+                if (touchEndX < touchStartX - minSwipeDistance) {
+                    // Swipe para esquerda
+                    clearInterval(interval);
+                    changeSlide(currentSlide + 1);
+                    startAutoSlide();
+                } else if (touchEndX > touchStartX + minSwipeDistance) {
+                    // Swipe para direita
+                    clearInterval(interval);
+                    changeSlide(currentSlide - 1);
+                    startAutoSlide();
+                }
+            }
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    clearInterval(interval);
+                    changeSlide(index);
+                    startAutoSlide();
+                });
+
+                dot.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        clearInterval(interval);
+                        changeSlide(index);
+                        startAutoSlide();
+                    }
+                });
+            });
+
+            startAutoSlide();
+        }
+
+        function initCountdown() {
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            if (!hoursEl || !minutesEl || !secondsEl) return;
+
+            let hours = parseInt(hoursEl.textContent);
+            let minutes = parseInt(minutesEl.textContent);
+            let seconds = parseInt(secondsEl.textContent);
+
+            if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+                hours = 5;
+                minutes = 30;
+                seconds = 0;
+                hoursEl.textContent = '05';
+                minutesEl.textContent = '30';
+                secondsEl.textContent = '00';
+            }
+
+            function updateCountdown() {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) {
+                            clearInterval(countdownInterval);
+                            // Atualiza visual quando o tempo acaba
+                            document.querySelector('.countdown-banner').classList.add('expired');
+                            document.querySelector('.countdown-banner .promo-btn').textContent = 'EXPIRADO';
+                            document.querySelector('.countdown-banner .promo-btn').classList.remove('pulse-animation');
+                            document.querySelector('.countdown-banner .promo-btn').disabled = true;
+                            return;
+                        }
+                    }
+                }
+
+                hoursEl.textContent = hours.toString().padStart(2, '0');
+                minutesEl.textContent = minutes.toString().padStart(2, '0');
+                secondsEl.textContent = seconds.toString().padStart(2, '0');
+            }
+
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function filterContent(category) {
+            const allSections = document.querySelectorAll('.promo-section');
+
+            if (category === 'all') {
+                allSections.forEach(section => section.style.display = 'block');
+                return;
+            }
+
+            allSections.forEach(section => {
+                const sectionCategory = section.getAttribute('data-category') || '';
+                
+                if (category === 'cashback' && (sectionCategory === 'cashback' || section.innerText.toLowerCase().includes('cashback'))) {
+                    section.style.display = 'block';
+                } else if (category === 'missions' && (sectionCategory === 'missions' || section.classList.contains('missions-section'))) {
+                    section.style.display = 'block';
+                } else if (category === 'exclusive' && (sectionCategory === 'exclusive' || section.innerText.toLowerCase().includes('exclusiv'))) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        function initTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => {
+                        b.classList.remove('active');
+                        b.setAttribute('aria-selected', 'false');
+                    });
+
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
+
+                    const category = btn.getAttribute('data-category');
+                    console.log(`Filtrar por: ${category}`);
+                    filterContent(category);
+                });
+            });
+        }
+
+        function initIntegrationButtons() {
+            document.getElementById('connect-ze')?.addEventListener('click', function() {
+                alert('Redirecionando para integração com Zé Delivery...');
+                // Aqui poderia adicionar uma lógica de integração ou redirecionamento
+            });
+
+            document.getElementById('connect-bees')?.addEventListener('click', function() {
+                alert('Redirecionando para integração com Bees...');
+                // Aqui poderia adicionar uma lógica de integração ou redirecionamento
+            });
+        }
+
+        function recoverEssentialFunctions() {
+            document.querySelectorAll('.use-coupon').forEach(btn => {
+                btn.addEventListener('click', () => alert('Cupom aplicado com sucesso!'));
+            });
+
+            document.querySelectorAll('.mission-btn').forEach(btn => {
+                btn.addEventListener('click', () => alert('Missão em andamento!'));
+            });
+
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', () => alert('Produto adicionado ao carrinho!'));
+            });
+        }
+
+        window.addEventListener('error', function (e) {
+            if (e.target.tagName === 'IMG') {
+                console.warn('Erro ao carregar imagem:', e.target.src);
+                // Salva URL original para possível recuperação quando voltar online
+                if (!e.target.getAttribute('data-original-src')) {
+                    e.target.setAttribute('data-original-src', e.target.src);
+                }
+            }
+        }, true);
+
+        window.addEventListener('online', function () {
+            document.querySelectorAll('img.error').forEach(img => {
+                const originalSrc = img.getAttribute('data-original-src');
+                if (originalSrc) {
+                    img.src = originalSrc;
+                    img.classList.remove('error');
+                }
+            });
+        });
+
+        function checkMobileLayout() {
+            const isMobile = window.innerWidth < 768;
+            document.querySelectorAll('.promo-section').forEach(section => {
+                section.classList.toggle('mobile-view', isMobile);
+            });
+        }
+
+        // Adicionar funcionalidade à barra de pesquisa
+        document.querySelector('.search-bar input')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const allItems = document.querySelectorAll('.coupon, .promo-item, .mission-card, .market-card');
+            
+            if (searchTerm.length > 2) {
+                allItems.forEach(item => {
+                    const itemText = item.innerText.toLowerCase();
+                    if (itemText.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            } else {
+                allItems.forEach(item => {
+                    item.style.display = 'flex';
+                });
+            }
+        });
+
+        // Adicionar funcionalidade ao botão de filtro
+        document.querySelector('.filter-btn')?.addEventListener('click', function() {
+            alert('Filtros avançados serão implementados em breve!');
+        });
+
+        window.addEventListener('load', checkMobileLayout);
+        window.addEventListener('resize', checkMobileLayout);
+    </script>      
+</body>
+</html>

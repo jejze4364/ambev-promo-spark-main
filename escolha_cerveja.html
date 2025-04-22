@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vote na Sua Cerveja Favorita</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+      color: #111827;
+    }
+    header {
+      background-color: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      padding: 1rem 2rem;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      color: #2563eb;
+    }
+    .container {
+      max-width: 1024px;
+      margin: auto;
+      padding: 2rem 1rem 5rem;
+    }
+    .beer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .beer-card {
+      background: #facc15;
+      color: #1f2937;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .beer-card:hover {
+      background: #eab308;
+      transform: scale(1.05);
+    }
+    .beer-card i {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .footer-spacer {
+      height: 80px;
+    }
+    .app-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #111827;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+      z-index: 1000;
+    }
+    .footer-link {
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      font-size: 0.85rem;
+    }
+    .footer-link i {
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .footer-link.active,
+    .footer-link:hover {
+      color: #facc15;
+    }
+    #heatmap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+  
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Vote na Sua Cerveja Favorita 🍻</h1>
+  </header>
+
+  <main class="container">
+    <p class="text-center" style="text-align:center; color: #6b7280; margin-bottom: 1rem;">
+      Clique na cerveja que você mais gosta! Seu voto será registrado automaticamente.
+    </p>
+
+    <div id="beerList" class="beer-grid"></div>
+    <section id="heatmapSection" style="margin-top: 2rem; display:none;">
+      <h2 style="text-align:center; color:#1f2937;">Popularidade das Cervejas (Mapa de Calor)</h2>
+      <div id="heatmap" class="beer-grid"></div>
+    </section>
+    
+  </main>
+
+  <div class="footer-spacer"></div>
+
+  <footer class="app-footer">
+    <a href="Inicial.html" class="footer-link"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="footer-link active"><i class="fas fa-beer"></i><span>Cervejas</span></a>
+    <a href="promocoes.html" class="footer-link"><i class="fas fa-percent"></i><span>Promoções</span></a>
+  </footer>
+
+  <script>
+    // Configuração Firebase (substitua com sua própria config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
+    authDomain: "pesquisa-8a0f9.firebaseapp.com",
+    projectId: "pesquisa-8a0f9",
+    storageBucket: "pesquisa-8a0f9.firebasestorage.app",
+    messagingSenderId: "453188166697",
+    appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+    measurementId: "G-H34QHPSPS1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const beers = [
+      "Brahma", "Brahma Zero", "Spaten", "Corona", "Corona Cero", "Budweiser", "Bud Zero",
+      "Stella Artois", "Becks", "Antarctica", "Michelob", "Colorado", "Patagonia", "Original",
+      "Bohemia", "Skol"
+    ];
+
+    const beerList = document.getElementById("beerList");
+
+    beers.forEach(name => {
+      const card = document.createElement('div');
+      card.className = 'beer-card';
+      card.innerHTML = `<i class="fas fa-beer"></i><div>${name}</div>`;
+      card.addEventListener('click', async () => {
+  try {
+    const ref = db.collection("votos").doc(name);
+    await db.runTransaction(async (t) => {
+      const doc = await t.get(ref);
+      const current = doc.exists ? doc.data().total || 0 : 0;
+      t.set(ref, { total: current + 1 });
+    });
+    alert(`Voto registrado com sucesso para ${name}!`);
+
+    renderHeatmap(); // chama o mapa após o voto
+  } catch (err) {
+    console.error("Erro ao registrar voto:", err);
+    alert("Erro ao registrar voto. Tente novamente.");
+  }
+});
+      beerList.appendChild(card);
+    });
+    async function renderHeatmap() {
+  const heatmapContainer = document.getElementById('heatmap');
+  const section = document.getElementById('heatmapSection');
+  heatmapContainer.innerHTML = '';
+
+  const snapshot = await db.collection("votos").get();
+  const votos = {};
+  let maxVotos = 0;
+
+  snapshot.forEach(doc => {
+    const val = doc.data().total || 0;
+    if (val > 0) {
+      votos[doc.id] = val;
+      if (val > maxVotos) maxVotos = val;
+    }
+  });
+
+  // Ordena cervejas por número de votos
+  const ordenadas = Object.entries(votos)
+    .sort((a, b) => b[1] - a[1]);
+
+  // Filtra top 5 + empates
+  const top = [];
+  let limite = 5;
+  let ultimoValor = 0;
+
+  for (let i = 0; i < ordenadas.length; i++) {
+    const [nome, total] = ordenadas[i];
+
+    if (i < 5) {
+      top.push([nome, total]);
+      ultimoValor = total;
+    } else if (total === ultimoValor) {
+      top.push([nome, total]);
+    } else {
+      break;
+    }
+  }
+
+  if (top.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  // Renderiza bolhas
+  top.forEach(([name, votosBeer]) => {
+    const intensidade = votosBeer / maxVotos;
+    const tamanho = 60 + intensidade * 100; // entre 60 e 160px
+    const cor = `hsl(${(1 - intensidade) * 40}, 100%, 60%)`; // de vermelho pra amarelo
+
+    const bolha = document.createElement('div');
+    bolha.style.width = `${tamanho}px`;
+    bolha.style.height = `${tamanho}px`;
+    bolha.style.backgroundColor = cor;
+    bolha.style.borderRadius = '50%';
+    bolha.style.display = 'flex';
+    bolha.style.alignItems = 'center';
+    bolha.style.justifyContent = 'center';
+    bolha.style.fontSize = '0.9rem';
+    bolha.style.fontWeight = 'bold';
+    bolha.style.color = '#1f2937';
+    bolha.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+    bolha.style.transition = 'all 0.3s ease';
+    bolha.textContent = name;
+
+    heatmapContainer.appendChild(bolha);
+  });
+
+  section.style.display = 'block';
+}
+  </script>
+</body>
+</html>

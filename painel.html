@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Executivo | Ambev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+  
+  <!-- Chart.js para visualizações -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="painel.css">
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo-container">
+      </div>
+      
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item active">
+            <a href="#" class="nav-link">
+              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="9"></rect>
+                <rect x="14" y="3" width="7" height="5"></rect>
+                <rect x="14" y="12" width="7" height="9"></rect>
+                <rect x="3" y="16" width="7" height="5"></rect>
+              </svg>
+              Dashboard
+            </a>
+          </li>
+          </li>
+          <li class="nav-item">
+            <a href="Inicial.html" class="nav-link">
+              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 3h-1a2 2 0 0 0-4 0h-1a2 2 0 0 0-4 0H4"></path>
+              </svg>
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">
+              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0-2.13-9.36"></path>
+              </svg>
+              Refazer Pesquisa
+            </a>
+          </li>                  
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1 class="dashboard-title">Dashboard</h1>
+        
+        <div class="date-range">
+          <label for="date-filter">Período:</label>
+          <select id="date-filter" onchange="updateDashboardData()">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="90">Últimos 3 meses</option>
+            <option value="365">Último ano</option>
+            <option value="all">Todo o período</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- Indicadores Principais (KPIs) -->
+      <section class="key-metrics">
+        <div class="metric-card">
+          <div class="metric-header">
+            <h3 class="metric-title">Total de Pesquisas</h3>
+            <div class="metric-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div id="total-pesquisas" class="metric-value">Carregando...</div>
+          <div id="total-pesquisas-trend" class="metric-trend">
+            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            Calculando...
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <h3 class="metric-title">Idade Média</h3>
+            <div class="metric-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="idade-media" class="metric-value">Carregando...</div>
+          <div id="idade-media-trend" class="metric-trend">          
+            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            Calculando...
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <h3 class="metric-title">Tempo Médio</h3>
+            <div class="metric-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div id="tempo-medio" class="metric-value">Carregando...</div>
+          <div id="tempo-medio-trend" class="metric-trend">
+            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            Calculando...
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <h3 class="metric-title">Ticket Médio</h3>
+            <div class="metric-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="ticket-medio" class="metric-value">Carregando...</div>
+          <div id="ticket-medio-trend" class="metric-trend">          
+            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            Calculando...
+          </div>
+        </div>
+      </section>
+
+      <!-- Gráficos e Rankings -->
+      <section class="charts-section">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Evolução de Respostas</h3>
+            <div class="chart-actions">
+              <button class="chart-action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="19" cy="12" r="1"></circle>
+                  <circle cx="5" cy="12" r="1"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="chart-content">
+            <canvas id="responsesChart"></canvas>
+          </div>
+        </div>
+
+        <div class="rankings-container">
+          <div class="rankings-header">
+            <h3 class="rankings-title">Cervejas Preferidas</h3>
+            <div class="chart-actions">
+              <button class="chart-action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="19" cy="12" r="1"></circle>
+                  <circle cx="5" cy="12" r="1"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <ul id="cervejas-preferidas" class="product-rank-list">
+            <li class="product-rank-item">
+              <div class="product-info">
+                <span class="product-rank">-</span>
+                <div class="product-img">
+                </div>
+                <span class="product-name">Carregando...</span>
+              </div>
+              <span class="product-percent">-</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Heatmap -->
+      <section class="heatmap-section">
+        <div class="chart-header">
+          <h3 class="chart-title">Engajamento por Região</h3>
+          <button class="export-button" onclick="exportData()">Exportar Dados</button>
+        </div>
+        <table class="heatmap-table">
+          <thead>
+            <tr>
+              <th>Região</th>
+              <th>Respostas</th>
+              <th>Taxa Conversão</th>
+              <th>Cervejas Preferidas</th>
+              <th>Idade Média</th>
+              <th>Ticket Médio</th>
+              <th>Data/Hora</th>
+            </tr>
+          </thead>          
+          <tbody id="engajamento-regiao">
+            <tr>
+              <td colspan="4">Carregando dados de regiões...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <footer class="dashboard-footer">
+        &copy; 2025 Ambev • Todos os direitos reservados.
+      </footer>
+    </main>
+  </div>
+
+  <!-- Script para Firebase e carregamento de dados -->
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
+      authDomain: "pesquisa-8a0f9.firebaseapp.com",
+      projectId: "pesquisa-8a0f9",
+      storageBucket: "pesquisa-8a0f9.firebasestorage.app",
+      messagingSenderId: "453188166697",
+      appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+      measurementId: "G-H34QHPSPS1"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.analytics();
+    const db = firebase.firestore();
+  
+    let allSurveyData = [];
+    let responsesChart = null;
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDashboardData();
+      initChartSelector();
+    });
+  
+    function updateDashboardData() {
+      const selectedDays = document.getElementById('date-filter').value;
+  
+      if (allSurveyData.length === 0) {
+        fetchAllSurveyData().then(data => {
+          const filteredData = filterDataByPeriod(data, selectedDays);
+          updateDashboard(filteredData);
+        });
+      } else {
+        const filteredData = filterDataByPeriod(allSurveyData, selectedDays);
+        updateDashboard(filteredData);
+      }
+    }
+  
+    function fetchAllSurveyData() {
+      return db.collection("pesquisas")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then(snapshot => {
+          allSurveyData = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            data.id = doc.id;
+            allSurveyData.push(data);
+          });
+          return allSurveyData;
+        });
+    }
+  
+    function filterDataByPeriod(data, days) {
+      if (days === 'all') return data;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - parseInt(days));
+      return data.filter(d => (d.timestamp instanceof Date ? d.timestamp : d.timestamp.toDate()) >= cutoff);
+    }
+  
+    function calculateTrends(current, previous) {
+      const trends = {};
+  
+      const currentConversions = current.filter(i => i.resultados).length;
+      const previousConversions = previous.filter(i => i.resultados).length;
+  
+      const currentShares = current.filter(i => i.compartilhado).length;
+      const previousShares = previous.filter(i => i.compartilhado).length;
+  
+      const getAvg = (arr, keyMap) => {
+        const values = arr.map(keyMap).filter(n => !isNaN(n));
+        return values.length ? values.reduce((a, b) => a + b) / values.length : 0;
+      };
+  
+      const gastoMap = {
+        "Até R$ 5,00 por unidade": 5,
+        "Entre R$ 6,00 e R$ 7,99": 7,
+        "Entre R$ 8,00 e R$ 9,99": 9,
+        "R$ 10,00 ou mais": 10
+      };
+  
+      const avg = (c, p) => ({
+        current: c.toFixed(1),
+        previous: p.toFixed(1),
+        change: p ? (((c - p) / p) * 100).toFixed(1) : 0
+      });
+  
+      trends.totalPesquisas = avg(current.length, previous.length);
+      trends.taxaConversao = avg(currentConversions / current.length * 100, previousConversions / previous.length * 100);
+      trends.tempoMedio = avg(getAvg(current, () => 180), getAvg(previous, () => 180));
+      trends.compartilhamentos = avg(currentShares, previousShares);
+      trends.idadeMedia = avg(getAvg(current, i => parseInt(i.respostas?.pergunta2)), getAvg(previous, i => parseInt(i.respostas?.pergunta2)));
+      trends.ticketMedio = avg(getAvg(current, i => gastoMap[i.respostas?.pergunta3] || 0), getAvg(previous, i => gastoMap[i.respostas?.pergunta3] || 0));
+  
+      return trends;
+    }
+  
+    function updateDashboard(data) {
+      const days = document.getElementById('date-filter').value;
+      const d = parseInt(days === 'all' ? 365 : days);
+      const now = new Date();
+      const prevStart = new Date(now);
+      const prevEnd = new Date(now);
+      prevStart.setDate(now.getDate() - d * 2);
+      prevEnd.setDate(now.getDate() - d);
+  
+      const prevData = allSurveyData.filter(i => {
+        const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
+        return t >= prevStart && t <= prevEnd;
+      });
+  
+      const trends = calculateTrends(data, prevData);
+  
+      setMetric('total-pesquisas', trends.totalPesquisas);
+      setMetric('taxa-conversao', trends.taxaConversao);
+      setMetric('tempo-medio', trends.tempoMedio, true);
+      setMetric('compartilhamentos', trends.compartilhamentos);
+      setMetric('idade-media', trends.idadeMedia);
+      setMetric('ticket-medio', trends.ticketMedio);
+  
+      renderChart(data);
+      renderCervejaRanking(data);
+      renderRegionalEngajamento(data);
+    }
+  
+    function setMetric(id, { current, change }, invert = false) {
+      const main = document.getElementById(id);
+      const trend = document.getElementById(`${id}-trend`);
+      const val = invert ? parseFloat(change) <= 0 : parseFloat(change) >= 0;
+  
+      if (main) main.textContent = `${current}`;
+      if (trend) {
+        trend.textContent = `${change}% vs D-1`;
+        trend.className = `metric-trend ${val ? 'trend-up' : 'trend-down'}`;
+        const icon = trend.querySelector('svg');
+        if (icon) icon.innerHTML = val ? '<polyline points="18 15 12 9 6 15"></polyline>' : '<polyline points="6 9 12 15 18 9"></polyline>';
+      }
+    }
+  
+    function renderChart(data) {
+      const type = document.getElementById('chart-type')?.value || 'mensal';
+      const { labels, values } = prepareChartData(data, type);
+  
+      if (responsesChart) responsesChart.destroy();
+  
+      const ctx = document.getElementById('responsesChart').getContext('2d');
+      responsesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Respostas',
+            data: values,
+            fill: true,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            tension: 0.3,
+            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(0, 0, 0, 0.05)' }
+            },
+            x: {
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              titleColor: '#333',
+              bodyColor: '#666',
+              borderColor: 'rgba(0, 0, 0, 0.1)',
+              borderWidth: 1,
+              padding: 10,
+              displayColors: false
+            }
+          }
+        }
+      });
+    }
+  
+    function prepareChartData(data, type = 'mensal') {
+      const counts = {};
+      data.forEach(i => {
+        const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
+        let key = '';
+        if (type === 'hora') key = `${t.getHours().toString().padStart(2, '0')}h`;
+        else if (type === 'dia') key = `${t.getDate().toString().padStart(2, '0')}/${(t.getMonth()+1).toString().padStart(2, '0')}`;
+        else key = `${t.getMonth()+1}/${t.getFullYear()}`;
+        counts[key] = (counts[key] || 0) + 1;
+      });
+      const keys = Object.keys(counts).sort();
+      return { labels: keys, values: keys.map(k => counts[k]) };
+    }
+  
+    function initChartSelector() {
+      const header = document.querySelector('.chart-header');
+      if (header) {
+        const select = document.createElement('select');
+        select.id = 'chart-type';
+        select.innerHTML = `
+          <option value="hora">Por hora</option>
+          <option value="dia">Por dia</option>
+          <option value="mensal" selected>Por mês</option>
+        `;
+        select.onchange = updateDashboardData;
+        header.appendChild(select);
+      }
+    }
+  
+    function renderCervejaRanking(data) {
+      const ranking = {};
+      data.forEach(item => {
+        if (item.resultados?.cervejas) {
+          item.resultados.cervejas.forEach(c => {
+            const name = c.toLowerCase().trim();
+            ranking[name] = (ranking[name] || 0) + 1;
+          });
+        }
+      });
+      const total = data.length;
+      const sorted = Object.entries(ranking).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const container = document.getElementById('cervejas-preferidas');
+      container.innerHTML = '';
+      sorted.forEach(([name, count], i) => {
+        container.innerHTML += `
+          <li class="product-rank-item">
+            <div class="product-info">
+              <span class="product-rank">${i + 1}</span>
+              <div class="product-img"><img src="https://via.placeholder.com/50" alt="${name}"></div>
+              <span class="product-name">${name}</span>
+            </div>
+            <span class="product-percent">${((count / total) * 100).toFixed(1)}%</span>
+          </li>`;
+      });
+    }
+  
+    function renderRegionalEngajamento(data) {
+  const regionMap = {};
+
+  data.forEach(item => {
+    const regiao = item.respostas?.pergunta1 || "Desconhecida";
+    const timestamp = item.timestamp instanceof Date ? item.timestamp : item.timestamp?.toDate?.() || new Date();
+
+    const idade = parseInt(item.respostas?.pergunta2);
+    const gastoMap = {
+      "Até R$ 5,00 por unidade": 5,
+      "Entre R$ 6,00 e R$ 7,99": 7,
+      "Entre R$ 8,00 e R$ 9,99": 9,
+      "R$ 10,00 ou mais": 10
+    };
+    const gasto = gastoMap[item.respostas?.pergunta3] || 0;
+    const cervejas = item.resultados?.cervejas?.join(", ") || "-";
+
+    if (!regionMap[regiao]) {
+      regionMap[regiao] = {
+        respostas: 0,
+        conversoes: 0,
+        totalIdade: 0,
+        totalGasto: 0,
+        cervejas: [],
+        timestamps: []
+      };
+    }
+
+    regionMap[regiao].respostas++;
+    if (item.resultados) regionMap[regiao].conversoes++;
+    if (!isNaN(idade)) {
+  regionMap[regiao].totalIdade += idade;
+  regionMap[regiao].contadorIdade = (regionMap[regiao].contadorIdade || 0) + 1;
+}
+    if (!isNaN(gasto)) regionMap[regiao].totalGasto += gasto;
+    if (cervejas !== "-") regionMap[regiao].cervejas.push(cervejas);
+    regionMap[regiao].timestamps.push(timestamp);
+  });
+
+  const tbody = document.getElementById('engajamento-regiao');
+  tbody.innerHTML = '';
+
+  Object.entries(regionMap).forEach(([regiao, r]) => {
+    const taxa = r.respostas ? ((r.conversoes / r.respostas) * 100).toFixed(1) : 0;
+    const idadeMedia = r.totalIdade && r.contadorIdade ? (r.totalIdade / r.contadorIdade).toFixed(1) : '-';
+    const ticketMedio = r.totalGasto && r.respostas ? `R$ ${(r.totalGasto / r.respostas).toFixed(2)}` : '-';
+    const cervejaCount = {};
+r.cervejas.forEach(nome => {
+  nome.split(',').forEach(c => {
+    const limpo = c.trim().toLowerCase();
+    cervejaCount[limpo] = (cervejaCount[limpo] || 0) + 1;
+  });
+});
+const cervejasMaisClicadas = Object.entries(cervejaCount)
+  .sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
+    const dataUltimaResposta = r.timestamps.length ? new Date(Math.max(...r.timestamps.map(t => new Date(t)))).toLocaleString("pt-BR") : '-';
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${regiao}</td>
+        <td>${r.respostas}</td>
+        <td>${taxa}%</td>
+        <td>${cervejasMaisClicadas}</td>
+        <td>${idadeMedia}</td>
+        <td>${ticketMedio}</td>
+        <td>${dataUltimaResposta}</td>
+      </tr>
+    `;
+  });
+}
+function exportData() {
+  const table = document.querySelector(".heatmap-table");
+  const rows = Array.from(table.querySelectorAll("tr"));
+  const csv = rows.map(row => 
+    Array.from(row.querySelectorAll("th, td"))
+      .map(cell => `"${cell.innerText}"`)
+      .join(",")
+  ).join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "engajamento_por_regiao.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+  </script>
+</body>
+
+</html>
