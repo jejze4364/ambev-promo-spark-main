@@ -628,16 +628,15 @@
         }
 
         function initIntegrationButtons() {
-            document.getElementById('connect-ze')?.addEventListener('click', function() {
-                alert('Redirecionando para integração com Zé Delivery...');
-                // Aqui poderia adicionar uma lógica de integração ou redirecionamento
-            });
+        document.getElementById('connect-ze')?.addEventListener('click', function () {
+         window.location.href = "https://www.ze.delivery/conta/entrar";
+         });
 
-            document.getElementById('connect-bees')?.addEventListener('click', function() {
-                alert('Redirecionando para integração com Bees...');
-                // Aqui poderia adicionar uma lógica de integração ou redirecionamento
-            });
+            document.getElementById('connect-bees')?.addEventListener('click', function () {
+            window.location.href = "https://accounts-global1.bees.com/accounts-global1.bees.com/oauth2/v2.0/authorize?p=b2c_1a_signin_br&redirect_uri=https%3A%2F%2Fmybees.com.br%2Fapi%2Fauth%2Fverify&response_type=id_token&response_mode=form_post&client_id=d18a1185-c0ff-4e14-a7c2-ee227a48bbe1&ui_locales=pt-BR&ajs_aid=01d90e0a-435f-4584-a6e1-d308f58aab04&state=CUSTOMDy-MV-FcJaK4F779SlfXqkd3ExApum22%3Flanguage%3Dpt%26country%3DBR%26p%3DB2C_1A_SIGNIN_BR&nonce=H4Cp3J1Mw1r4wxAicY7V_-bnNVPDn-fA&scope=profile%20openid&x-client-SKU=passport-azure-ad&x-client-Ver=4.3.2";
+         });
         }
+
 
         function recoverEssentialFunctions() {
             document.querySelectorAll('.use-coupon').forEach(btn => {
