@@ -447,7 +447,8 @@ function getData() {
       document.querySelector('.progress-fill').style.width = `${percent}%`;
     }
 
-    function loadQuestion() {
+    // Modifique a função loadQuestion para incluir responsividade para mobile
+function loadQuestion() {
   const container = document.getElementById('question-container');
   const q = questions[currentQuestion];
 
@@ -466,9 +467,7 @@ function getData() {
   // Aplica layout em duas colunas na primeira pergunta ou se gridLayout é true
   // (usado para a questão 4 ou outras onde isso faça sentido)
   if (currentQuestion === 0 || q.gridLayout) {
-    optionsDiv.style.display = 'grid';
-    optionsDiv.style.gridTemplateColumns = '1fr 1fr';
-    optionsDiv.style.gap = '1rem';
+    optionsDiv.classList.add('grid-layout');
   }
 
   // Verifica se a pergunta é de múltiplas escolhas
@@ -569,6 +568,18 @@ function getData() {
       margin-bottom: 2rem;
     }
     
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     .checkbox-option {
       padding: 0.9rem;
       border-radius: 8px;
@@ -597,6 +608,7 @@ function getData() {
       margin-right: 10px;
       position: relative;
       transition: all 0.2s ease;
+      flex-shrink: 0;
     }
     
     .checkbox-option.selected .checkbox {
