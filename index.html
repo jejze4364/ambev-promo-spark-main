@@ -101,7 +101,9 @@
   function saveDataToFirebase(data) {
   // Gere um ID único para este registro
   const surveyId = "survey_" + new Date().getTime();
-  
+  const startTime = new Date();
+// Salve startTime junto com os dados da pesquisa
+
   // Adicione timestamp
   data.timestamp = new Date();
 
@@ -137,49 +139,51 @@ function getData() {
     const scores = {};
     const respostas = {};
 
-    // Definindo os objetos necessários para o resultado final
-    const friendlyNames = {
-      brahma: "Brahma",
-      spaten: "Spaten",
-      corona: "Corona",
-      bud: "Budweiser",
-      stella: "Stella Artois",
-      budzero: "Budweiser Zero",
-      coronacero: "Corona Cero",
-      becks: "Beck's",
-      antarctica: "Antarctica",
-      michelob: "Michelob Ultra",
-      brahmazero: "Brahma Zero",
-      skol: "Skol",
-      bohemia: "Bohemia",
-      original: "Original",
-      patagonia: "Patagonia",
-      colorado: "Colorado",
-      lt350: "Lata 350ml",
-      ln: "Long Neck",
-      lt473: "Latão 473ml",
-      lt279: "Latinha 269ml/275ml"
-    };
+   // Objetos corrigidos e sincronizados
+const friendlyNames = {
+  brahma: "Brahma",
+  spaten: "Spaten",
+  corona: "Corona",
+  bud: "Budweiser",
+  stella: "Stella Artois",
+  budzero: "Budweiser Zero",
+  coronacero: "Corona Cero",
+  becks: "Beck's",
+  antarctica: "Antarctica",
+  michelob: "Michelob Ultra",
+  brahmazero: "Brahma Zero",
+  skol: "Skol",
+  bohemia: "Bohemia",
+  original: "Original",
+  patagonia: "Patagonia",
+  colorado: "Colorado",
+  lt350: "Lata 350ml",
+  ln: "Long Neck",
+  lt473: "Latão 473ml",
+  lt279: "Latinha 269ml/275ml",
+  stellapg: "Stella Artois Sem Glúten"
+};
 
-    const beerDescriptions = {
-      brahma: "Sabor marcante e refrescante",
-      spaten: "Puro malte premium alemã",
-      corona: "Refrescante com toque cítrico",
-      bud: "Equilibrada e suave",
-      stella: "Sofisticada e encorpada",
-      stellapg: "Sem Gluten, sem estresse",
-      budzero: "Zero álcool, 100% sabor",
-      coronacero: "Refrescante sem álcool",
-      becks: "Pureza e tradição alemã",
-      antarctica: "Clássica brasileira",
-      michelob: "Leve e baixa caloria",
-      brahmazero: "Refrescante sem álcool",
-      skol: "Leve e refrescante",
-      bohemia: "Primeira cerveja do Brasil",
-      original: "Autêntica e marcante",
-      patagonia: "Premium argentina",
-      colorado: "Artesanal com toques especiais"
-    };
+const beerDescriptions = {
+  brahma: "Sabor marcante e refrescante",
+  spaten: "Puro malte premium alemã",
+  corona: "Refrescante com toque cítrico",
+  bud: "Equilibrada e suave",
+  stella: "Sofisticada e encorpada",
+  budzero: "Zero álcool, 100% sabor",
+  coronacero: "Refrescante sem álcool",
+  becks: "Pureza e tradição alemã",
+  antarctica: "Clássica brasileira",
+  michelob: "Leve e baixa caloria",
+  brahmazero: "Refrescante sem álcool",
+  skol: "Leve e refrescante",
+  bohemia: "Primeira cerveja do Brasil",
+  original: "Autêntica e marcante",
+  patagonia: "Premium argentina",
+  colorado: "Artesanal com toques especiais",
+  stellapg: "Sem Glúten, sem estresse"
+};
+
 
     const packageDescriptions = {
       lt350: "Prática e resfria rapidamente",
@@ -276,36 +280,34 @@ function getData() {
       text: "Até R$ 5,00 por unidade",
       scores: {
         antarctica: 4, brahma: 4, skol: 4,
-        spaten: 3, stella: 3, brahmazero: 3, bohemia: 3,
-        bud: 2, budzero: 2, becks: 2,
-        corona: 1, coronacero: 1, stellapg: 1, patagonia: 1, michelob: 1, colorado: 1
+        spaten: 2, stella: 2, brahmazero: 4, bohemia: 4,
+        bud: 4, budzero: 4
       }
     },
     {
       text: "Entre R$ 6,00 e R$ 7,99",
       scores: {
         antarctica: 3, brahma: 3, skol: 3,
-        spaten: 4, stella: 4, brahmazero: 4, bohemia: 4,
+        spaten: 4, stella: 4, brahmazero: 3, bohemia: 3,
         bud: 4, budzero: 4, becks: 4,
-        corona: 3, coronacero: 3, stellapg: 3, patagonia: 3, michelob: 3, colorado: 3
+        corona: 3, coronacero: 3, stellapg: 3, patagonia: 2, michelob: 2, colorado: 2
       }
     },
     {
       text: "Entre R$ 8,00 e R$ 9,99",
       scores: {
-        antarctica: 3, brahma: 3, skol: 3,
-        spaten: 4, stella: 4, brahmazero: 4, bohemia: 4,
-        bud: 4, budzero: 4, becks: 4,
-        corona: 3, coronacero: 3, stellapg: 3, patagonia: 3, michelob: 3, colorado: 3
+        antarctica: 2, brahma: 2, skol: 2,
+        spaten: 4, stella: 4, brahmazero: 2, bohemia: 4,
+        bud: 2, budzero: 2, becks: 4,
+        corona: 4, coronacero: 4, stellapg: 3, patagonia: 3, michelob: 3, colorado: 3
       }
     },
     {
       text: "R$ 10,00 ou mais",
       scores: {
-        antarctica: 1, brahma: 1, skol: 1,
-        spaten: 2, stella: 2, brahmazero: 2, bohemia: 2,
-        bud: 3, budzero: 3, becks: 3,
-        corona: 4, coronacero: 4, stellapg: 4, patagonia: 4, michelob: 4, colorado: 4
+        spaten: 3, stella: 3,
+        bud: 3, budzero: 3, becks: 4,
+        corona: 3, coronacero: 3, stellapg: 4, patagonia: 4, michelob: 4, colorado: 4
       }
     }
   ],
@@ -320,35 +322,35 @@ function getData() {
   options: [
     {
       text: "Churrasco com amigos e família",
-      scores: { antarctica: 2, brahma: 2, spaten: 4, corona: 4, bud: 3, stella: 1, stellapg: 2, budzero: 3, coronacero: 4, becks: 3, brahmazero: 1, colorado: 3, patagonia: 1, michelob: 2, skol: 1, bohemia: 4 }
+      scores: { antarctica: 4, brahma: 4, brahmazero: 4, skol: 4, bohemia: 4 }
     },
     {
       text: "Happy hours e eventos corporativos",
-      scores: { antarctica: 1, brahma: 4, spaten: 3, corona: 2, bud: 3, stella: 2, stellapg: 3, budzero: 3, coronacero: 4, becks: 2, brahmazero: 4, colorado: 1, patagonia: 1, michelob: 4, skol: 3, bohemia: 1 }
+      scores: { spaten: 4, stella: 4, stellapg: 4, budzero: 4, coronacero: 4, becks: 4, brahmazero: 4, colorado: 4, patagonia: 4, michelob: 4 }
     },
     {
       text: "Festas e celebrações",
-      scores: { antarctica: 1, brahma: 3, spaten: 3, corona: 2, bud: 2, stella: 2, stellapg: 3, budzero: 2, coronacero: 4, becks: 4, brahmazero: 4, colorado: 1, patagonia: 4, michelob: 2, skol: 1, bohemia: 1 }
+      scores: { bud: 4, stella: 3, stellapg: 3, budzero: 4, becks: 4, brahmazero: 4}
     },
     {
       text: "Momentos ao ar livre (praia, piscina)",
-      scores: { antarctica: 3, brahma: 3, spaten: 4, corona: 1, bud: 2, stella: 2, stellapg: 4, budzero: 3, coronacero: 1, becks: 4, brahmazero: 3, colorado: 1, patagonia: 2, michelob: 1, skol: 4, bohemia: 1 }
+      scores: { corona: 4, budzero: 3, coronacero: 4, brahmazero: 3, michelob: 4 }
     },
     {
       text: "Jantares e Harmonizações",
-      scores: { antarctica: 2, brahma: 4, spaten: 2, corona: 3, bud: 1, stella: 3, stellapg: 2, budzero: 4, coronacero: 1, becks: 4, brahmazero: 2, colorado: 2, patagonia: 4, michelob: 3, skol: 4, bohemia: 3 }
+      scores: { stella: 4, stellapg: 4, colorado: 4, patagonia: 4 }
     },
     {
       text: "Assistindo a jogos de futebol",
-      scores: { antarctica: 1, brahma: 2, spaten: 1, corona: 2, bud: 1, stella: 3, stellapg: 2, budzero: 3, coronacero: 4, becks: 1, brahmazero: 3, colorado: 2, patagonia: 4, michelob: 3, skol: 3, bohemia: 4 }
+      scores: { antarctica: 4, brahma: 4, spaten: 3, budzero: 3, coronacero: 3, brahmazero: 3 }
     },
     {
       text: "Encontros românticos",
-      scores: { antarctica: 4, brahma: 2, spaten: 2, corona: 3, bud: 2, stella: 2, stellapg: 1, budzero: 4, coronacero: 1, becks: 2, brahmazero: 4, colorado: 1, patagonia: 3, michelob: 3, skol: 4, bohemia: 1 }
+      scores: { stella: 4, stellapg: 4, colorado: 4, patagonia: 4 }
     },
     {
       text: "Relaxando em casa após o trabalho",
-      scores: { antarctica: 2, brahma: 4, spaten: 2, corona: 1, bud: 3, stella: 1, stellapg: 3, budzero: 1, coronacero: 4, becks: 3, brahmazero: 4, colorado: 2, patagonia: 1, michelob: 1, skol: 4, bohemia: 4 }
+      scores: { antarctica: 4, brahma: 4, spaten: 4, corona: 4, bud: 4 }
     }
   ]
    }, // <-- ISSO FALTAVA
@@ -357,8 +359,8 @@ function getData() {
   description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
   options: [
     { text: "Sim, prefiro cervejas zero álcool", scores: { budzero: 30, coronacero: 30, brahmazero: 30 } },
-    { text: "Não, prefiro cervejas tradicionais", scores: { brahma: 30, bud: 30, corona: 30, stella: 30 } },
-    { text: "Estou aberto a experimentar opções zero", scores: { budzero: 20, coronacero: 20, brahmazero: 20, brahma: 10, corona: 10 } }
+    { text: "Não, prefiro cervejas tradicionais", scores: { } },
+    { text: "Estou aberto a experimentar opções zero", scores: { budzero: 20, coronacero: 20, brahmazero: 20, michelob: 20, stellapg: 20 } }
   ],
   multipleChoice: false
   },
@@ -675,7 +677,7 @@ function updateSelectionCounter(questionIndex, selectedCount, required) {
           ${topBeers.map(([beer], index) => `
             <div class="beer-card ${index === 0 ? 'top-match' : ''}">
               <div class="beer-image">
-                <img src="img/${beer}.jpg" alt="${friendlyNames[beer]}" />
+                <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
                 ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
               </div>
               <div class="beer-info">
