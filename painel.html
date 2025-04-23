@@ -513,16 +513,48 @@
 
 document.getElementById("tempo-medio").innerText = tempos.length ? `${(tempos.reduce((a, b) => a + b) / tempos.length).toFixed(0)}s` : "-";
 
-    async function fetchAllData() {
-      const snapshot = await db.collection("pesquisas").get();
-      allSurveyData = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        data.id = doc.id;
-        allSurveyData.push(data);
-      });
-    }
+    // Em vez de carregar tudo de uma vez
+async function fetchAllData(limit = 50, lastDoc = null) {
+  let query = db.collection("pesquisas").orderBy("timestamp", "desc").limit(limit);
   
+  if (lastDoc) {
+    query = query.startAfter(lastDoc);
+  }
+  
+  const snapshot = await query.get();
+  const lastVisible = snapshot.docs[snapshot.docs.length-1];
+  
+  // Retorne o último documento para paginação futura
+  return {
+    data: snapshot.docs.map(doc => {
+      const data = doc.data();
+      data.id = doc.id;
+      return data;
+    }),
+    lastDoc: lastVisible
+  };
+}
+const memoizedResults = {};
+
+function getMemoizedCalculation(key, calculation) {
+  if (!memoizedResults[key]) {
+    memoizedResults[key] = calculation();
+  }
+  return memoizedResults[key];
+}
+function throttle(func, delay) {
+  let lastCall = 0;
+  return function(...args) {
+    const now = new Date().getTime();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      func(...args);
+    }
+  };
+}
+
+const throttledUpdate = throttle(updateDashboardData, 300);
+// Use throttledUpdate nos event listeners
     function fillDynamicFilters() {
       const regions = new Set();
       const beers = new Set();

@@ -101,7 +101,8 @@ const beerDescriptions = {
 
 const questions = [
   {
-    question: "Em qual desses municipios você costuma fazer suas compras de supermercado?",
+    question: "Em qual desses municípios você costuma fazer suas compras de supermercado?",
+    dropdown: true, // <- chave nova para renderizar como <select>
     options: [
       { text: "Rio de Janeiro", scores: {} },
       { text: "São Gonçalo", scores: {} },
@@ -116,7 +117,7 @@ const questions = [
       { text: "Outro(s)", scores: {} }
     ],
     multipleChoice: false
-  },
+  },  
   
   // Pergunta 2 - Faixa etária (sem pontuação)
   {
@@ -292,6 +293,7 @@ const questions = [
         becks: 14, antarctica: 14, skol: 14, bohemia: 14, 
         patagonia: 14, colorado: 14, original: 14
       } 
+      
     },
     { 
       text: "Estou aberto a experimentar opções zero", 
@@ -307,7 +309,43 @@ const questions = [
     }
   ],
   multipleChoice: false
+},
+{
+  question: "Com que frequência você consome cerveja?",
+  description: "Essa informação nos ajuda a entender melhor seu perfil de consumo.",
+  options: [
+    {
+      text: "Todos os dias",
+      scores: {
+        brahma: 12, skol: 12, antarctica: 12,
+        michelob: 10, brahmazero: 8, budzero: 8
+      }
+    },
+    {
+      text: "De 2 a 3 vezes por semana",
+      scores: {
+        bud: 12, stella: 12, spaten: 12,
+        michelob: 12, corona: 10, brahmazero: 6
+      }
+    },
+    {
+      text: "Apenas em eventos e ocasiões especiais",
+      scores: {
+        corona: 12, patagonia: 12, colorado: 12,
+        stella: 10, becks: 10, bohemia: 8
+      }
+    },
+    {
+      text: "Raramente ou nunca",
+      scores: {
+        budzero: 18, coronacero: 18, brahmazero: 18,
+        michelob: 18, stellapg: 18
+      }
+    }
+  ],
+  multipleChoice: false
 }
+
 ];
 function verifyAge(ok) {
   const ageModal = document.getElementById('age-modal');
@@ -359,9 +397,55 @@ optionsDiv.classList.add('options-container');
 if (currentQuestion === 0 || q.gridLayout) {
 optionsDiv.classList.add('grid-layout');
 }
+// Verifica se é dropdown
+if (q.dropdown) {
+  const select = document.createElement('select');
+  select.classList.add('dropdown-select');
+
+  // Placeholder
+  const placeholder = document.createElement('option');
+  placeholder.textContent = 'Selecione um município';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+
+  // Adiciona opções do dropdown
+  q.options.forEach((opt, i) => {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = opt.text;
+    select.appendChild(option);
+  });
+
+  const continueBtn = document.createElement('button');
+  continueBtn.textContent = 'Continuar';
+  continueBtn.classList.add('btn-continue');
+
+  continueBtn.onclick = () => {
+    const selectedIdx = select.value;
+    if (selectedIdx === '') return alert('Por favor, selecione um município.');
+
+    const opt = q.options[selectedIdx];
+    respostas[`pergunta${currentQuestion + 1}`] = opt.text;
+    document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+
+    // Nenhuma pontuação atribuída nesse caso, mas se quiser somar, pode ativar abaixo:
+    Object.entries(opt.scores).forEach(([key, value]) => {
+      scores[key] = (scores[key] || 0) + value;
+    });
+
+    nextQuestion();
+  };
+
+  optionsDiv.appendChild(select);
+  optionsDiv.appendChild(continueBtn);
+  container.appendChild(optionsDiv);
+  return; // Interrompe o resto do render padrão
+}
 
 // Verifica se a pergunta é de múltiplas escolhas
 if (q.multipleChoice) {
+  
 q.options.forEach((opt, i) => {
   const label = document.createElement('label');
   label.classList.add('checkbox-option');
@@ -622,25 +706,21 @@ container.innerHTML = `
     <h3>Compartilhe Seu Resultado</h3>
     <div class="share-buttons">
       <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        Facebook
+      <i class="fab fa-facebook-f"></i> Facebook
       </a>
       <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-8.5-8.5 8.38 8.38 0 0 1 3.8.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        WhatsApp
+        <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
       <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 114.9-114.9S287.6 141 224.1 141z"/></svg>
-        Instagram
-      </a>
+      <i class="fab fa-instagram"></i> Instagram
+    </a>
     </div>
   </div>
 
   <div class="try-again-section">
-    <button class="btn-outline" onclick="location.reload()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 2v6h6"/></svg>
-      Fazer o Teste Novamente
-    </button>
+  <button class="btn-outline" onclick="location.reload()">
+    <i class="fas fa-redo-alt"></i> Fazer o Teste Novamente
+  </button>
   </div>
 </div>
 `;
