@@ -1,677 +1,653 @@
-const sumScores = (scores) => {
-  // Apenas retorna os scores para manter a estrutura
-  return scores;
+const firebaseConfig = {
+apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
+authDomain: "pesquisa-8a0f9.firebaseapp.com",
+projectId: "pesquisa-8a0f9",
+storageBucket: "pesquisa-8a0f9.firebasestorage.app",
+messagingSenderId: "453188166697",
+appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+measurementId: "G-H34QHPSPS1"
+};
+// Inicializa o Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics();
+const db = firebase.firestore();
+
+function saveDataToFirebase(data) {
+// Gere um ID único para este registro
+const surveyId = "survey_" + new Date().getTime();
+const startTime = new Date();
+// Salve startTime junto com os dados da pesquisa
+
+// Adicione timestamp
+data.timestamp = new Date();
+
+// Salvar no Firestore
+return db.collection("pesquisas").doc(surveyId).set(data)
+.then(() => {
+  console.log("Dados salvos com sucesso no Firebase!");
+  return true;
+})
+.catch((error) => {
+  console.error("Erro ao salvar dados:", error);
+  return false;
+});
+}
+function getData() {
+const db = firebase.firestore();
+
+// Acessar a coleção "pesquisas" no Firestore
+db.collection("pesquisas").get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      // Exibindo os dados de cada documento no console
+      console.log("ID do Documento:", doc.id);
+      console.log("Dados do Documento:", doc.data());
+    });
+  })
+  .catch((error) => {
+    console.error("Erro ao obter dados do Firestore:", error);
+  });
+}
+// Declaração de variáveis globais
+let currentQuestion = 0;
+const scores = {};
+const respostas = {};
+
+// Objetos corrigidos e sincronizados
+const friendlyNames = {
+  brahma: "Brahma",
+  spaten: "Spaten",
+  corona: "Corona",
+  bud: "Budweiser",
+  stella: "Stella Artois",
+  budzero: "Budweiser Zero",
+  coronacero: "Corona Cero",
+  becks: "Beck's",
+  antarctica: "Antarctica",
+  michelob: "Michelob Ultra",
+  brahmazero: "Brahma Zero",
+  skol: "Skol",
+  bohemia: "Bohemia",
+  original: "Original",
+  patagonia: "Patagonia",
+  colorado: "Colorado",
+  lt350: "Lata 350ml",
+  ln: "Long Neck",
+  lt473: "Latão 473ml",
+  lt279: "Latinha 269ml/275ml",
+  stellapg: "Stella Artois Sem Glúten"
 };
 
-// Questões e opções permanecem as mesmas
+const beerDescriptions = {
+  brahma: "Sabor marcante e refrescante",
+  spaten: "Puro malte premium alemã",
+  corona: "Refrescante com toque cítrico",
+  bud: "Equilibrada e suave",
+  stella: "Sofisticada e encorpada",
+  budzero: "Zero álcool, 100% sabor",
+  coronacero: "Refrescante sem álcool",
+  becks: "Pureza e tradição alemã",
+  antarctica: "Clássica brasileira",
+  michelob: "Leve e baixa caloria",
+  brahmazero: "Refrescante sem álcool",
+  skol: "Leve e refrescante",
+  bohemia: "Primeira cerveja do Brasil",
+  original: "Autêntica e marcante",
+  patagonia: "Premium argentina",
+  colorado: "Artesanal com toques especiais",
+  stellapg: "Sem Glúten, sem estresse"
+};
+
+
 const questions = [
   {
+    question: "Em qual desses municipios você costuma fazer suas compras de supermercado?",
+    options: [
+      { text: "Rio de Janeiro", scores: {} },
+      { text: "São Gonçalo", scores: {} },
+      { text: "Duque de Caxias", scores: {} },
+      { text: "Nova Iguaçu", scores: {} },
+      { text: "Belford Roxo", scores: {} },
+      { text: "Niterói", scores: {} },
+      { text: "Campos dos Goytacazes", scores: {} },
+      { text: "São João de Meriti", scores: {} },
+      { text: "Volta Redonda", scores: {} },
+      { text: "Petrópolis", scores: {} },
+      { text: "Outro(s)", scores: {} }
+    ],
+    multipleChoice: false
+  },
+  
+  // Pergunta 2 - Faixa etária (sem pontuação)
+  {
     question: "Qual a sua faixa etária?",
+    description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
     options: [
-      { 
-        text: "De 18 a 27 anos", 
-        scores: sumScores({ 
-          brahma: 20, spaten: 15, corona: 25, bud: 25, stella: 15,
-          budzero: 20, coronacero: 25, becks: 20, michelob: 25, brahmazero: 20
-        }) 
+      {
+        text: "18 a 27 anos",
+        scores: {}
       },
-      { 
-        text: "De 28 a 37 anos", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 25, corona: 20, bud: 20, stella: 25,
-          budzero: 15, coronacero: 15, becks: 25, michelob: 20, brahmazero: 15
-        }) 
+      {
+        text: "28 a 37 anos",
+        scores: {}
       },
-      { 
-        text: "De 38 a 45 anos", 
-        scores: sumScores({ 
-          brahma: 20, spaten: 25, corona: 15, bud: 15, stella: 25,
-          budzero: 25, coronacero: 20, becks: 20, michelob: 15, brahmazero: 25
-        }) 
+      {
+        text: "38 a 45 anos",
+        scores: {}
       },
-      { 
-        text: "Mais de 45 anos", 
-        scores: sumScores({ 
-          brahma: 15, spaten: 20, corona: 15, bud: 10, stella: 20,
-          budzero: 25, coronacero: 25, becks: 15, michelob: 15, brahmazero: 25
-        }) 
+      {
+        text: "Acima de 45 anos",
+        scores: {}
       }
-    ],
-    multipleChoice: false, // Adicionado para clareza
-  },
-  {
-    question: "Quanto você costuma gastar em uma cerveja? (unidade)",
-    options: [
-      { 
-        text: "Até R$ 5", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 10, corona: 10, bud: 20, stella: 10, 
-          budzero: 15, coronacero: 5, becks: 5, antarctica: 25, michelob: 5, brahmazero: 25, 
-          skol: 25, bohemia: 25, original: 15, patagonia: 5, colorado: 5,
-        }) 
-      },
-      { 
-        text: "Entre R$ 6 e R$ 7", 
-        scores: sumScores({ 
-          brahma: 20, spaten: 20, corona: 20, bud: 25, stella: 20, 
-          budzero: 25, coronacero: 15, becks: 10, antarctica: 10, michelob: 15, brahmazero: 15,
-          skol: 20, bohemia: 20, original: 25, patagonia: 10, colorado: 10,
-        }) 
-      },
-      { 
-        text: "Entre R$ 8 e R$ 9", 
-        scores: sumScores({ 
-          brahma: 10, spaten: 25, corona: 25, bud: 20, stella: 15, 
-          budzero: 10, coronacero: 20, becks: 20, antarctica: 5, michelob: 20, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 20, patagonia: 15, colorado: 15,
-        }) 
-      },
-      { 
-        text: "Mais de R$ 10", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 20, corona: 25, bud: 5, stella: 15, 
-          budzero: 5, coronacero: 25, becks: 45, antarctica: 5, michelob: 45, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 5, patagonia: 45, colorado: 45,
-        }) 
-      },
-    ],
-    multipleChoice: false, // Adicionado para clareza
-  },  
-  {
-    question: "Selecione 3 tipos de ocasiões em que você mais consome cerveja?",
-    options: [
-      { 
-        text: "Churrasco com família ou amigos", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 15, corona: 15, bud: 20, stella: 20, 
-          budzero: 10, coronacero: 10, becks: 10, antarctica: 20, michelob: 5, brahmazero: 10,
-          skol: 20, bohemia: 15, original: 20, patagonia: 5, colorado: 5,
-        }) 
-      },
-      { 
-        text: "Eventos de trabalho", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 10, corona: 15, bud: 10, stella: 10, 
-          budzero: 20, coronacero: 20, becks: 10, antarctica: 5, michelob: 20, brahmazero: 15,
-          skol: 5, bohemia: 5, original: 5, patagonia: 25, colorado: 25,
-          
-        }) 
-      },
-      { 
-        text: "Eventos noturnos ou festas", 
-        scores: sumScores({ 
-          brahma: 15, spaten: 20, corona: 5, bud: 20, stella: 5, 
-          budzero: 5, coronacero: 5, becks: 25, antarctica: 5, michelob: 5, brahmazero: 10,
-          skol: 5, bohemia: 5, original: 5, patagonia: 10, colorado: 5,
-        }) 
-      },
-      { 
-        text: "Momentos ao ar livre, como trilhas ou piqueniques", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 5, corona: 25, bud: 5, stella: 15, 
-          budzero: 5, coronacero: 25, becks: 5, antarctica: 5, michelob: 15, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 5, patagonia: 20, colorado: 5, 
-        }) 
-      },
-      { 
-        text: "Festivais e eventos musicais", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 5, corona: 20, bud: 25, stella: 5, 
-          budzero: 15, coronacero: 15, becks: 25, antarctica: 5, michelob: 5, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 5, patagonia: 5, colorado: 5,  
-        }) 
-      },
-      { 
-        text: "Jantares ou experiências gastronômicas", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 5, corona: 15, bud: 5, stella: 25, 
-          budzero: 5, coronacero: 15, becks: 10, antarctica: 5, michelob: 20, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 5, patagonia: 20, colorado: 25,   
-        }) 
-      },
-      { 
-        text: "Acompanhando jogos de futebol", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 5, corona: 5, bud: 20, stella: 5, 
-          budzero: 5, coronacero: 5, becks: 5, antarctica: 20, michelob: 5, brahmazero: 20,
-          skol: 20, bohemia: 15, original: 15, patagonia: 5, colorado: 5,
-        }) 
-      },
-      { 
-        text: "Acompanhando lutas", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 25, corona: 5, bud: 5, stella: 5, 
-          budzero: 5, coronacero: 5, becks: 5, antarctica: 5, michelob: 5, brahmazero: 5,
-          skol: 5, bohemia: 5, original: 5, patagonia: 5, colorado: 5, 
-        }) 
-      },
-      { 
-        text: "Acompanhando atividades físicas diversas", 
-        scores: sumScores({ 
-          brahma: 15, spaten: 15, corona: 25, bud: 5, stella: 5, 
-          budzero: 15, coronacero: 15, becks: 5, antarctica: 5, michelob: 20, brahmazero: 15,
-          skol: 5, bohemia: 5, original: 5, patagonia: 5, colorado: 5,  
-        }) 
-      },
-      { 
-        text: "Após (ou até durante) aquela corrida", 
-        scores: sumScores({ 
-          brahma: 5, spaten: 5, corona: 20, bud: 5, stella: 15, 
-          budzero: 20, coronacero: 20, becks: 5, antarctica: 5, michelob: 25, brahmazero: 15,
-          skol: 5, bohemia: 5, original: 5, patagonia: 5, colorado: 5,  
-        }) 
-      },
-      { 
-        text: "Assistindo eventos esportivos", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 20, corona: 5, bud: 10, stella: 5, 
-          budzero: 5, coronacero: 5, becks: 5, antarctica: 20, michelob: 5, brahmazero: 20,
-          skol: 5, bohemia: 5, original: 5, patagonia: 5, colorado: 5,  
-        }) 
-      },
-    ],
-    multipleChoice: true,
-    requiredChoices: 3 // Adicionado para validar o número exato de opções
-  },
-  {
-    question: "Qual o perfil de sabor que você prefere?",
-    options: [
-      { 
-        text: "Leve e refrescante", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 15, corona: 25, bud: 25, stella: 20, 
-          budzero: 25, coronacero: 20, becks: 15, antarctica: 25, michelob: 20, brahmazero: 20,
-          skol: 25, bohemia: 20, original: 25, patagonia: 15, colorado: 5,
-        }) 
-      },
-      { 
-        text: "Moderado e equilibrado", 
-        scores: sumScores({ 
-          brahma: 20, spaten: 25, corona: 25, bud: 20, stella: 15, 
-          budzero: 20, coronacero: 15, becks: 25, antarctica: 20, michelob: 20, brahmazero: 15,
-          skol: 15, bohemia: 20, original: 20, patagonia: 20, colorado: 25,
-        }) 
-      },
-      { 
-        text: "Marcante e encorpado", 
-        scores: sumScores({ 
-          brahma: 15, spaten: 25, corona: 5, bud: 10, stella: 5, 
-          budzero: 10, coronacero: 10, becks: 25, antarctica: 10, michelob: 15, brahmazero: 10,
-          skol: 10, bohemia: 10, original: 25, patagonia: 25, colorado: 25,
-        }) 
-      },
-      { 
-        text: "Flexível, depende da ocasião", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 5, corona: 15, bud: 20, stella: 25, 
-          budzero: 15, coronacero: 20, becks: 25, antarctica: 10, michelob: 25, brahmazero: 15,
-          skol: 25, bohemia: 25, original: 15, patagonia: 25, colorado: 25,  
-        }) 
-      },
     ],
     multipleChoice: false
   },
-  {
-    question: "Você quer uma cerveja zero álcool?",
-    options: [
-      { 
-        text: "Sim", 
-        scores: sumScores({ 
-          budzero: 25, coronacero: 25, michelob: 20, brahmazero: 25,
-        }) 
-      },
-      { 
-        text: "Não", 
-        scores: sumScores({ 
-          brahma: 25, spaten: 25, corona: 25, bud: 25, stella: 25, becks: 25, antarctica: 25, michelob: 25,
-          skol: 25, bohemia: 25, original: 25, patagonia: 25, colorado: 25,
-        }) 
-      },
-      { 
-        text: "Nunca provei", 
-        scores: sumScores({ 
-          budzero: 5, coronacero: 10, michelob: 10, brahmazero: 5,
-        }) 
-      },
-    ],
-    multipleChoice: false
-  },
-  {
-    question: "Qual sua embalagem preferida para a cerveja?",
-    options: [
-      { text: "Lata 350 ml", scores: sumScores({ lt350: 1 }) },
-      { text: "Long Neck", scores: sumScores({ ln: 100 }) },
-      { text: "Lata 473 ml (Latão)", scores: sumScores({ lt473: 1 }) },
-      { text: "Lata 279 ml (Latinha)", scores: sumScores({ lt279: 1 }) },
-      { 
-        text: "Outro", 
-        scores: sumScores({ lt350: 0 }), 
-        isOther: true
+
+  // Pergunta 3 - Faixa de preço (30% dos pontos totais - máximo ~30 pontos)
+{
+  question: "Quanto você normalmente gasta em uma cerveja no mercado?",
+  description: "Valor médio por unidade que você costuma pagar.",
+  options: [
+    {
+      text: "Até R$ 4,00 por unidade",
+      scores: {
+        antarctica: 18, brahma: 18, skol: 18, bohemia: 18, original: 18,
+        spaten: 14, stella: 9, brahmazero: 18, 
+        bud: 18, budzero: 18, becks: 5,
+        corona: 9, coronacero: 9, stellapg: 5, patagonia: 5, michelob: 5, colorado: 5
       }
-    ],
-    multipleChoice: false,
-  }
+    },
+    {
+      text: "Entre R$ 4,00 e R$ 5,99 por unidade",
+      scores: {
+        antarctica: 14, brahma: 14, skol: 14, bohemia: 14, original: 14,
+        spaten: 18, stella: 14, brahmazero: 14, 
+        bud: 14, budzero: 14, becks: 9,
+        corona: 14, coronacero: 14, stellapg: 9, patagonia: 9, michelob: 9, colorado: 9
+      }
+    },
+    {
+      text: "Entre R$ 6,00 e R$ 7,99 por unidade",
+      scores: {
+        antarctica: 9, brahma: 9, skol: 9, bohemia: 9, original: 9,
+        spaten: 9, stella: 18, brahmazero: 9, 
+        bud: 9, budzero: 9, becks: 18,
+        corona: 18, coronacero: 18, stellapg: 18, patagonia: 18, michelob: 18, colorado: 18
+      }
+    },
+    {
+      text: "R$ 8,00 ou mais por unidade",
+      scores: {
+        antarctica: 5, brahma: 5, skol: 5, bohemia: 5, original: 5,
+        spaten: 5, stella: 18, brahmazero: 5, 
+        bud: 9, budzero: 9, becks: 18,
+        corona: 14, coronacero: 14, stellapg: 18, patagonia: 23, michelob: 14, colorado: 23
+      }
+    }
+  ],
+  multipleChoice: false
+},
+
+// Pergunta 4 - Ocasiões (40% dos pontos totais - máximo de 40 pontos)
+{
+  question: "Em quais ocasiões você mais gosta de apreciar uma cerveja?(Escolha 3)",
+  description: "Selecione as 3 principais ocasiões que combinam com o seu estilo.",
+  multipleChoice: true,
+  requiredChoices: 3,
+  gridLayout: true,
+  options: [
+    {
+      text: "Churrasco com amigos e família",
+      scores: { 
+        antarctica: 13, brahma: 13, skol: 13, bohemia: 10, original: 13,
+        spaten: 10, bud: 8, michelob: 8, budzero: 8, brahmazero: 8
+      }
+    },
+    {
+      text: "Happy hours e eventos corporativos",
+      scores: { 
+        spaten: 13, stella: 13, stellapg: 13, becks: 13, 
+        corona: 10, bud: 10,
+        budzero: 10, coronacero: 10, brahmazero: 10, michelob: 13
+      }
+    },
+    {
+      text: "Festas e celebrações",
+      scores: { 
+        bud: 13, stella: 10, skol: 13, corona: 13, brahma: 10,
+        budzero: 8, coronacero: 8, becks: 10, brahmazero: 8
+      }
+    },
+    {
+      text: "Momentos ao ar livre (praia, piscina)",
+      scores: { 
+        corona: 13, coronacero: 13, skol: 10, brahma: 8, 
+        budzero: 10, brahmazero: 10, michelob: 13, antarctica: 8, bud: 10
+      }
+    },
+    {
+      text: "Jantares e Harmonizações",
+      scores: { 
+        stella: 13, stellapg: 13, colorado: 13, patagonia: 13,
+        becks: 10, bohemia: 10, spaten: 10, original: 10
+      }
+    },
+    {
+      text: "Assistindo a jogos de futebol",
+      scores: { 
+        antarctica: 13, brahma: 13, skol: 13, bud: 10, spaten: 8,
+        budzero: 10, coronacero: 8, brahmazero: 10
+      }
+    },
+    {
+      text: "Encontros românticos",
+      scores: { 
+        stella: 13, stellapg: 13, colorado: 13, patagonia: 13,
+        becks: 10, bohemia: 8, spaten: 8, corona: 10
+      }
+    },
+    {
+      text: "Relaxando em casa após o trabalho",
+      scores: { 
+        antarctica: 10, brahma: 10, spaten: 10, bud: 10,
+        bohemia: 13, original: 13, coronacero: 8, brahmazero: 8,
+        budzero: 8, michelob: 10
+      }
+    }
+  ]
+},
+
+// Pergunta 5 - Zero álcool (30% dos pontos totais - máximo 30 pontos)
+{
+  question: "Você tem interesse em opções zero álcool?",
+  description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
+  options: [
+    { 
+      text: "Sim, prefiro cervejas zero álcool", 
+      scores: { 
+        // Garante que cervejas zero álcool sejam recomendadas
+        budzero: 18, coronacero: 18, brahmazero: 18, 
+        
+        // Penaliza cervejas com álcool para não serem recomendadas
+        bud: -100, corona: -100, brahma: -100,
+        stella: -100, spaten: -100, becks: -100, 
+        antarctica: -100, skol: -100, bohemia: -100,
+        patagonia: -100, colorado: -100, original: -100,
+        
+        // Penaliza menos as opções de baixo teor
+        michelob: -50, stellapg: -30
+      } 
+    },
+    { 
+      text: "Não, prefiro cervejas tradicionais", 
+      scores: { 
+        // Penaliza fortemente cervejas zero
+        budzero: -200, coronacero: -200, brahmazero: -200, 
+        
+        // Penaliza menos as opções de baixo teor
+        michelob: -100, stellapg: -30,
+        
+        // Aumenta levemente as cervejas tradicionais (14 pontos)
+        bud: 14, corona: 14, brahma: 14, stella: 14, spaten: 14,
+        becks: 14, antarctica: 14, skol: 14, bohemia: 14, 
+        patagonia: 14, colorado: 14, original: 14
+      } 
+    },
+    { 
+      text: "Estou aberto a experimentar opções zero", 
+      scores: { 
+        // Cervejas zero álcool pontuação positiva
+        budzero: 6, coronacero: 8, brahmazero: 4,
+        
+        
+        
+        // Opções intermediárias
+        michelob: 4, stellapg: 4
+      } 
+    }
+  ],
+  multipleChoice: false
+}
 ];
-
-const pages = {
-  brahma: "brahma.html",
-  spaten: "spaten.html",
-  corona: "corona.html",
-  bud: "budweiser.html",
-  stella: "stella.html",
-  budzero: "budzero.html",
-  coronacero: "coronacero.html",
-  becks: "becks.html",
-  antarctica: "antarctica.html",
-  michelob: "michelob.html",
-  brahmazero: "brahmazero.html",
-  skol: "skol.html",
-  bohemia: "bohemia.html",
-  original: "original.html",
-  patagonia: "patagonia.html",
-  colorado: "colorado.html"
-};
-
-const friendlyNames = {
-  skol: "Skol", 
-  bohemia: "Bohemia", 
-  original: "Original", 
-  patagonia: "Patagonia", 
-  colorado: "Colorado",
-  brahma: "Brahma", 
-  spaten: "Spaten", 
-  corona: "Corona", 
-  bud: "Budweiser", 
-  stella: "Stella Artois", 
-  budzero: "Bud Zero",
-  coronacero: "Corona Cero", 
-  becks: "Beck's", 
-  antarctica: "Antarctica", 
-  lt350: "Lata 350ml",
-  ln: "Long Neck", 
-  lt473: "Lata 473ml (Latão)", 
-  lt279: "Lata 279ml (Latinha)", 
-  michelob: "Michelob Ultra", 
-  brahmazero: "Brahma Zero",
-};
-
-// Estado inicial
-let currentQuestion = 0;
-let preferredPackaging = '';
-const scores = {
-  skol: 0, bohemia: 0, original: 0, patagonia: 0, colorado: 0,
-  brahma: 0, spaten: 0, corona: 0, bud: 0, stella: 0, budzero: 0, coronacero: 0,
-  becks: 0, antarctica: 0, lt350: 0, ln: 0, lt473: 0, lt279: 0, michelob: 0, brahmazero: 0,
-};
-
-let questionHistory = [];
-let questionScores = []; // Para acompanhar os scores por questão
-
-function loadQuestion() {
-  const questionContainer = document.getElementById("question-container");
-  if (!questionContainer) return; // Cláusula de proteção para container ausente
+function verifyAge(ok) {
+  const ageModal = document.getElementById('age-modal');
+  const container = document.querySelector('.container');
   
-  questionContainer.innerHTML = "";
-  const question = questions[currentQuestion];
-  const questionTitle = document.createElement("h2");
-  questionTitle.innerText = question.question;
-  questionContainer.appendChild(questionTitle);
+  ageModal.style.display = 'none';
+  container.style.display = 'flex';
 
-  if (question.multipleChoice) {
-    renderMultipleChoice(question, questionContainer);
+  if (ok) {
+    loadQuestion();
+    updateProgressBar();
   } else {
-    renderSingleChoice(question, questionContainer);
-  }
-
-  if (currentQuestion > 0) {
-    const backButton = document.createElement("button");
-    backButton.innerText = "Voltar";
-    backButton.addEventListener("click", goBack);
-    backButton.classList.add("voltar");
-    questionContainer.appendChild(backButton);
+    document.querySelector('.container').innerHTML = `
+      <div style="text-align:center; padding: 3rem 1rem;">
+        <h2>Conteúdo restrito para maiores de 18 anos</h2>
+        <p>De acordo com a legislação brasileira, o consumo de bebidas alcoólicas só é permitido para maiores de 18 anos.</p>
+        <a href="#" onclick="location.reload()" class="btn-primary">Voltar</a>
+      </div>
+    `;
   }
 }
 
-function renderMultipleChoice(question, container) {
-  const optionsContainer = document.createElement("div");
-  optionsContainer.classList.add("options-container");
-  
-  // Configuração específica para a questão 2 (índice atual é 2)
-  if (currentQuestion === 2) {
-    optionsContainer.dataset.question = "2";
+function updateProgressBar() {
+  const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
+  document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+  document.getElementById('progress-percent').textContent = `${percent}%`;
+  document.querySelector('.progress-fill').style.width = `${percent}%`;
+}
+
+// Modifique a função loadQuestion para incluir responsividade para mobile
+function loadQuestion() {
+const container = document.getElementById('question-container');
+const q = questions[currentQuestion];
+
+container.innerHTML = ''; // Limpa o conteúdo atual
+
+let questionContent = `
+<h2>${q.question}</h2>
+${q.description ? `<p style="color: var(--text-light); margin-bottom: 1.5rem;">${q.description}</p>` : ''}
+`;
+
+container.innerHTML = questionContent;  // Adiciona o conteúdo da pergunta ao container
+
+const optionsDiv = document.createElement('div');
+optionsDiv.classList.add('options-container');
+
+// Aplica layout em duas colunas na primeira pergunta ou se gridLayout é true
+// (usado para a questão 4 ou outras onde isso faça sentido)
+if (currentQuestion === 0 || q.gridLayout) {
+optionsDiv.classList.add('grid-layout');
+}
+
+// Verifica se a pergunta é de múltiplas escolhas
+if (q.multipleChoice) {
+q.options.forEach((opt, i) => {
+  const label = document.createElement('label');
+  label.classList.add('checkbox-option');
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.dataset.idx = i;
+  input.name = `checkbox-question-${currentQuestion}`;
+  const box = document.createElement('div');
+  box.classList.add('checkbox');
+  label.appendChild(input);
+  label.appendChild(box);
+  label.append(opt.text);
+  optionsDiv.appendChild(label);
+
+  input.addEventListener('change', () => {
+    label.classList.toggle('selected', input.checked);
     
-    // Ajuste responsivo para dispositivos móveis
-    if (window.innerWidth <= 768) {
-      optionsContainer.style.gridTemplateColumns = "1fr";
-    } else {
-      optionsContainer.style.gridTemplateColumns = "repeat(3, 1fr)";
+    // Verificar contagem de seleções para perguntas com limite
+    if (q.requiredChoices) {
+      const selected = optionsDiv.querySelectorAll('input:checked').length;
+      // Desativa opções adicionais se o limite for atingido
+      if (selected >= q.requiredChoices) {
+        optionsDiv.querySelectorAll('input:not(:checked)').forEach(inp => {
+          inp.disabled = true;
+          inp.parentElement.classList.add('disabled');
+        });
+      } else {
+        optionsDiv.querySelectorAll('input').forEach(inp => {
+          inp.disabled = false;
+          inp.parentElement.classList.remove('disabled');
+        });
+      }
     }
-    
-    optionsContainer.style.gap = "10px";
-    optionsContainer.style.display = "grid";
+  });
+});
+
+const btn = document.createElement('button');
+btn.innerText = "Continuar";
+btn.classList.add('btn-continue');
+btn.onclick = () => {
+  const selected = optionsDiv.querySelectorAll('input:checked');
+
+  if (q.requiredChoices && selected.length !== q.requiredChoices) {
+    alert(`Selecione exatamente ${q.requiredChoices} opções.`);
+    return;
   }
 
-  question.options.forEach((option, index) => {
-    const label = document.createElement("label");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.dataset.optionIndex = index;
+  let selectedAnswers = [];
+  selected.forEach(sel => {
+    const opt = q.options[+sel.dataset.idx];
+    selectedAnswers.push(opt.text);
 
-    // Adicionando estilo para as opções de checkbox
-    label.style.display = "flex";
-    label.style.alignItems = "center";
-    label.style.marginBottom = "10px";
-    label.style.cursor = "pointer";
-    
-    checkbox.style.marginRight = "8px";
-
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(option.text));
-    optionsContainer.appendChild(label);
-  });
-
-  container.appendChild(optionsContainer);
-
-  const nextButton = document.createElement("button");
-  nextButton.innerText = "Próxima";
-  nextButton.addEventListener("click", () => {
-    const checkedBoxes = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
-    
-    // Verificação específica para a pergunta que requer exatamente 3 escolhas
-    if (question.requiredChoices && checkedBoxes.length !== question.requiredChoices) {
-      alert(`Por favor, selecione exatamente ${question.requiredChoices} opções.`);
-      return;
-    } else if (checkedBoxes.length === 0) {
-      alert("Por favor, selecione pelo menos uma opção.");
-      return;
-    }
-    
-    handleMultipleChoiceAnswers();
-  });
-  container.appendChild(nextButton);
-}
-
-function renderSingleChoice(question, container) {
-  const optionsContainer = document.createElement("div");
-  optionsContainer.classList.add("options-container");
-
-  question.options.forEach((option) => {
-    const button = document.createElement("button");
-    button.innerText = option.text;
-    button.addEventListener("click", () => {
-      // Remove a classe selecionada de todos os botões
-      optionsContainer.querySelectorAll("button").forEach(btn => 
-        btn.classList.remove("selected")
-      );
-      // Adiciona a classe selecionada ao botão clicado
-      button.classList.add("selected");
-      handleAnswer(option.scores);
-    });
-    optionsContainer.appendChild(button);
-  });
-
-  container.appendChild(optionsContainer);
-}
-
-function handleMultipleChoiceAnswers() {
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-  const question = questions[currentQuestion];
-  const totalScores = {};
-  
-  checkboxes.forEach((checkbox) => {
-    const index = parseInt(checkbox.dataset.optionIndex);
-    const optionScores = question.options[index].scores;
-    
-    Object.entries(optionScores).forEach(([key, value]) => {
-      totalScores[key] = (totalScores[key] || 0) + value;
+    // Somar pontuações
+    Object.entries(opt.scores).forEach(([key, value]) => {
+      scores[key] = (scores[key] || 0) + value;
     });
   });
-  
-  // Guarda os scores desta questão específica para possível reversão
-  questionScores[currentQuestion] = {...totalScores};
-  
-  updateScores(totalScores);
-  questionHistory.push(currentQuestion);
+
+  respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
+  document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
   nextQuestion();
+};
+
+container.appendChild(optionsDiv);
+container.appendChild(btn);
+} else {
+q.options.forEach(opt => {
+  const btn = document.createElement('button');
+  btn.classList.add('option-button');
+  btn.innerHTML = `<div class="circle"></div>${opt.text}`;
+  btn.onclick = () => {
+    Object.entries(opt.scores).forEach(([key, value]) => {
+      scores[key] = (scores[key] || 0) + value;
+    });
+
+    respostas[`pergunta${currentQuestion + 1}`] = opt.text;
+    document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+    nextQuestion();
+  };
+  optionsDiv.appendChild(btn);
+});
+container.appendChild(optionsDiv);
 }
 
-function handleAnswer(scoresToAdd) {
-  // Guarda os scores desta questão específica para possível reversão
-  questionScores[currentQuestion] = {...scoresToAdd};
-  
-  updateScores(scoresToAdd);
-  questionHistory.push(currentQuestion);
-  nextQuestion();
+// Adicione estilos extras para as opções de checkbox
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+.checkbox-option.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-function updateScores(scoresToAdd) {
-  Object.entries(scoresToAdd).forEach(([key, value]) => {
-    if (scores.hasOwnProperty(key)) {
-      scores[key] += value;
-    }
-  });
+.options-container {
+  margin-bottom: 2rem;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkbox-option {
+  padding: 0.9rem;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  transition: all 0.2s ease;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-option:hover {
+  background-color: #f0f0f0;
+}
+
+.checkbox-option.selected {
+  background-color: rgba(247, 168, 0, 0.1);
+  border: 1px solid var(--primary-color, #f7a800);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.checkbox-option.selected .checkbox {
+  border-color: var(--primary-color, #f7a800);
+  background-color: var(--primary-color, #f7a800);
+}
+
+.checkbox-option.selected .checkbox:after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.btn-continue {
+  background-color: var(--primary-color, #f7a800);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+  margin: 1.5rem auto 0;
+  transition: all 0.3s ease;
+}
+
+.btn-continue:hover {
+  background-color: #e69a00;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
+}
+`;
+document.head.appendChild(styleElement);
+}
+function updateSelectionCounter(questionIndex, selectedCount, required) {
+const counterElement = document.getElementById(`selection-counter-${questionIndex}`);
+if (!counterElement) return;
+
+counterElement.textContent = `${selectedCount}/${required} selecionadas`;
+
+if (selectedCount === required) {
+counterElement.classList.add('complete');
+} else {
+counterElement.classList.remove('complete');
+}
 }
 
 function nextQuestion() {
   currentQuestion++;
   if (currentQuestion < questions.length) {
     loadQuestion();
+    updateProgressBar();
   } else {
-    calculateResult();
+    showResults();
   }
 }
 
-function goBack() {
-  if (questionHistory.length > 0) {
-    const previousQuestion = questionHistory.pop();
-    
-    // Remove os scores da questão anterior
-    if (questionScores[previousQuestion]) {
-      Object.entries(questionScores[previousQuestion]).forEach(([key, value]) => {
-        if (scores.hasOwnProperty(key)) {
-          scores[key] -= value;
-        }
-      });
-    }
-    
-    currentQuestion = previousQuestion;
-    loadQuestion();
-  }
-}
+function showResults() {
+const container = document.getElementById('question-container');
+const topBeers = Object.entries(scores)
+.filter(([key]) => beerDescriptions[key])
+.sort((a, b) => b[1] - a[1])
+.slice(0, 3);
 
-function calculateResult() {
-  const sortedScores = Object.entries(scores)
-    .filter(([key]) => pages.hasOwnProperty(key))
-    .sort(([, a], [, b]) => b - a);
-  
-  const topThreeBeers = sortedScores.slice(0, 3);
-  const topBeer = topThreeBeers[0][0];
-  
-  // Obtém a preferência de embalagem
-  const packagingScores = { lt350: scores.lt350, ln: scores.ln, lt473: scores.lt473, lt279: scores.lt279 };
-  const topPackaging = Object.entries(packagingScores).sort(([, a], [, b]) => b - a)[0][0];
+const dataToSave = {
+respostas: respostas,
+resultados: {
+  cervejas: topBeers.map(([beer]) => friendlyNames[beer]),
+},
+scores: scores
+};
 
-  // Exibição aprimorada do resultado com os 3 melhores matches
-  const resultContainer = document.getElementById("question-container");
-  if (!resultContainer) return;
+saveDataToFirebase(dataToSave).then(success => {
+if (success) getData();
+});
 
-  const resultHtml = `
-    <div class="result-wrapper animate-fade-in">
-      <div class="result-content">
-        <div class="congratulations">
-          <span class="emoji">🎊</span>
-          <h2>Parabéns!</h2>
-          <span class="emoji">🎊</span>
-        </div>
-        
-        <div class="match-result">
-          <h3>Suas Top 3 Cervejas:</h3>
-          <div class="top-beers">
-            ${topThreeBeers.map(([beer, score], index) => `
-              <div class="beer-match ${index === 0 ? 'primary-match' : 'secondary-match'}">
-                <span class="position">${index + 1}º</span>
-                <a href="${pages[beer]}" class="beer-link">
-                  ${friendlyNames[beer]}
-                </a>
-                <div class="match-score">
-                  <div class="score-bar" style="width: ${(score / topThreeBeers[0][1] * 100)}%"></div>
-                </div>
-              </div>
-            `).join('')}
+container.innerHTML = `
+<div class="results-container">
+  <div class="results-header">
+    <h2>Seu Perfil Cervejeiro</h2>
+    <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
+  </div>
+
+  <div class="action-buttons">
+    <a href="Inicial.html" class="btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Conheça o Projeto
+    </a>
+    <a href="promocoes.html" class="btn-promo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Conheça as Promoções <span class="btn-indicator">→</span>
+    </a>
+  </div>
+
+  <div class="results-section">
+    <h3>Cervejas Ideais Para Você</h3>
+    <div class="beer-list">
+      ${topBeers.map(([beer], index) => `
+        <div class="beer-card ${index === 0 ? 'top-match' : ''}">
+          <div class="beer-image">
+            <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
+            ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
+          </div>
+          <div class="beer-info">
+            <h4>${friendlyNames[beer]}</h4>
+            <p>${beerDescriptions[beer]}</p>
+            <div class="match-percent">${Math.round(90 - index * 8)}% de compatibilidade</div>
           </div>
         </div>
-
-        <div class="packaging-result">
-          <p>Embalagem Recomendada: ${friendlyNames[topPackaging]}</p>
-        </div>
-          
-        <div class="promo-section">
-          <p>Aproveite agora! Clique abaixo para descobrir promoções especiais:</p>
-          <a href="mercados.html" class="promo-button">
-            VER PROMOÇÕES EXCLUSIVAS
-          </a>
-          <a href="Inicial.html" class="promo-button">
-            CONHECER O PROJETO
-          </a>
-        </div>
-      </div>
+      `).join('')}
     </div>
-  `;
+  </div>
 
-  resultContainer.innerHTML = resultHtml;
+  <div class="share-section">
+    <h3>Compartilhe Seu Resultado</h3>
+    <div class="share-buttons">
+      <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        Facebook
+      </a>
+      <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-8.5-8.5 8.38 8.38 0 0 1 3.8.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        WhatsApp
+      </a>
+      <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 114.9-114.9S287.6 141 224.1 141z"/></svg>
+        Instagram
+      </a>
+    </div>
+  </div>
 
-  // Adiciona estilos aprimorados para a página de resultados
-  if (!document.getElementById('result-styles')) {
-    const styleSheet = document.createElement("style");
-    styleSheet.id = 'result-styles';
-    styleSheet.textContent = `
-      .result-wrapper {
-        width: 100%;
-        min-height: 100vh;
-        padding: 2rem;
-        background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-      }
+  <div class="try-again-section">
+    <button class="btn-outline" onclick="location.reload()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 2v6h6"/></svg>
+      Fazer o Teste Novamente
+    </button>
+  </div>
+</div>
+`;
 
-      .result-content {
-        max-width: 600px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      }
-
-      .congratulations {
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-
-      .top-beers {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin: 1.5rem 0;
-      }
-
-      .beer-match {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 10px;
-        transition: transform 0.2s;
-      }
-
-      .beer-match:hover {
-        transform: translateX(5px);
-      }
-
-      .primary-match {
-        background: #fff3cd;
-      }
-
-      .position {
-        font-weight: bold;
-        color: #0077c8;
-      }
-
-      .match-score {
-        flex-grow: 1;
-        height: 8px;
-        background: #e9ecef;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .score-bar {
-        height: 100%;
-        background: #0077c8;
-        border-radius: 4px;
-        transition: width 1s ease-out;
-      }
-
-      .beer-link {
-        color: #0077c8;
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      .beer-link:hover {
-        text-decoration: underline;
-      }
-
-      .promo-button {
-        display: inline-block;
-        margin-top: 1.5rem;
-        margin-right: 0.5rem;
-        background: #0077c8;
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        text-align: center;
-      }
-
-      .promo-button:hover {
-        background: #005fa3;
-        transform: translateY(-2px);
-      }
-
-      @media (max-width: 768px) {
-        .result-content {
-          padding: 1.5rem;
-        }
-
-        .beer-match {
-          flex-direction: column;
-          text-align: center;
-          gap: 0.5rem;
-        }
-        
-        .promo-button {
-          display: block;
-          width: 100%;
-          margin-right: 0;
-        }
-      }
-      
-      .animate-fade-in {
-        animation: fadeIn 0.8s ease-in-out;
-      }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    `;
-    document.head.appendChild(styleSheet);
-  }
+setTimeout(() => {
+document.querySelector('.facebook')?.addEventListener('click', () => window.open('https://www.facebook.com', '_blank'));
+document.querySelector('.whatsapp')?.addEventListener('click', () => window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank'));
+document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
+}, 100);
 }
-
-// Inicializa o quiz
-window.onload = loadQuestion;
