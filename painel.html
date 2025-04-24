@@ -31,21 +31,25 @@
 <body>
   
   <div class="dashboard-container">
-    <!-- Cabeçalho do Dashboard -->
-    <div class="dashboard-header">
-      <div>
-        <h1 class="dashboard-title">Dashboard de Pesquisas</h1>
-        <p class="dashboard-subtitle">Análise de resultados da pesquisa "Descubra Sua Cerveja Ideal"</p>
-      </div>
-      <div class="header-controls">
-        <button id="export-csv" class="btn btn-outline">
-          <i class="fas fa-file-csv"></i> Exportar CSV
-        </button>
-        <button id="refresh-btn" class="btn btn-primary">
-          <i class="fas fa-sync-alt"></i> Atualizar Dados
-        </button>
-      </div>
-    </div>
+<!-- Cabeçalho do Dashboard -->
+<div class="dashboard-header">
+  <div>
+    <h1 class="dashboard-title">Dashboard de Pesquisas</h1>
+    <p class="dashboard-subtitle">Análise de resultados da pesquisa "Descubra Sua Cerveja Ideal"</p>
+  </div>
+  <div class="header-controls">
+    <a href="Inicial.html" class="btn btn-outline" style="margin-right: 1rem;">
+      <i class="fas fa-arrow-left"></i> Voltar ao Início
+    </a>
+    <button id="export-csv" class="btn btn-outline">
+      <i class="fas fa-file-csv"></i> Exportar CSV
+    </button>
+    <button id="refresh-btn" class="btn btn-primary">
+      <i class="fas fa-sync-alt"></i> Atualizar Dados
+    </button>
+  </div>
+</div>
+
     
     <!-- Mensagem de erro -->
     <div id="error-message" class="error-message"></div>
