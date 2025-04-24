@@ -338,8 +338,8 @@ const questions = [
     {
       text: "Raramente ou nunca",
       scores: {
-        budzero: 180, coronacero: 180, brahmazero: 180,
-        michelob: 180, stellapg: 180
+        budzero: 18, coronacero: 18, brahmazero: 18,
+        michelob: 18, stellapg: 18
       }
     }
   ],
