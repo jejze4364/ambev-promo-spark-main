@@ -1,876 +1,233 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Executivo | Ambev</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Dashboard de Pesquisas | Ambev</title>
   
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
   
-  <!-- Chart.js para visualizações -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- DateRangePicker -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.css">
+  
+  <!-- Chart.js para visualizações avançadas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  
+  <!-- Estilo externo referenciado -->
   <link rel="stylesheet" href="painel.css">
+  <script src="painel.js"></script>
 
 </head>
 
 <body>
+  
   <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="logo-container">
+    <!-- Cabeçalho do Dashboard -->
+    <div class="dashboard-header">
+      <div>
+        <h1 class="dashboard-title">Dashboard de Pesquisas</h1>
+        <p class="dashboard-subtitle">Análise de resultados da pesquisa "Descubra Sua Cerveja Ideal"</p>
+      </div>
+      <div class="header-controls">
+        <button id="export-csv" class="btn btn-outline">
+          <i class="fas fa-file-csv"></i> Exportar CSV
+        </button>
+        <button id="refresh-btn" class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> Atualizar Dados
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mensagem de erro -->
+    <div id="error-message" class="error-message"></div>
+    
+    <!-- Barra de filtros -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label">Período:</label>
+        <input type="text" id="date-range" class="filter-input date-range-picker" placeholder="Selecione o período">
       </div>
       
-      <nav>
-        <ul class="nav-menu">
-          <li class="nav-item active">
-            <a href="#" class="nav-link">
-              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="9"></rect>
-                <rect x="14" y="3" width="7" height="5"></rect>
-                <rect x="14" y="12" width="7" height="9"></rect>
-                <rect x="3" y="16" width="7" height="5"></rect>
-              </svg>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="Inicial.html" class="nav-link">
-              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 3h-1a2 2 0 0 0-4 0h-1a2 2 0 0 0-4 0H4"></path>
-              </svg>
-              Home
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="index.html" class="nav-link">
-              <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="1 4 1 10 7 10"></polyline>
-                <path d="M3.51 15a9 9 0 1 0-2.13-9.36"></path>
-              </svg>
-              Refazer Pesquisa
-            </a>
-          </li>                  
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="dashboard-header">
-        <h1 class="dashboard-title">Dashboard</h1>
-        
-        <div class="action-buttons">
-          <button class="btn btn-primary" id="btn-export-all">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Exportar Tudo
-          </button>
-          <button class="btn btn-secondary" id="btn-advanced-filters">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            Filtros Avançados
-          </button>
-        </div>
-      </header>
-
-      <!-- Filtros básicos -->
-      <section class="filters-section">
-        <div class="filter-group">
-          <label for="date-filter">Período:</label>
-          <select id="date-filter" onchange="updateDashboardData()">
-            <option value="7">Últimos 7 dias</option>
-            <option value="30" selected>Últimos 30 dias</option>
-            <option value="90">Últimos 3 meses</option>
-            <option value="365">Último ano</option>
-            <option value="all">Todo o período</option>
-          </select>
-        </div>
-        
-        <div class="filter-group">
-          <label for="region-filter">Região:</label>
-          <select id="region-filter" onchange="updateDashboardData()">
-            <option value="all" selected>Todas as regiões</option>
-            <!-- Preenchido dinamicamente -->
-          </select>
-        </div>
-        
-        <div class="filter-group">
-          <label for="age-filter">Faixa etária:</label>
-          <select id="age-filter" onchange="updateDashboardData()">
-            <option value="all" selected>Todas as idades</option>
-            <option value="18-24">18-24 anos</option>
-            <option value="25-34">25-34 anos</option>
-            <option value="35-44">35-44 anos</option>
-            <option value="45+">45+ anos</option>
-          </select>
-        </div>
-        
-        <div class="filter-group">
-          <label for="price-filter">Ticket médio:</label>
-          <select id="price-filter" onchange="updateDashboardData()">
-            <option value="all" selected>Todos os valores</option>
-            <option value="5">Até R$ 5,00</option>
-            <option value="8">R$ 6,00 a R$ 7,99</option>
-            <option value="10">R$ 8,00 a R$ 9,99</option>
-            <option value="10+">R$ 10,00 ou mais</option>
-          </select>
-        </div>
-      </section>
-
-      <!-- Indicadores Principais (KPIs) -->
-      <section class="key-metrics">
-        <div class="metric-card">
-          <div class="metric-header">
-            <h3 class="metric-title">Total de Pesquisas</h3>
-            <div class="metric-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div id="total-pesquisas" class="metric-value">Carregando...</div>
-          <div id="total-pesquisas-trend" class="metric-trend">
-            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-            Calculando...
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-header">
-            <h3 class="metric-title">Idade Média</h3>
-            <div class="metric-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                <line x1="4" y1="22" x2="4" y2="15"></line>
-              </svg>
-            </div>
-          </div>
-          <div id="idade-media" class="metric-value">Carregando...</div>
-          <div id="idade-media-trend" class="metric-trend">          
-            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-            Calculando...
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-header">
-            <h3 class="metric-title">Tempo Médio</h3>
-            <div class="metric-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div id="tempo-medio" class="metric-value">Carregando...</div>
-          <div id="tempo-medio-trend" class="metric-trend">
-            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-            Calculando...
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-header">
-            <h3 class="metric-title">Ticket Médio</h3>
-            <div class="metric-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="18" cy="5" r="3"></circle>
-                <circle cx="6" cy="12" r="3"></circle>
-                <circle cx="18" cy="19" r="3"></circle>
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-              </svg>
-            </div>
-          </div>
-          <div id="ticket-medio" class="metric-value">Carregando...</div>
-          <div id="ticket-medio-trend" class="metric-trend">          
-            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-            Calculando...
-          </div>
-        </div>
-        
-        <!-- Nova métrica para Cervejas Zero -->
-        <div class="metric-card">
-          <div class="metric-header">
-            <h3 class="metric-title">Interesse em Zero</h3>
-            <div class="metric-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-                <line x1="6" y1="1" x2="6" y2="4"></line>
-                <line x1="10" y1="1" x2="10" y2="4"></line>
-                <line x1="14" y1="1" x2="14" y2="4"></line>
-              </svg>
-            </div>
-          </div>
-          <div id="interesse-zero" class="metric-value">Carregando...</div>
-          <div id="interesse-zero-trend" class="metric-trend">          
-            <svg class="trend-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-            Calculando...
-          </div>
-        </div>
-      </section>
-
-      <!-- Gráficos e Rankings -->
-      <section class="charts-section">
-        <div class="chart-container">
-          <div class="chart-header">
-            <h3 class="chart-title">Evolução de Respostas</h3>
-            <div class="chart-actions">
-              <select id="chart-type" onchange="updateDashboardData()">
-                <option value="hora">Por hora</option>
-                <option value="dia">Por dia</option>
-                <option value="mensal" selected>Por mês</option>
-              </select>
-              <button class="chart-action-btn" id="toggle-chart-view">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 20V10"></path>
-                  <path d="M18 20V4"></path>
-                  <path d="M6 20v-4"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="chart-content">
-            <canvas id="responsesChart"></canvas>
-          </div>
-        </div>
-
-        <div class="rankings-container">
-          <div class="rankings-header">
-            <h3 class="rankings-title">Cervejas Preferidas</h3>
-            <div class="chart-actions">
-              <button class="chart-action-btn" id="refresh-ranking">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 4v6h-6"></path>
-                  <path d="M1 20v-6h6"></path>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <ul id="cervejas-preferidas" class="product-rank-list">
-            <li class="product-rank-item">
-              <div class="product-info">
-                <span class="product-rank">-</span>
-                <div class="product-img">
-                </div>
-                <span class="product-name">Carregando...</span>
-              </div>
-              <span class="product-percent">-</span>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="charts-section">
-        <div class="chart-container" style="width: 100%;">
-          <div class="chart-header">
-            <h3 class="chart-title">Interesse em Cerveja Zero</h3>
-            <div style="display: flex; gap: 1rem;">
-              <select id="zero-region-filter" onchange="updateDashboardData()">
-                <option value="all">Todas as regiões</option>
-                <!-- preenchido dinamicamente -->
-              </select>
-              <select id="zero-age-filter" onchange="updateDashboardData()">
-                <option value="all">Todas idades</option>
-                <option value="18-24">18-24</option>
-                <option value="25-34">25-34</option>
-                <option value="35-44">35-44</option>
-                <option value="45+">45+</option>
-              </select>
-            </div>
-          </div>
-          <div class="chart-content">
-            <canvas id="zeroInterestChart"></canvas>
-          </div>
-        </div>
-      </section>
+      <div class="filter-divider"></div>
       
+      <div class="filter-group">
+        <label class="filter-label">Município:</label>
+        <select id="filter-city" class="filter-input">
+          <option value="">Todos</option>
+        </select>
+      </div>
       
-
-      <!-- Heatmap -->
-      <section class="heatmap-section">
-        <div class="chart-header">
-          <h3 class="chart-title">Engajamento por Região</h3>
-          <button class="btn btn-primary" onclick="exportRegionalData()">Exportar Tabela</button>
+      <div class="filter-group">
+        <label class="filter-label">Faixa Etária:</label>
+        <select id="filter-age" class="filter-input">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      
+      <div class="filter-divider"></div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Marca:</label>
+        <select id="filter-brand" class="filter-input">
+          <option value="">Todas</option>
+        </select>
+      </div>
+      
+      <div class="filter-actions">
+        <button id="apply-filters" class="btn btn-secondary">
+          <i class="fas fa-filter"></i> Aplicar
+        </button>
+        <button id="clear-filters" class="btn btn-outline">
+          <i class="fas fa-times"></i> Limpar
+        </button>
+      </div>
+    </div>
+    
+    <div class="panel-section">
+      <div class="panel-header">
+        <h2>Visão Resumida</h2>
+      </div>
+      <div class="panel-content resumo-kpis">
+        <div class="kpi-item">
+          <h4>Total de Respostas</h4>
+          <p id="total-respostas">-</p>
         </div>
-        <div class="table-responsive">
-          <table class="heatmap-table">
+        <div class="kpi-item">
+          <h4>Idade Média</h4>
+          <p id="idade-media">-</p>
+        </div>
+        <div class="kpi-item">
+          <h4>Ticket Médio</h4>
+          <p id="ticket-medio">-</p>
+        </div>
+        <div class="kpi-item">
+          <h4>Cerveja Favorita</h4>
+          <p id="cerveja-favorita">-</p>
+        </div>
+      </div>
+    </div>    
+    
+    <!-- Marcas e Ranking -->
+    <div class="panel-section" id="brands-section">
+      <div class="panel-header">
+        <h2>Análise de Marcas</h2>
+        <button class="toggle-button"><i class="fas fa-chevron-up"></i></button>
+      </div>
+      <div class="panel-content">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="ranking">Ranking</button>
+          <button class="tab-button" data-tab="chart">Gráfico</button>
+          <button class="tab-button" data-tab="comparison">Comparação</button>
+        </div>
+        
+        <div class="tab-content active" id="ranking-tab">
+          <div id="beer-rankings" class="rankings-container"></div>
+        </div>
+        
+        <div class="tab-content" id="chart-tab">
+          <div class="chart-container">
+            <canvas id="brands-chart"></canvas>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="comparison-tab">
+          <div class="comparison-controls">
+            <select id="comparison-brand1" class="comparison-select">
+              <option value="">Selecione a marca</option>
+            </select>
+            <div class="comparison-vs">VS</div>
+            <select id="comparison-brand2" class="comparison-select">
+              <option value="">Selecione a marca</option>
+            </select>
+          </div>
+          <div id="comparison-results" class="comparison-results"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Análise de Perguntas -->
+    <div class="panel-section" id="questions-section">
+      <div class="panel-header">
+        <h2>Análise de Perguntas</h2>
+        <button class="toggle-button"><i class="fas fa-chevron-up"></i></button>
+      </div>
+      <div class="panel-content">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="distributions">Distribuições</button>
+          <button class="tab-button" data-tab="correlations">Correlações</button>
+        </div>
+        
+        <div class="tab-content active" id="distributions-tab">
+          <div id="question-charts" class="questions-container"></div>
+        </div>
+        
+        <div class="tab-content" id="correlations-tab">
+          <div class="correlation-selector">
+            <select id="correlation-x" class="correlation-select">
+              <option value="">Selecione a pergunta (X)</option>
+            </select>
+            <select id="correlation-y" class="correlation-select">
+              <option value="">Selecione a pergunta (Y)</option>
+            </select>
+          </div>
+          <div class="chart-container">
+            <canvas id="correlation-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Resultados Detalhados -->
+    <div class="panel-section collapsed" id="details-section">
+      <div class="panel-header">
+        <h2>Resultados Detalhados</h2>
+        <button class="toggle-button"><i class="fas fa-chevron-down"></i></button>
+      </div>
+      <div class="panel-content">
+        <div class="table-controls">
+          <div class="table-search">
+            <input type="text" id="search-results" placeholder="Buscar..." class="search-input">
+          </div>
+          <div class="table-pagination">
+            <button id="prev-page" class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+            <span id="page-info">Página 1 de 1</span>
+            <button id="next-page" class="pagination-btn" disabled><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="results-table" class="data-table">
             <thead>
               <tr>
-                <th>Região</th>
-                <th>Respostas</th>
-                <th>
-                  Interesse Zero
-                  <span class="info-tooltip">
-                    <span class="tooltip-icon">ⓘ</span>
-                    <span class="tooltip-text">Pessoas que responderam positivamente sobre cervejas zero álcool</span>
-                  </span>
-                </th>
-                <th>Cervejas Preferidas</th>
-                <th>Idade Média</th>
-                <th>Ticket Médio</th>
-                <th>Data/Hora</th>
+                <th>Data</th>
+                <th>Município</th>
+                <th>Faixa Etária</th>
+                <th>Preço</th>
+                <th>Ocasiões</th>
+                <th>Zero Álcool</th>
+                <th>Frequência</th>
+                <th>Cerveja Recomendada</th>
+                <th>Score</th>
               </tr>
-            </thead>          
-            <tbody id="engajamento-regiao">
-              <tr>
-                <td colspan="7">Carregando dados de regiões...</td>
-              </tr>
-            </tbody>
+            </thead>
+            <tbody id="results-tbody"></tbody>
           </table>
         </div>
-      </section>
-
-      <footer class="dashboard-footer">
-        &copy; 2025 Ambev • Todos os direitos reservados.
-      </footer>
-    </main>
-  </div>
-
-  <!-- Modal de Filtros Avançados -->
-  <div id="advanced-filters-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Filtros Avançados</h3>
-        <button class="modal-close">&times;</button>
-      </div>
-      
-      <div class="modal-body">
-        <div class="filter-group">
-          <label>Intervalo de Datas:</label>
-          <div style="display: flex; gap: 10px;">
-            <input type="date" id="date-start" class="date-picker">
-            <input type="date" id="date-end" class="date-picker">
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <label>Regiões:</label>
-          <div class="checkbox-group" id="region-checkboxes">
-            <!-- Preenchido dinamicamente -->
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <label>Cervejas:</label>
-          <div class="checkbox-group" id="beer-checkboxes">
-            <!-- Preenchido dinamicamente -->
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <label>Interesse em Zero:</label>
-          <select id="zero-filter">
-            <option value="all">Todos</option>
-            <option value="sim">Prefere zero álcool</option>
-            <option value="talvez">Aberto a experimentar</option>
-            <option value="nao">Não tem interesse</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="reset-filters">Limpar Filtros</button>
-        <button class="btn btn-primary" id="apply-filters">Aplicar</button>
       </div>
     </div>
-  </div>
-
-  <!-- Modal de Exportação -->
-  <div id="export-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Exportar Dados</h3>
-        <button class="modal-close">&times;</button>
-      </div>
-      
-      <div class="modal-body">
-        <div class="filter-group">
-          <label>Selecione os dados para exportar:</label>
-          <div class="checkbox-group">
-            <div class="checkbox-item">
-              <input type="checkbox" id="export-all" checked>
-              <label for="export-all">Todos os dados</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="export-respostas">
-              <label for="export-respostas">Apenas respostas</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="export-resultados">
-              <label for="export-resultados">Apenas resultados</label>
-            </div>
-            <div class="checkbox-item">
-              <input type="checkbox" id="export-metadata">
-              <label for="export-metadata">Incluir metadados</label>
-            </div>
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <label>Formato:</label>
-          <select id="export-format">
-            <option value="csv">CSV</option>
-            <option value="json">JSON</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="cancel-export">Cancelar</button>
-        <button class="btn btn-success" id="confirm-export">Exportar</button>
-      </div>
+    
+    <!-- Rodapé -->
+    <div class="dashboard-footer">
+      <p>Dashboard de Pesquisas Ambev © 2025</p>
     </div>
   </div>
-
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
-      authDomain: "pesquisa-8a0f9.firebaseapp.com",
-      projectId: "pesquisa-8a0f9",
-      storageBucket: "pesquisa-8a0f9.firebasestorage.app",
-      messagingSenderId: "453188166697",
-      appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
-      measurementId: "G-H34QHPSPS1"
-    };
-  
-    firebase.initializeApp(firebaseConfig);
-    const analytics = firebase.analytics();
-    const db = firebase.firestore();
-  
-    let allSurveyData = [];
-    let responsesChart = null;
-    let zeroInterestChart = null;
-  
-    const gastoMap = {
-      "Até R$ 5,00 por unidade": 5,
-      "Entre R$ 6,00 e R$ 7,99": 7,
-      "Entre R$ 8,00 e R$ 9,99": 9,
-      "R$ 10,00 ou mais": 10
-    };
-  
-    const zeroMap = {
-      "Sim, prefiro cervejas zero álcool": 1,
-      "Estou aberto a experimentar opções zero": 0.5,
-      "Não, prefiro cervejas tradicionais": 0
-    };
-  
-    document.addEventListener("DOMContentLoaded", () => {
-      fetchAllData().then(() => {
-        fillDynamicFilters();
-        updateDashboardData();
-        setupModalLogic();
-        document.getElementById("apply-filters").addEventListener("click", () => {
-          updateDashboardData();
-          closeModal("advanced-filters-modal");
-        });
-        document.getElementById("reset-filters").addEventListener("click", () => {
-          document.getElementById("region-filter").value = "all";
-          document.getElementById("age-filter").value = "all";
-          document.getElementById("price-filter").value = "all";
-          document.getElementById("zero-filter").value = "all";
-          updateDashboardData();
-        });
-      });
-    });
-    const tempos = data.map(i => {
-  const inicio = i.startTime?.toDate?.() || i.startTime;
-  const fim = i.timestamp?.toDate?.() || i.timestamp;
-  if (inicio && fim && inicio instanceof Date && fim instanceof Date) {
-    return (fim - inicio) / 1000;
-  }
-  return null;
-}).filter(v => typeof v === "number");
-
-document.getElementById("tempo-medio").innerText = tempos.length ? `${(tempos.reduce((a, b) => a + b) / tempos.length).toFixed(0)}s` : "-";
-
-    // Em vez de carregar tudo de uma vez
-async function fetchAllData(limit = 50, lastDoc = null) {
-  let query = db.collection("pesquisas").orderBy("timestamp", "desc").limit(limit);
-  
-  if (lastDoc) {
-    query = query.startAfter(lastDoc);
-  }
-  
-  const snapshot = await query.get();
-  const lastVisible = snapshot.docs[snapshot.docs.length-1];
-  
-  // Retorne o último documento para paginação futura
-  return {
-    data: snapshot.docs.map(doc => {
-      const data = doc.data();
-      data.id = doc.id;
-      return data;
-    }),
-    lastDoc: lastVisible
-  };
-}
-const memoizedResults = {};
-
-function getMemoizedCalculation(key, calculation) {
-  if (!memoizedResults[key]) {
-    memoizedResults[key] = calculation();
-  }
-  return memoizedResults[key];
-}
-function throttle(func, delay) {
-  let lastCall = 0;
-  return function(...args) {
-    const now = new Date().getTime();
-    if (now - lastCall >= delay) {
-      lastCall = now;
-      func(...args);
-    }
-  };
-}
-
-const throttledUpdate = throttle(updateDashboardData, 300);
-// Use throttledUpdate nos event listeners
-    function fillDynamicFilters() {
-      const regions = new Set();
-      const beers = new Set();
-      allSurveyData.forEach(item => {
-        const regiao = item.respostas?.pergunta1;
-        if (regiao) regions.add(regiao);
-        item.resultados?.cervejas?.forEach(c => beers.add(c));
-      });
-  
-      const regionSelect = document.getElementById("region-filter");
-      regions.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r;
-        opt.textContent = r;
-        regionSelect.appendChild(opt);
-      });
-  
-      const regionCheck = document.getElementById("region-checkboxes");
-      const beerCheck = document.getElementById("beer-checkboxes");
-  
-      regions.forEach(r => {
-        regionCheck.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${r}" checked> ${r}</label>`;
-      });
-  
-      beers.forEach(c => {
-        beerCheck.innerHTML += `<label class="checkbox-item"><input type="checkbox" value="${c}" checked> ${c}</label>`;
-      });
-    }
-  
-    function updateDashboardData() {
-      const days = parseInt(document.getElementById("date-filter").value);
-      const region = document.getElementById("region-filter").value;
-      const age = document.getElementById("age-filter").value;
-      const price = document.getElementById("price-filter").value;
-      const zeroFilter = document.getElementById("zero-filter")?.value || "all";
-      const type = document.getElementById("chart-type")?.value || "mensal";
-  
-      const now = new Date();
-      const cutoff = new Date(now);
-      cutoff.setDate(cutoff.getDate() - days);
-  
-      const filtered = allSurveyData.filter(i => {
-        const d = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
-        if (d < cutoff) return false;
-        if (region !== "all" && i.respostas?.pergunta1 !== region) return false;
-        const idade = parseInt(i.respostas?.pergunta2);
-        if (age === "18-24" && (idade < 18 || idade > 24)) return false;
-        if (age === "25-34" && (idade < 25 || idade > 34)) return false;
-        if (age === "35-44" && (idade < 35 || idade > 44)) return false;
-        if (age === "45+" && idade < 45) return false;
-        const gasto = gastoMap[i.respostas?.pergunta3];
-        if (price === "5" && gasto > 5) return false;
-        if (price === "8" && (gasto < 6 || gasto > 7.99)) return false;
-        if (price === "10" && (gasto < 8 || gasto > 9.99)) return false;
-        if (price === "10+" && gasto < 10) return false;
-        const zero = i.respostas?.pergunta5;
-        if (zeroFilter === "sim" && zero !== "Sim, prefiro cervejas zero álcool") return false;
-        if (zeroFilter === "talvez" && zero !== "Estou aberto a experimentar opções zero") return false;
-        if (zeroFilter === "nao" && zero !== "Não, prefiro cervejas tradicionais") return false;
-        return true;
-      });
-  
-      renderKPIs(filtered);
-      renderChart(filtered, type);
-      renderRanking(filtered);
-      renderRegionalTable(filtered);
-      renderZeroChart(filtered);
-      const zeroRegion = document.getElementById("zero-region-filter")?.value || "all";
-const zeroAge = document.getElementById("zero-age-filter")?.value || "all";
-
-const filteredZeroData = filtered.filter(i => {
-  if (zeroRegion !== "all" && i.respostas?.pergunta1 !== zeroRegion) return false;
-  const idade = parseInt(i.respostas?.pergunta2);
-  if (zeroAge === "18-24" && (idade < 18 || idade > 24)) return false;
-  if (zeroAge === "25-34" && (idade < 25 || idade > 34)) return false;
-  if (zeroAge === "35-44" && (idade < 35 || idade > 44)) return false;
-  if (zeroAge === "45+" && idade < 45) return false;
-  return true;
-});
-
-renderZeroChart(filteredZeroData);
-
-    }
-  
-    function renderKPIs(data) {
-  const idade = data.map(i => parseInt(i.respostas?.pergunta2)).filter(Number);
-  const gasto = data.map(i => gastoMap[i.respostas?.pergunta3]).filter(Number);
-  const interesse = data.map(i => zeroMap[i.respostas?.pergunta5]).filter(Number);
-
-  const tempos = data.map(i => {
-    const inicio = i.startTime?.toDate?.() || i.startTime;
-    const fim = i.timestamp?.toDate?.() || i.timestamp;
-    if (inicio && fim && inicio instanceof Date && fim instanceof Date) {
-      return (fim - inicio) / 1000;
-    }
-    return null;
-  }).filter(v => typeof v === "number");
-
-  document.getElementById("total-pesquisas").innerText = data.length;
-  document.getElementById("idade-media").innerText = idade.length ? (idade.reduce((a, b) => a + b) / idade.length).toFixed(1) : "-";
-  document.getElementById("tempo-medio").innerText = tempos.length ? `${(tempos.reduce((a, b) => a + b) / tempos.length).toFixed(0)}s` : "-";
-  document.getElementById("ticket-medio").innerText = gasto.length ? `R$ ${(gasto.reduce((a, b) => a + b) / gasto.length).toFixed(2)}` : "-";
-  document.getElementById("interesse-zero").innerText = interesse.length ? `${(interesse.reduce((a, b) => a + b) / interesse.length * 100).toFixed(1)}%` : "-";
-}
-
-  
-    function renderChart(data, type) {
-      const labels = [];
-      const values = {};
-  
-      data.forEach(i => {
-        const d = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
-        let key = '';
-        if (type === 'hora') key = `${d.getHours().toString().padStart(2, '0')}h`;
-        else if (type === 'dia') key = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
-        else key = `${d.getMonth() + 1}/${d.getFullYear()}`;
-        values[key] = (values[key] || 0) + 1;
-      });
-  
-      const sortedKeys = Object.keys(values).sort();
-      const chartData = sortedKeys.map(k => values[k]);
-  
-      if (responsesChart) responsesChart.destroy();
-  
-      const ctx = document.getElementById("responsesChart").getContext("2d");
-      responsesChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: sortedKeys,
-          datasets: [{
-            label: "Respostas",
-            data: chartData,
-            fill: true,
-            backgroundColor: "rgba(0, 123, 255, 0.2)",
-            borderColor: "rgba(0, 123, 255, 1)",
-            tension: 0.3
-          }]
-        }
-      });
-    }
-  
-    function renderRanking(data) {
-      const beers = {};
-      data.forEach(i => {
-        i.resultados?.cervejas?.forEach(c => {
-          beers[c] = (beers[c] || 0) + 1;
-        });
-      });
-  
-      const sorted = Object.entries(beers).sort((a, b) => b[1] - a[1]);
-      const container = document.getElementById("cervejas-preferidas");
-      container.innerHTML = "";
-  
-      sorted.slice(0, 5).forEach(([c, v], i) => {
-        container.innerHTML += `
-          <li class="product-rank-item">
-            <div class="product-info">
-              <span class="product-rank">${i + 1}</span>
-              <div class="product-img"><img src="https://via.placeholder.com/50" alt="${c}"></div>
-              <span class="product-name">${c}</span>
-            </div>
-            <span class="product-percent">${((v / data.length) * 100).toFixed(1)}%</span>
-          </li>`;
-      });
-    }
-  
-    function renderZeroChart(data) {
-  const labels = [
-    "Prefere Zero",
-    "Aberto a Experimentar",
-    "Prefere Tradicional"
-  ];
-  const rawLabels = [
-    "Sim, prefiro cervejas zero álcool",
-    "Estou aberto a experimentar opções zero",
-    "Não, prefiro cervejas tradicionais"
-  ];
-  const counts = [0, 0, 0];
-  data.forEach(i => {
-    const v = i.respostas?.pergunta5;
-    if (v === rawLabels[0]) counts[0]++;
-    else if (v === rawLabels[1]) counts[1]++;
-    else if (v === rawLabels[2]) counts[2]++;
-  });
-
-  if (zeroInterestChart) zeroInterestChart.destroy();
-
-  const ctx = document.getElementById("zeroInterestChart").getContext("2d");
-  zeroInterestChart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels,
-      datasets: [{
-        label: "Número de Respostas",
-        data: counts,
-        backgroundColor: ["#2ecc71", "#f1c40f", "#e74c3c"],
-        borderRadius: 8,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: {
-          label: ctx => `${ctx.raw} resposta(s)`
-        }}
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { stepSize: 1 }
-        }
-      }
-    }
-  });
-}
-
-    function renderRegionalTable(data) {
-  const map = {};
-
-  data.forEach(i => {
-    const r = i.respostas?.pergunta1 || "Desconhecida";
-    if (!map[r]) {
-      map[r] = {
-        total: 0,
-        idade: [],
-        gasto: [],
-        zero: [],
-        cervejas: [],
-        datas: []
-      };
-    }
-
-    map[r].total++;
-
-    // Idade
-    const idade = parseInt(i.respostas?.pergunta2);
-    if (!isNaN(idade)) map[r].idade.push(idade);
-
-    // Gasto
-    const g = gastoMap[i.respostas?.pergunta3];
-    if (g) map[r].gasto.push(g);
-
-    // Cerveja Zero (normalizado)
-    const zero = i.respostas?.pergunta5;
-if (zeroMap[zero] !== undefined) {
-  map[r].zero.push(zeroMap[zero]);
-}
-
-
-
-    // Cervejas
-    map[r].cervejas.push(...(i.resultados?.cervejas || []));
-
-    // Timestamp
-    const t = i.timestamp instanceof Date ? i.timestamp : i.timestamp.toDate();
-    map[r].datas.push(t);
-  });
-
-  const tbody = document.getElementById("engajamento-regiao");
-  tbody.innerHTML = "";
-
-  Object.entries(map).forEach(([reg, v]) => {
-  const cervejasCount = {};
-  v.cervejas.forEach(c => {
-    cervejasCount[c] = (cervejasCount[c] || 0) + 1;
-  });
-  const topBeer = Object.entries(cervejasCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
-  const data = new Date(Math.max(...v.datas.map(d => new Date(d))));
-
-  tbody.innerHTML += `
-    <tr>
-      <td>${reg}</td>
-      <td>${v.total}</td>
-      <td>${v.zero.length ? v.zero.filter(z => z === 1).length : 0}</td>
-      <td>${topBeer}</td>
-      <td>${v.idade.length ? (v.idade.reduce((a, b) => a + b) / v.idade.length).toFixed(1) : "-"}</td>
-      <td>${v.gasto.length ? `R$ ${(v.gasto.reduce((a, b) => a + b) / v.gasto.length).toFixed(2)}` : "-"}</td>
-      <td>${data.toLocaleString("pt-BR")}</td>
-    </tr>`;
-});
-}
-    function exportRegionalData() {
-      const table = document.querySelector(".heatmap-table");
-      const rows = [...table.querySelectorAll("tr")];
-      const csv = rows.map(row => [...row.querySelectorAll("th, td")].map(cell => `"${cell.innerText}"`).join(",")).join("\n");
-  
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "engajamento_por_regiao.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  
-    function setupModalLogic() {
-      document.querySelectorAll(".modal-close").forEach(btn => {
-        btn.onclick = () => btn.closest(".modal").style.display = "none";
-      });
-  
-      document.getElementById("btn-advanced-filters").onclick = () => {
-        document.getElementById("advanced-filters-modal").style.display = "flex";
-      };
-  
-      window.onclick = function(event) {
-        document.querySelectorAll(".modal").forEach(modal => {
-          if (event.target === modal) modal.style.display = "none";
-        });
-      };
-    }
-  
-    function closeModal(id) {
-      document.getElementById(id).style.display = "none";
-    }
-  </script>
-  
+</body>
+</html>
