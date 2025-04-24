@@ -54,37 +54,41 @@
       margin-bottom: 0.5rem;
     }
     .footer-spacer {
-      height: 80px;
-    }
-    .app-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #111827;
-      color: white;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 0.75rem 0;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-      z-index: 1000;
-    }
-    .footer-link {
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      font-size: 0.85rem;
-    }
-    .footer-link i {
-      font-size: 1.2rem;
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-    .footer-link.active,
-    .footer-link:hover {
-      color: #facc15;
-    }
+  height: 90px; /* aumentei de 80px para garantir espaço */
+  flex-shrink: 0;
+}
+
+    footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111827;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.75rem 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.footer-link {
+  text-align: center;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: white;
+}
+
+.footer-link i {
+  font-size: 1.2rem;
+  display: block;
+}
+
+.footer-link.active,
+.footer-link:hover {
+  color: #facc15;
+}
+
     #heatmap {
   display: flex;
   flex-wrap: wrap;
@@ -92,6 +96,10 @@
   gap: 1rem;
   margin-top: 1.5rem;
 }
+main {
+  min-height: calc(100vh - 90px - 72px); /* viewport - footer - header */
+}
+
   
   </style>
 </head>
@@ -115,11 +123,21 @@
 
   <div class="footer-spacer"></div>
 
-  <footer class="app-footer">
-    <a href="Inicial.html" class="footer-link"><i class="fas fa-home"></i><span>Home</span></a>
-    <a href="#" class="footer-link active"><i class="fas fa-beer"></i><span>Cervejas</span></a>
-    <a href="promocoes.html" class="footer-link"><i class="fas fa-percent"></i><span>Promoções</span></a>
+  <footer>
+    <a href="Inicial.html" class="footer-link">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Home</span>
+    </a>
+    <a href="escolha_cerveja.html" class="footer-link active">
+      <i class="fas fa-beer" aria-hidden="true"></i>
+      <span>Cervejas</span>
+    </a>
+    <a href="promocoes.html" class="footer-link">
+      <i class="fas fa-percent" aria-hidden="true"></i>
+      <span>Promoções</span>
+    </a>
   </footer>
+
 
   <script>
     // Configuração Firebase (substitua com sua própria config)
