@@ -311,18 +311,18 @@ const questions = [
   multipleChoice: false
 },
 {
-  question: "Com que frequência você consome cerveja?",
+  question: "Com que frequência você compra cerveja?",
   description: "Essa informação nos ajuda a entender melhor seu perfil de consumo.",
   options: [
     {
-      text: "Todos os dias",
+      text: "De 2 a 3 vezes por semana",
       scores: {
         brahma: 12, skol: 12, antarctica: 12,
         michelob: 10, brahmazero: 8, budzero: 8
       }
     },
     {
-      text: "De 2 a 3 vezes por semana",
+      text: "Semanalmente",
       scores: {
         bud: 12, stella: 12, spaten: 12,
         michelob: 12, corona: 10, brahmazero: 6
