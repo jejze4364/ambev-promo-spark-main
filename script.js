@@ -188,7 +188,7 @@ const questions = [
         text: "Entre R$ 4,00 e R$ 5,99 por unidade",
         scores: {
           // Cervejas econômicas (boa pontuação)
-          antarctica: 25, brahma: 25, skol: 25, bohemia: 25, original: 25,
+          antarctica: 20, brahma: 20, skol: 20, bohemia: 20, original: 25,
           // Cervejas de preço médio (pontuação máxima)
           spaten: 30, bud: 30, brahmazero: 30, budzero: 30, 
           // Cervejas premium (pontuação média)
