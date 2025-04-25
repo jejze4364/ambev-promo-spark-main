@@ -1,91 +1,276 @@
-<!-- index.hrml -->
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descubra Sua Cerveja Ideal | Ambev</title>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home | Projeto de Estágio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #eff6ff, #ffffff);
+      color: #1f2937;
+    }
 
+    header, main {
+      max-width: 1024px;
+      margin: auto;
+      padding: 1.5rem 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #1d4ed8;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #4b5563; /* Melhor contraste */
+      margin-bottom: 2rem;
+    }
+
+    .option-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .option-card {
+      background: white;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+      padding: 1.25rem;
+      width: 250px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative; /* Para adicionar overlay acessível */
+    }
+
+    .option-card:hover {
+      border-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .option-card a {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      text-indent: -9999px;
+      z-index: 1;
+    }
+
+    .option-card h3 {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .main-btn {
+      background: #2563eb;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+
+    .main-btn:hover {
+      background: #1e40af;
+    }
+
+    .info-section {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .info-section h2 {
+      color: #2563eb;
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+    }
+
+    .info-card i {
+      font-size: 1.5rem;
+      color: #2563eb;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-card h3 {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-card p {
+      color: #4b5563; /* Melhor contraste */
+      font-size: 0.9rem;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111827;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+
+    .footer-link {
+      text-align: center;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: white;
+    }
+
+    .footer-link i {
+      font-size: 1.2rem;
+      display: block;
+    }
+
+    .footer-link.active,
+    .footer-link:hover {
+      color: #facc15;
+    }
+
+    .footer-spacer {
+      height: 80px;
+    }
+
+    @media (max-width: 640px) {
+      .option-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .footer-spacer {
+        height: 100px;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<!-- Substituir o código do modal de idade atual por este -->
-<div id="age-modal">
-  <div id="age-modal-content">
-    <div class="modal-header">
-      <div class="age-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
+
+  <header>
+    <h1>🍻 Desbrave nosso Projeto </h1>
+    <p class="subtitle">
+      Escolha uma das opções abaixo para embarcar em uma experiência personalizada. Cada caminho oferece algo único para você! 😊
+    </p>
+
+    <nav>
+      <div class="option-cards">
+        <div class="option-card">
+          <a href="index.html">Responder Pesquisa Novamente</a>
+          <h3>Responder Pesquisa Novamente</h3>
+          <p>Descubra Sua Cerveja Ideal em menos de 1 minuto.</p>
+        </div>
+        <div class="option-card">
+          <a href="login.html">Resultados</a>
+          <h3>Resultados</h3>
+          <p>Explore nosso Projeto por meio de um dashboard interativo!!</p>
+        </div>
+        <div class="option-card">
+          <a href="integrantes.html">Conheça os Integrantes</a>
+          <h3>Conheça os Integrantes</h3>
+          <p>Venha conhecer esse time de estags</p>
+        </div>
       </div>
-    </div>
-    
-    <h2>Verificação de Idade</h2>
-    <p class="modal-description">Este site contém informações sobre bebidas alcoólicas e está destinado exclusivamente para maiores de 18 anos.</p>
-    
-    <div class="age-options">
-      <button class="btn-yes" onclick="verifyAge(true)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 6L9 17l-5-5"></path>
-        </svg>
-        Sim, tenho mais de 18 anos
-      </button>
-      <button class="btn-no" onclick="verifyAge(false)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        Não tenho 18 anos
-      </button>
-    </div>
-    
-    <div class="legal-notice">
-      <p>Se você não tem idade legal para consumo de bebidas alcoólicas em seu país, por favor, saia deste site.</p>
-      <p>Consumo responsável. Não compartilhe este conteúdo com menores de idade.</p>
-    </div>
-  </div>
-</div>
 
-  <div class="container" style="display: none;">
-    <div id="header">
-      <h1>Descubra Sua Cerveja Ideal</h1>
-      <p>Responda algumas perguntas simples e descubra quais cervejas combinam com o seu perfil. Encontre as melhores promoções personalizadas!</p>
-    </div>
-
-    <div class="progress-container">
-      <div class="progress-label">
-        <span id="progress-text">Questão 1 de 6</span>
-        <span id="progress-percent">0%</span>
+      <div class="button-row">
+        <a href="promocoes.html" class="main-btn">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          Todas as Promoções
+        </a>
+        <a href="mercados.html" class="main-btn">
+          <i class="fas fa-store" aria-hidden="true"></i>
+          Mercados Parceiros
+        </a>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width:0%"></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="info-section">
+      <h2>Sobre a Ambev</h2>
+      <div class="info-cards">
+        <article class="info-card">
+          <i class="fas fa-award" aria-hidden="true"></i>
+          <h3>Liderança no Mercado</h3>
+          <p>Somos a maior cervejaria do Brasil e parte da AB InBev, maior grupo cervejeiro do mundo com mais de 100 anos de tradição.</p>
+        </article>
+        <article class="info-card">
+          <i class="fas fa-beer" aria-hidden="true"></i>
+          <h3>Diversidade de Marcas</h3>
+          <p>Nosso portfólio inclui mais de 30 marcas de cervejas, entre nacionais e internacionais, para todos os gostos.</p>
+        </article>
+        <article class="info-card">
+          <i class="fas fa-globe" aria-hidden="true"></i>
+          <h3>Compromisso Sustentável</h3>
+          <p>Investimos constantemente em iniciativas de sustentabilidade, redução do consumo de água e energia em nossas operações.</p>
+        </article>
       </div>
-    </div>
+      <p style="margin-top: 2rem; color: #4b5563; font-size: 0.85rem;">
+        * Válido para maiores de 18 anos. Beba com responsabilidade.
+      </p>
+    </section>
+  </main>
 
-    <div id="question-container"></div>
-    
-    <!-- Campos ocultos para respostas -->
-    <div style="display:none;">
-      <input type="hidden" id="pergunta1" name="pergunta1">
-      <input type="hidden" id="pergunta2" name="pergunta2">
-      <input type="hidden" id="pergunta3" name="pergunta3">
-      <input type="hidden" id="pergunta4" name="pergunta4">
-      <input type="hidden" id="pergunta5" name="pergunta5">
-      <input type="hidden" id="pergunta6" name="pergunta6">
-    </div>
-  </div>
+  <!-- Espaço para footer fixo -->
+  <div class="footer-spacer"></div>
 
+  <!-- Rodapé -->
+  <footer>
+    <a href="Inicial.html" class="footer-link active">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Home</span>
+    </a>
+    <a href="escolha_cerveja.html" class="footer-link">
+      <i class="fas fa-beer" aria-hidden="true"></i>
+      <span>Cervejas</span>
+    </a>
+    <a href="promocoes.html" class="footer-link">
+      <i class="fas fa-percent" aria-hidden="true"></i>
+      <span>Promoções</span>
+    </a>
+  </footer>
 
-  <script src="script.js" defer></script>
 </body>
-
 </html>
