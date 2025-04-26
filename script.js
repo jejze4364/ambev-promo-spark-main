@@ -509,92 +509,54 @@ if (q.dropdown) {
   return; // Interrompe o resto do render padrão
 }
 
-// Verifica se a pergunta é de múltiplas escolhas
 if (q.multipleChoice) {
-  
-q.options.forEach((opt, i) => {
-  const label = document.createElement('label');
-  label.classList.add('checkbox-option');
-  const input = document.createElement('input');
-  input.type = 'checkbox';
-  input.dataset.idx = i;
-  input.name = `checkbox-question-${currentQuestion}`;
-  const box = document.createElement('div');
-  box.classList.add('checkbox');
-  label.appendChild(input);
-  label.appendChild(box);
-  label.append(opt.text);
-  optionsDiv.appendChild(label);
+   q.options.forEach((opt, i) => {
+     const label = document.createElement('label');
+     label.classList.add('checkbox-option');
+     const input = document.createElement('input');
+     input.type = 'checkbox';
+     input.dataset.idx = i;
+     input.name = `checkbox-question-${currentQuestion}`;
+     const box = document.createElement('div');
+     box.classList.add('checkbox');
+     label.appendChild(input);
+     label.appendChild(box);
+     label.append(opt.text);
+     optionsDiv.appendChild(label);
 
-  input.addEventListener('change', () => {
-    label.classList.toggle('selected', input.checked);
-    
-    // Verificar contagem de seleções para perguntas com limite
-    if (q.requiredChoices) {
-      const selected = optionsDiv.querySelectorAll('input:checked').length;
-      // Desativa opções adicionais se o limite for atingido
-      if (selected >= q.requiredChoices) {
-        optionsDiv.querySelectorAll('input:not(:checked)').forEach(inp => {
-          inp.disabled = true;
-          inp.parentElement.classList.add('disabled');
-        });
-      } else {
-        optionsDiv.querySelectorAll('input').forEach(inp => {
-          inp.disabled = false;
-          inp.parentElement.classList.remove('disabled');
-        });
-      }
-    }
-  });
-});
+     input.addEventListener('change', () => {
+       label.classList.toggle('selected', input.checked);
 
-const btn = document.createElement('button');
-btn.innerText = "Continuar";
-btn.classList.add('btn-continue');
-btn.onclick = () => {
-  const selected = optionsDiv.querySelectorAll('input:checked');
+       // Remover a verificação do número de seleções
+       // Não é mais necessário verificar se o número de seleções está correto
+     });
+   });
 
-  if (q.requiredChoices && selected.length !== q.requiredChoices) {
-    alert(`Selecione exatamente ${q.requiredChoices} opções.`);
-    return;
-  }
+   const btn = document.createElement('button');
+   btn.innerText = "Continuar";
+   btn.classList.add('btn-continue');
+   btn.onclick = () => {
+     const selected = optionsDiv.querySelectorAll('input:checked');
+     
+     // Agora não é mais necessário verificar quantas opções foram selecionadas
+     let selectedAnswers = [];
+     selected.forEach(sel => {
+       const opt = q.options[+sel.dataset.idx];
+       selectedAnswers.push(opt.text);
 
-  let selectedAnswers = [];
-  selected.forEach(sel => {
-    const opt = q.options[+sel.dataset.idx];
-    selectedAnswers.push(opt.text);
+       // Somar pontuações
+       Object.entries(opt.scores).forEach(([key, value]) => {
+         scores[key] = (scores[key] || 0) + value;
+       });
+     });
 
-    // Somar pontuações
-    Object.entries(opt.scores).forEach(([key, value]) => {
-      scores[key] = (scores[key] || 0) + value;
-    });
-  });
+     respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
+     document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
+     nextQuestion();
+   };
 
-  
-  respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
-  document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
-  nextQuestion();
-};
-
-container.appendChild(optionsDiv);
-container.appendChild(btn);
-} else {
-q.options.forEach(opt => {
-  const btn = document.createElement('button');
-  btn.classList.add('option-button');
-  btn.innerHTML = `<div class="circle"></div>${opt.text}`;
-  btn.onclick = () => {
-    Object.entries(opt.scores).forEach(([key, value]) => {
-      scores[key] = (scores[key] || 0) + value;
-    });
-
-    respostas[`pergunta${currentQuestion + 1}`] = opt.text;
-    document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
-    nextQuestion();
-  };
-  optionsDiv.appendChild(btn);
-});
-container.appendChild(optionsDiv);
+   container.appendChild(optionsDiv);
+   container.appendChild(btn);
 }
 
 // Adicione estilos extras para as opções de checkbox
