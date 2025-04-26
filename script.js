@@ -176,7 +176,7 @@ const questions = [
         text: "Até R$ 4,00 por unidade",
         scores: {
           // Cervejas econômicas (pontuação máxima)
-          antarctica: 30, brahma: 30, skol: 30, bohemia: 28, original: 28,
+          antarctica: 30, brahma: 30, skol: 30, bohemia: 30, original: 30,
           // Cervejas de preço médio (pontuação média)
           spaten: 20, bud: 20, brahmazero: 25, budzero: 20,
           // Cervejas premium (pontuação baixa)
@@ -188,7 +188,7 @@ const questions = [
         text: "Entre R$ 4,00 e R$ 5,99 por unidade",
         scores: {
           // Cervejas econômicas (boa pontuação)
-          antarctica: 20, brahma: 20, skol: 20, bohemia: 20, original: 25,
+          antarctica: 20, brahma: 20, skol: 20, bohemia: 25, original: 30,
           // Cervejas de preço médio (pontuação máxima)
           spaten: 30, bud: 30, brahmazero: 30, budzero: 30, 
           // Cervejas premium (pontuação média)
@@ -346,7 +346,7 @@ const questions = [
     description: "Essa informação nos ajuda a entender melhor seu perfil de consumo.",
     options: [
       {
-        text: "Todos os dias",
+        text: "De 2x ou mais por semana",
         scores: {
           // Cervejas tradicionais mais populares
           brahma: 20, skol: 20, antarctica: 20,
@@ -358,7 +358,7 @@ const questions = [
         }
       },
       {
-        text: "De 2 a 3 vezes por semana",
+        text: "Semanalmente",
         scores: {
           // Cervejas premium tradicionais
           bud: 20, stella: 20, spaten: 20,
