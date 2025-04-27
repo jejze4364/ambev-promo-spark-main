@@ -48,6 +48,33 @@ db.collection("pesquisas").get()
     console.error("Erro ao obter dados do Firestore:", error);
   });
 }
+document.addEventListener("DOMContentLoaded", function() {
+  // 🔥 Torna o container visível!
+  document.querySelector('.container').style.display = 'flex';
+
+  const container = document.getElementById('question-container');
+  container.innerHTML = "<p>Teste de carregamento</p>";
+
+  console.log("Inicializando aplicação...");
+
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    allBeers.forEach(beer => {
+      scores[beer] = 0;
+    });
+
+    console.log("Carregando primeira pergunta...");
+    loadQuestion();
+    updateProgressBar();
+  } catch (error) {
+    console.error("Erro na inicialização:", error);
+    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
+  }
+});
+
 // Declaração de variáveis globais
 let currentQuestion = 0;
 const scores = {};
