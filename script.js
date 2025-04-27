@@ -48,27 +48,6 @@ db.collection("pesquisas").get()
     console.error("Erro ao obter dados do Firestore:", error);
   });
 }
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelector('.container').style.display = 'flex';
-
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    allBeers.forEach(beer => {
-      scores[beer] = 0;
-    });
-
-    loadQuestion();
-    updateProgressBar();
-  } catch (error) {
-    console.error("Erro na inicialização:", error);
-    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
-  }
-});
-
-
 // Declaração de variáveis globais
 let currentQuestion = 0;
 const scores = {};
@@ -82,6 +61,32 @@ const allBeers = [
   'becks', 'antarctica', 'michelob', 'brahmazero', 'skol', 'bohemia',
   'original', 'patagonia', 'colorado', 'stellapg'
 ];
+document.addEventListener("DOMContentLoaded", function() {
+  // Torna o container visível
+  document.querySelector('.container').style.display = 'flex';
+
+  const container = document.getElementById('question-container');
+  container.innerHTML = "<p>Teste de carregamento</p>";
+
+  console.log("Inicializando aplicação...");
+  
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    allBeers.forEach(beer => {
+      scores[beer] = 0;
+    });
+    
+    console.log("Carregando primeira pergunta...");
+    loadQuestion();
+    updateProgressBar();
+  } catch (error) {
+    console.error("Erro na inicialização:", error);
+    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
+  }
+});
 
 // Valor máximo por questão (padronizado)
 const MAX_POINTS_PER_QUESTION = [
@@ -188,7 +193,7 @@ const questions = [
     multipleChoice: false
   },
 
-  // Pergunta 3 - Faixa de preço (25 pontos máximos por cerveja)
+   // Pergunta 3 - Faixa de preço (25 pontos máximos por cerveja)
 {
   question: "Quanto você normalmente gasta em uma cerveja no mercado?",
   description: "Valor médio por unidade que você costuma pagar.",
@@ -443,6 +448,7 @@ function updateProgressBar() {
 
 // Modifique a função loadQuestion para incluir responsividade para mobile
 function loadQuestion() {
+  
 const container = document.getElementById('question-container');
 const q = questions[currentQuestion];
 
@@ -748,7 +754,7 @@ function showResults() {
     </div>
 
     <div class="action-buttons">
-      <a href="index.html" class="btn-primary">
+      <a href="Inicial.html" class="btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Conheça o Projeto
       </a>
@@ -806,3 +812,4 @@ function showResults() {
     document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
   }, 100);
 }
+
