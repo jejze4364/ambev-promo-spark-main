@@ -327,7 +327,7 @@ const questions = [
       text: "Estou aberto a experimentar opções zero", 
       scores: { 
         // Cervejas zero álcool (boa pontuação)
-        budzero: 20, coronacero: 20, brahmazero: 20,
+        budzero: 25, coronacero: 25, brahmazero: 20,
         // Cervejas de baixo teor (boa pontuação)
         michelob: 20, stellapg: 20,
         // Cervejas tradicionais (pontuação média)
