@@ -346,7 +346,7 @@ const questions = [
     description: "Essa informação nos ajuda a entender melhor seu perfil de consumo.",
     options: [
       {
-        text: "Todos os dias",
+        text: "Mais de 2x por semana",
         scores: {
           // Cervejas tradicionais mais populares
           brahma: 20, skol: 20, antarctica: 20,
@@ -358,7 +358,7 @@ const questions = [
         }
       },
       {
-        text: "De 2 a 3 vezes por semana",
+        text: "Semanalmente",
         scores: {
           // Cervejas premium tradicionais
           bud: 20, stella: 20, spaten: 20,
