@@ -413,27 +413,6 @@ function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TO
   return percentages;
 }
 
-function verifyAge(ok) {
-  const ageModal = document.getElementById('age-modal');
-  const container = document.querySelector('.container');
-  
-  ageModal.style.display = 'none';
-  container.style.display = 'flex';
-
-  if (ok) {
-    loadQuestion();
-    updateProgressBar();
-  } else {
-    document.querySelector('.container').innerHTML = `
-      <div style="text-align:center; padding: 3rem 1rem;">
-        <h2>Conteúdo restrito para maiores de 18 anos</h2>
-        <p>De acordo com a legislação brasileira, o consumo de bebidas alcoólicas só é permitido para maiores de 18 anos.</p>
-        <a href="#" onclick="location.reload()" class="btn-primary">Voltar</a>
-      </div>
-    `;
-  }
-}
-
 function updateProgressBar() {
   const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
   document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
