@@ -49,13 +49,7 @@ db.collection("pesquisas").get()
   });
 }
 document.addEventListener("DOMContentLoaded", function() {
-  // 🔥 Torna o container visível!
   document.querySelector('.container').style.display = 'flex';
-
-  const container = document.getElementById('question-container');
-  container.innerHTML = "<p>Teste de carregamento</p>";
-
-  console.log("Inicializando aplicação...");
 
   try {
     if (!firebase.apps.length) {
@@ -66,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function() {
       scores[beer] = 0;
     });
 
-    console.log("Carregando primeira pergunta...");
     loadQuestion();
     updateProgressBar();
   } catch (error) {
@@ -74,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
   }
 });
+
 
 // Declaração de variáveis globais
 let currentQuestion = 0;
