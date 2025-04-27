@@ -1,288 +1,224 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercados com Promoções | Esportanos</title>
-    <link rel="stylesheet" href="promocoes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Global Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            color: #ffbe0b;
-            text-align: center;
-            margin-top: 50px;
-            font-size: 2.5em;
-            text-transform: uppercase;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 0 10%;
-        }
-
-        .market-card {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .market-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .market-logo {
-            width: 100%;
-            height: 150px;
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-
-        .market-info {
-            margin-bottom: 15px;
-        }
-
-        .best-offer {
-            font-weight: bold;
-            color: #ffbe0b;
-            margin-bottom: 15px;
-        }
-
-        .view-offers-btn {
-            background-color: #ffbe0b;
-            color: white;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .view-offers-btn:hover {
-            background-color: #f77f00;
-            transform: scale(1.05);
-        }
-
-        /* Section headers */
-        .section-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .container {
-                padding: 0 5%;
-            }
-
-            .market-card {
-                font-size: 0.9em;
-                padding: 15px;
-            }
-
-            .view-offers-btn {
-                font-size: 1em;
-            }
-        }
-    </style>
+    <title>Escolha seu Supermercado - Rio de Janeiro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="promocoes.css"> <!-- AQUI ALTERADO -->
 </head>
-
 <body>
     <div class="app-container">
         <!-- Header com navegação -->
         <header class="app-header">
             <div class="header-content">
-                <a href="promocoes.html" class="back-btn">
+                <a href="index.html" class="back-btn" aria-label="Voltar para página inicial">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <h1>Mercados com Promoções</h1>
+                <h1>Supermercados</h1>
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                    <span class="notification-badge" aria-label="3 notificações não lidas">3</span>
                 </div>
             </div>
         </header>
 
-        <!-- Seção de cupons -->
-        <section class="promo-section">
+        <main class="main-content">
+            <!-- Seletor de localização -->
+            <div class="location-selector">
+                <div class="location-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h2>Selecione sua região</h2>
+                </div>
+                <div class="location-dropdown">
+                    <select id="region-selector">
+                        <option value="todos">Todas as regiões</option>
+                        <option value="zona-norte">Zona Norte</option>
+                        <option value="zona-sul">Zona Sul</option>
+                        <option value="zona-oeste">Zona Oeste</option>
+                        <option value="centro">Centro</option>
+                        <option value="baixada">Baixada Fluminense</option>
+                        <option value="niteroi">Niterói e São Gonçalo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Barra de pesquisa -->
+            <div class="search-container">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="market-search" placeholder="Buscar supermercados...">
+                </div>
+            </div>
+
+            <!-- Tabs de categorias -->
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="todos">Todos</button>
+                <button class="category-tab" data-category="super">Supermercados</button>
+                <button class="category-tab" data-category="atacado">Atacadões</button>
+                <button class="category-tab" data-category="popular">Mais populares</button>
+            </div>
+
+            <!-- Grade de supermercados -->
             <div class="section-header">
-                <h2>Mercados com Promoções Ativas</h2>
+                <h3 class="section-title">Supermercados e Atacadões</h3>
+            </div>
+            <div class="market-grid" id="market-grid">
+                <!-- Assaí -->
+                <a href="assai-promocoes.html" class="market-card" data-category="atacado" data-region="zona-norte zona-oeste baixada">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Assaí Atacadista">
+                        <span class="featured-tag">Destaque</span>
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Assaí Atacadista</h3>
+                        <p class="market-location">12 lojas</p>
+                        <span class="promo-count">24 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Guanabara -->
+                <a href="guanabara-promocoes.html" class="market-card" data-category="super" data-region="zona-sul zona-norte centro">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Guanabara">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Guanabara</h3>
+                        <p class="market-location">18 lojas</p>
+                        <span class="promo-count">15 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Prezunic -->
+                <a href="prezunic-promocoes.html" class="market-card" data-category="super" data-region="zona-oeste zona-norte baixada">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Prezunic">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Prezunic</h3>
+                        <p class="market-location">16 lojas</p>
+                        <span class="promo-count">18 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Carrefour -->
+                <a href="carrefour-promocoes.html" class="market-card" data-category="super" data-region="zona-sul zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Carrefour">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Carrefour</h3>
+                        <p class="market-location">9 lojas</p>
+                        <span class="promo-count">22 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Extra -->
+                <a href="extra-promocoes.html" class="market-card" data-category="super" data-region="zona-norte zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Extra">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Extra</h3>
+                        <p class="market-location">7 lojas</p>
+                        <span class="promo-count">16 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Mundial -->
+                <a href="mundial-promocoes.html" class="market-card" data-category="super" data-region="zona-sul centro">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Mundial">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Mundial</h3>
+                        <p class="market-location">14 lojas</p>
+                        <span class="promo-count">19 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Atacadão -->
+                <a href="atacadao-promocoes.html" class="market-card" data-category="atacado" data-region="baixada zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Atacadão">
+                        <span class="featured-tag">Destaque</span>
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Atacadão</h3>
+                        <p class="market-location">5 lojas</p>
+                        <span class="promo-count">25 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Pão de Açúcar -->
+                <a href="pao-de-acucar-promocoes.html" class="market-card" data-category="super" data-region="zona-sul centro">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Pão de Açúcar">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Pão de Açúcar</h3>
+                        <p class="market-location">10 lojas</p>
+                        <span class="promo-count">12 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Supermarket -->
+                <a href="supermarket-promocoes.html" class="market-card" data-category="super" data-region="zona-sul">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Supermarket">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Supermarket</h3>
+                        <p class="market-location">8 lojas</p>
+                        <span class="promo-count">14 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Rede Economia -->
+                <a href="rede-economia-promocoes.html" class="market-card" data-category="super" data-region="zona-norte centro baixada">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Rede Economia">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Rede Economia</h3>
+                        <p class="market-location">20 lojas</p>
+                        <span class="promo-count">17 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Sam's Club -->
+                <a href="sams-club-promocoes.html" class="market-card" data-category="atacado" data-region="zona-oeste zona-norte">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Sam's Club">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Sam's Club</h3>
+                        <p class="market-location">3 lojas</p>
+                        <span class="promo-count">20 promoções</span>
+                    </div>
+                </a>
+
+                <!-- Makro -->
+                <a href="makro-promocoes.html" class="market-card" data-category="atacado" data-region="baixada zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="Makro">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">Makro</h3>
+                        <p class="market-location">4 lojas</p>
+                        <span class="promo-count">21 promoções</span>
+                    </div>
+                </a>
             </div>
 
-            <!-- Lista de mercados com promoções -->
-            <div class="container">
-                <!-- Mercado 1 -->
-                <div class="market-card">
-                    <img src="assai.jpg" alt="Assaí Atacadista" class="market-logo">
-                    <div class="market-info">
-                        <h3>Assaí</h3>
-                        <p>12 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>30% OFF em Brahma</strong>
-                    </div>
-                    <a href="atacadonovembro.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 2 -->
-                <div class="market-card">
-                    <img src="guanabara.jpg" alt="Guanabara" class="market-logo">
-                    <div class="market-info">
-                        <h3>Guanabara</h3>
-                        <p>8 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>Leve 6, Pague 5</strong>
-                    </div>
-                    <a href="varejonovembro.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 3 -->
-                <div class="market-card">
-                    <div class="featured-tag">Destaque</div>
-                    <img src="carone.jpg" alt="Carone" class="market-logo">
-                    <div class="market-info">
-                        <h3>Carone</h3>
-                        <p>15 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>40% na 2ª unidade</strong>
-                    </div>
-                    <a href="caronepromo.html" class="view-offers-btn featured-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 4 -->
-                <div class="market-card">
-                    <img src="extra.jpg" alt="Extra" class="market-logo">
-                    <div class="market-info">
-                        <h3>Extra</h3>
-                        <p>10 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>Leve 5, Pague 4</strong>
-                    </div>
-                    <a href="varejovale.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 5 -->
-                <div class="market-card">
-                    <img src="macaé.jpg" alt="Macaé" class="market-logo">
-                    <div class="market-info">
-                        <h3>Macaé</h3>
-                        <p>5 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>10% OFF em compras acima de R$100</strong>
-                    </div>
-                    <a href="macaepromocoes.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 6 -->
-                <div class="market-card">
-                    <img src="carrefour.jpg" alt="Carrefour" class="market-logo">
-                    <div class="market-info">
-                        <h3>Carrefour</h3>
-                        <p>18 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>R$30 OFF na compra de cervejas</strong>
-                    </div>
-                    <a href="carrefourpromo.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- Mercado 7 -->
-                <div class="market-card">
-                    <img src="pao-de-acucar.jpg" alt="Pão de Açúcar" class="market-logo">
-                    <div class="market-info">
-                        <h3>Pão de Açúcar</h3>
-                        <p>9 ofertas ativas</p>
-                    </div>
-                    <div class="best-offer">
-                        <span>Melhor oferta:</span>
-                        <strong>Desconto de 20% em cervejas importadas</strong>
-                    </div>
-                    <a href="paodeacucar.html" class="view-offers-btn">
-                        Ver Ofertas <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Integração com Zé Delivery -->
-        <section class="promo-section delivery-integration">
-            <div class="integration-card ze-delivery-section">
-                <div class="integration-content">
-                    <img src="ze-delivery-wide.png" alt="Zé Delivery" class="integration-logo">
-                    <div class="integration-info">
-                        <h3>Receba em casa com<br>Zé Delivery</h3>
-                        <p>Aplique automaticamente os<br>mesmos descontos do app</p>
-                    </div>
-                </div>
-                <button id="connect-ze" class="connect-btn">
-                    CONECTAR <i class="fas fa-link"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- Integração com Bees -->
-        <section class="promo-section delivery-integration">
-            <div class="integration-card bees-section">
-                <div class="integration-badge">EXCLUSIVO CNPJ</div>
-                <div class="integration-content">
-                    <img src="bees-wide.png" alt="Bees" class="integration-logo">
-                    <div class="integration-info">
-                        <h3>Compre no atacado<br>com Bees</h3>
-                        <p>Preços especiais para<br>seu estabelecimento</p>
-                    </div>
-                </div>
-                <button id="connect-bees" class="connect-btn">
-                    CONECTAR <i class="fas fa-link"></i>
-                </button>
-            </div>
-        </section>
+            <!-- Espaço para o footer -->
+            <div class="footer-spacer"></div>
+        </main>
 
         <!-- Footer -->
         <footer class="app-footer">
-            <a href="Inicial.html" class="footer-link">
+            <a href="index.html" class="footer-link">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
@@ -297,7 +233,86 @@
         </footer>
     </div>
 
-    <script src="promocoes.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtros por categoria
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const markets = document.querySelectorAll('.market-card');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Filter markets by category
+                    const category = tab.getAttribute('data-category');
+                    filterMarkets();
+                });
+            });
+            
+            // Filtros por região
+            const regionSelector = document.getElementById('region-selector');
+            regionSelector.addEventListener('change', filterMarkets);
+            
+            // Busca por nome
+            const searchInput = document.getElementById('market-search');
+            searchInput.addEventListener('input', filterMarkets);
+            
+            function filterMarkets() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = document.querySelector('.category-tab.active').getAttribute('data-category');
+                const selectedRegion = regionSelector.value;
+                
+                markets.forEach(market => {
+                    const marketName = market.querySelector('.market-name').textContent.toLowerCase();
+                    const marketCategory = market.getAttribute('data-category');
+                    const marketRegions = market.getAttribute('data-region');
+                    
+                    // Verificar se atende aos critérios de filtro
+                    const matchesSearch = marketName.includes(searchTerm);
+                    const matchesCategory = selectedCategory === 'todos' || marketCategory === selectedCategory || 
+                                          (selectedCategory === 'popular' && market.querySelector('.featured-tag'));
+                    const matchesRegion = selectedRegion === 'todos' || (marketRegions && marketRegions.includes(selectedRegion));
+                    
+                    // Exibir ou ocultar o item
+                    if (matchesSearch && matchesCategory && matchesRegion) {
+                        market.style.display = 'flex';
+                    } else {
+                        market.style.display = 'none';
+                    }
+                });
+                
+                // Verificar se há resultados visíveis
+                const visibleMarkets = document.querySelectorAll('.market-card[style="display: flex;"]');
+                const marketGrid = document.getElementById('market-grid');
+                
+                if (visibleMarkets.length === 0) {
+                    // Se não houver resultados, mostrar mensagem
+                    if (!document.querySelector('.no-results')) {
+                        const noResults = document.createElement('div');
+                        noResults.className = 'no-results';
+                        noResults.style.textAlign = 'center';
+                        noResults.style.padding = '20px';
+                        noResults.style.width = '100%';
+                        noResults.style.gridColumn = '1 / -1';
+                        noResults.innerHTML = `
+                            <i class="fas fa-search" style="font-size: 32px; color: #ccc; margin-bottom: 10px;"></i>
+                            <p>Nenhum supermercado encontrado com esses filtros.</p>
+                        `;
+                        marketGrid.appendChild(noResults);
+                    }
+                } else {
+                    // Se houver resultados, remover mensagem de não encontrado
+                    const noResults = document.querySelector('.no-results');
+                    if (noResults) {
+                        noResults.remove();
+                    }
+                }
+            }
+        });
+    </script>
 </body>
-
 </html>
