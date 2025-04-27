@@ -202,19 +202,16 @@ const firebaseConfig = {
         text: "Até R$ 4,00 por unidade",
         scores: {
           // Cervejas econômicas (pontuação máxima)
-          antarctica: 25, brahma: 25, skol: 25, bohemia: 20, original: 20,
+          antarctica: 25, brahma: 25, skol: 20, bohemia: 20, original: 20,
           // Cervejas de preço médio (pontuação média)
           spaten: 10, bud: 10, brahmazero: 15, budzero: 10,
-          // Cervejas premium (pontuação baixa)
-          stella: 5, becks: 5, corona: 5, coronacero: 5, 
-          stellapg: 3, patagonia: 3, michelob: 5, colorado: 3
         }
       },
       {
         text: "Entre R$ 4,00 e R$ 5,99 por unidade",
         scores: {
           // Cervejas econômicas (pontuação média)
-          antarctica: 15, brahma: 15, skol: 15, bohemia: 15, original: 15,
+          antarctica: 10, brahma: 10, skol: 5, bohemia: 10, original: 15,
           // Cervejas de preço médio (pontuação máxima)
           spaten: 25, bud: 25, brahmazero: 25, budzero: 20, original: 20,
           // Cervejas premium (pontuação média)
@@ -226,7 +223,7 @@ const firebaseConfig = {
         text: "Entre R$ 6,00 e R$ 7,99 por unidade",
         scores: {
           // Cervejas econômicas (pontuação baixa)
-          antarctica: 5, brahma: 5, skol: 5, bohemia: 8, original: 8,
+          antarctica: 5, brahma: 5, original: 8,
           // Cervejas de preço médio (pontuação média)
           spaten: 15, bud: 15, brahmazero: 10, budzero: 12,
           // Cervejas premium (pontuação máxima)
@@ -237,8 +234,6 @@ const firebaseConfig = {
       {
         text: "R$ 8,00 ou mais por unidade",
         scores: {
-          // Cervejas econômicas (pontuação mínima)
-          antarctica: 3, brahma: 3, skol: 3, bohemia: 5, original: 5,
           // Cervejas de preço médio (pontuação baixa)
           spaten: 8, bud: 8, brahmazero: 3, budzero: 5,
           // Cervejas premium (pontuação máxima)
