@@ -176,9 +176,9 @@ const questions = [
         text: "Até R$ 4,00 por unidade",
         scores: {
           // Cervejas econômicas (pontuação máxima)
-          antarctica: 30, brahma: 30, skol: 30, bohemia: 28, original: 28,
+          antarctica: 50, brahma: 50, skol: 48, bohemia: 48, original: 48,
           // Cervejas de preço médio (pontuação média)
-          spaten: 20, bud: 20, brahmazero: 25, budzero: 20,
+          spaten: 20, bud: 20, brahmazero: 25, budzero: 20, bohemia: 20, original: 20,
           // Cervejas premium (pontuação baixa)
           stella: 10, becks: 10, corona: 10, coronacero: 10, 
           stellapg: 5, patagonia: 5, michelob: 10, colorado: 5
@@ -190,7 +190,7 @@ const questions = [
           // Cervejas econômicas (boa pontuação)
           antarctica: 25, brahma: 25, skol: 25, bohemia: 25, original: 25,
           // Cervejas de preço médio (pontuação máxima)
-          spaten: 30, bud: 30, brahmazero: 30, budzero: 30, 
+          spaten: 50, bud: 50, brahmazero: 50, budzero: 35, original: 50,
           // Cervejas premium (pontuação média)
           stella: 20, becks: 20, corona: 20, coronacero: 20,
           stellapg: 15, michelob: 20, patagonia: 15, colorado: 15
@@ -204,7 +204,7 @@ const questions = [
           // Cervejas de preço médio (boa pontuação)
           spaten: 25, bud: 25, brahmazero: 15, budzero: 20,
           // Cervejas premium (pontuação máxima)
-          stella: 30, becks: 30, corona: 30, coronacero: 30,
+          stella: 50, becks: 50, corona: 50, coronacero: 50,
           stellapg: 25, michelob: 30, patagonia: 25, colorado: 25
         }
       },
@@ -217,7 +217,7 @@ const questions = [
           spaten: 15, bud: 15, brahmazero: 5, budzero: 10,
           // Cervejas premium (pontuação máxima)
           stella: 30, becks: 30, corona: 25, coronacero: 25,
-          stellapg: 30, michelob: 25, patagonia: 30, colorado: 30
+          stellapg: 50, michelob: 25, patagonia: 50, colorado: 50
         }
       }
     ],
