@@ -168,62 +168,47 @@ const questions = [
     multipleChoice: false
   },
   {
-    question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha 3)",
-    description: "Selecione as 3 principais ocasiões que combinam com o seu estilo.",
-    multipleChoice: true,
-    requiredChoices: 3,
-    gridLayout: true,
-    options: [
-      {
-        text: "Churrasco com amigos e família",
-        scores: {
-          brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25
-        }
-      },
-      {
-        text: "Happy hours e eventos corporativos",
-        scores: {
-          stella: 30, bud: 30, spaten: 25, michelob: 25
-        }
-      },
-      {
-        text: "Festas e celebrações",
-        scores: {
-          bud: 30, skol: 30, corona: 30, brahma: 25
-        }
-      },
-      {
-        text: "Momentos ao ar livre (praia, piscina)",
-        scores: {
-          corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25
-        }
-      },
-      {
-        text: "Jantares e Harmonizações",
-        scores: {
-          stella: 30, stellapg: 30, colorado: 30, patagonia: 30
-        }
-      },
-      {
-        text: "Assistindo a jogos de futebol",
-        scores: {
-          brahma: 30, antarctica: 30, skol: 30, bud: 25
-        }
-      },
-      {
-        text: "Encontros românticos",
-        scores: {
-          stella: 30, colorado: 30, patagonia: 30, michelob: 25
-        }
-      },
-      {
-        text: "Relaxando em casa após o trabalho",
-        scores: {
-          brahma: 30, original: 30, bohemia: 25, michelob: 25
-        }
-      }
-    ]
-  },
+  question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha quantas quiser)",
+  description: "Selecione todas as ocasiões que combinam com o seu estilo.",
+  multipleChoice: true,
+  requiredChoices: null, // <<< NÃO DEFINE UM LIMITE
+  gridLayout: true,
+  options: [
+    {
+      text: "Churrasco com amigos e família",
+      scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
+    },
+    {
+      text: "Happy hours e eventos corporativos",
+      scores: { stella: 30, bud: 30, spaten: 25, michelob: 25 }
+    },
+    {
+      text: "Festas e celebrações",
+      scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
+    },
+    {
+      text: "Momentos ao ar livre (praia, piscina)",
+      scores: { corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
+    },
+    {
+      text: "Jantares e Harmonizações",
+      scores: { stella: 30, stellapg: 30, colorado: 30, patagonia: 30 }
+    },
+    {
+      text: "Assistindo a jogos de futebol",
+      scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25 }
+    },
+    {
+      text: "Encontros românticos",
+      scores: { stella: 30, colorado: 30, patagonia: 30, michelob: 25 }
+    },
+    {
+      text: "Relaxando em casa após o trabalho",
+      scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
+    }
+  ]
+},
+
   {
     question: "Você tem interesse em opções zero álcool?",
     description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
