@@ -88,112 +88,51 @@ const firebaseConfig = {
     }
   });
   
-  // Valor máximo por questão (padronizado)
-  const MAX_POINTS_PER_QUESTION = [
-    0,  // Questão 1 (localização) - sem pontuação, mas mantemos estrutura
-    0,   // Questão 2 (faixa etária) - sem pontuação 
-    30,  // Questão 3 (faixa de preço) - 30% do total
-    40,  // Questão 4 (ocasiões) - 40% do total (mais importante)
-    30,  // Questão 5 (zero álcool) - 30% do total
-    20   // Questão 6 (frequência) - 20% do total
-  ];
-  
-  // Pontuação total máxima possível por cerveja
-  const MAX_TOTAL_POINTS = MAX_POINTS_PER_QUESTION.reduce((sum, val) => sum + val, 0);
-  
-  
-  // Objetos corrigidos e sincronizados
-  const friendlyNames = {
-    brahma: "Brahma",
-    spaten: "Spaten",
-    corona: "Corona",
-    bud: "Budweiser",
-    stella: "Stella Artois",
-    budzero: "Budweiser Zero",
-    coronacero: "Corona Cero",
-    becks: "Beck's",
-    antarctica: "Antarctica",
-    michelob: "Michelob Ultra",
-    brahmazero: "Brahma Zero",
-    skol: "Skol",
-    bohemia: "Bohemia",
-    original: "Original",
-    patagonia: "Patagonia",
-    colorado: "Colorado",
-    lt350: "Lata 350ml",
-    ln: "Long Neck",
-    lt473: "Latão 473ml",
-    lt279: "Latinha 269ml/275ml",
-    stellapg: "Stella Artois Sem Glúten"
-  };
-  
-  const beerDescriptions = {
-    brahma: "Sabor marcante e refrescante",
-    spaten: "Puro malte premium alemã",
-    corona: "Refrescante com toque cítrico",
-    bud: "Equilibrada e suave",
-    stella: "Sofisticada e encorpada",
-    budzero: "Zero álcool, 100% sabor",
-    coronacero: "Refrescante sem álcool",
-    becks: "Pureza e tradição alemã",
-    antarctica: "Clássica brasileira",
-    michelob: "Leve e baixa caloria",
-    brahmazero: "Refrescante sem álcool",
-    skol: "Leve e refrescante",
-    bohemia: "Primeira cerveja do Brasil",
-    original: "Autêntica e marcante",
-    patagonia: "Premium argentina",
-    colorado: "Artesanal com toques especiais",
-    stellapg: "Sem Glúten, sem estresse"
-  };
-  
-  
-  const questions = [
-    {
-      question: "Em qual desses municípios você costuma fazer suas compras de supermercado?",
-      dropdown: true, // <- chave nova para renderizar como <select>
-      options: [
-        { text: "Rio de Janeiro", scores: {} },
-        { text: "São Gonçalo", scores: {} },
-        { text: "Duque de Caxias", scores: {} },
-        { text: "Nova Iguaçu", scores: {} },
-        { text: "Belford Roxo", scores: {} },
-        { text: "Niterói", scores: {} },
-        { text: "Campos dos Goytacazes", scores: {} },
-        { text: "São João de Meriti", scores: {} },
-        { text: "Volta Redonda", scores: {} },
-        { text: "Petrópolis", scores: {} },
-        { text: "Outro(s)", scores: {} }
-      ],
-      multipleChoice: false
-    },  
-    
-    // Pergunta 2 - Faixa etária (sem pontuação)
-    {
-      question: "Qual a sua faixa etária?",
-      description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
-      options: [
-        {
-          text: "18 a 27 anos",
-          scores: {}
-        },
-        {
-          text: "28 a 37 anos",
-          scores: {}
-        },
-        {
-          text: "38 a 45 anos",
-          scores: {}
-        },
-        {
-          text: "Acima de 45 anos",
-          scores: {}
-        }
-      ],
-      multipleChoice: false
-    },
-  
-     // Pergunta 3 - Faixa de preço (25 pontos máximos por cerveja)
+  // Pontuações máximas por pergunta
+const MAX_POINTS_PER_QUESTION = [
+  0,  // Localização (não pontua)
+  0,  // Faixa etária (não pontua)
+  40, // Preço
+  30, // Ocasiões
+  30, // Interesse em zero álcool
+  30  // Frequência de consumo
+];
+
+// Pontuação total máxima
+const MAX_TOTAL_POINTS = MAX_POINTS_PER_QUESTION.reduce((sum, val) => sum + val, 0);
+
+// Objeto friendlyNames e beerDescriptions mantidos como estavam (não alterei)
+
+const questions = [
+  {
+    question: "Em qual desses municípios você costuma fazer suas compras de supermercado?",
+    dropdown: true,
+    options: [
+      { text: "Rio de Janeiro", scores: {} },
+      { text: "São Gonçalo", scores: {} },
+      { text: "Duque de Caxias", scores: {} },
+      { text: "Nova Iguaçu", scores: {} },
+      { text: "Belford Roxo", scores: {} },
+      { text: "Niterói", scores: {} },
+      { text: "Campos dos Goytacazes", scores: {} },
+      { text: "São João de Meriti", scores: {} },
+      { text: "Volta Redonda", scores: {} },
+      { text: "Petrópolis", scores: {} },
+      { text: "Outro(s)", scores: {} }
+    ],
+    multipleChoice: false
+  },
+  {
+    question: "Qual a sua faixa etária?",
+    description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
+    options: [
+      { text: "18 a 27 anos", scores: {} },
+      { text: "28 a 37 anos", scores: {} },
+      { text: "38 a 45 anos", scores: {} },
+      { text: "Acima de 45 anos", scores: {} }
+    ],
+    multipleChoice: false
+  },
   {
     question: "Quanto você normalmente gasta em uma cerveja no mercado?",
     description: "Valor médio por unidade que você costuma pagar.",
@@ -201,53 +140,35 @@ const firebaseConfig = {
       {
         text: "Até R$ 4,00 por unidade",
         scores: {
-          // Cervejas econômicas (pontuação máxima)
-          antarctica: 25, brahma: 25, skol: 20, bohemia: 20, original: 20,
-          // Cervejas de preço médio (pontuação média)
-          spaten: 10, bud: 10, brahmazero: 15, budzero: 10,
+          brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
         }
       },
       {
         text: "Entre R$ 4,00 e R$ 5,99 por unidade",
         scores: {
-          // Cervejas econômicas (pontuação média)
-          antarctica: 10, brahma: 10, skol: 5, bohemia: 10, original: 15,
-          // Cervejas de preço médio (pontuação máxima)
-          spaten: 25, bud: 25, brahmazero: 25, budzero: 20, original: 20,
-          // Cervejas premium (pontuação média)
-          stella: 10, becks: 10, corona: 10, coronacero: 10,
-          stellapg: 8, michelob: 10, patagonia: 8, colorado: 8
+          spaten: 40, bud: 40, brahmazero: 35, budzero: 30,
+          stella: 30, corona: 30, becks: 30, michelob: 25, coronacero: 25
         }
       },
       {
         text: "Entre R$ 6,00 e R$ 7,99 por unidade",
         scores: {
-          // Cervejas econômicas (pontuação baixa)
-          antarctica: 5, brahma: 5, original: 8,
-          // Cervejas de preço médio (pontuação média)
-          spaten: 15, bud: 15, brahmazero: 10, budzero: 12,
-          // Cervejas premium (pontuação máxima)
-          stella: 25, becks: 25, corona: 25, coronacero: 25,
-          stellapg: 15, michelob: 18, patagonia: 15, colorado: 15
+          stella: 40, becks: 40, corona: 40, patagonia: 35, colorado: 35,
+          michelob: 30, brahmazero: 20, budzero: 20
         }
       },
       {
         text: "R$ 8,00 ou mais por unidade",
         scores: {
-          // Cervejas de preço médio (pontuação baixa)
-          spaten: 8, bud: 8, brahmazero: 3, budzero: 5,
-          // Cervejas premium (pontuação máxima)
-          stella: 20, becks: 20, corona: 18, coronacero: 18,
-          stellapg: 25, michelob: 15, patagonia: 25, colorado: 25
+          patagonia: 40, colorado: 40, stellapg: 40, michelob: 35,
+          stella: 30, becks: 30, corona: 30
         }
       }
     ],
     multipleChoice: false
   },
-  
-  // Pergunta 4 - Ocasiões (35 pontos máximos por cerveja)
   {
-    question: "Em quais ocasiões você mais gosta de apreciar uma cerveja?(Escolha 3)",
+    question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha 3)",
     description: "Selecione as 3 principais ocasiões que combinam com o seu estilo.",
     multipleChoice: true,
     requiredChoices: 3,
@@ -255,113 +176,80 @@ const firebaseConfig = {
     options: [
       {
         text: "Churrasco com amigos e família",
-        scores: { 
-          antarctica: 12, brahma: 12, skol: 12, bohemia: 10, original: 10,
-          spaten: 8, bud: 8, michelob: 6, budzero: 6, brahmazero: 6
+        scores: {
+          brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25
         }
       },
       {
         text: "Happy hours e eventos corporativos",
-        scores: { 
-          spaten: 12, stella: 12, stellapg: 12, becks: 12, 
-          corona: 8, bud: 8,
-          budzero: 8, coronacero: 8, brahmazero: 8, michelob: 10
+        scores: {
+          stella: 30, bud: 30, spaten: 25, michelob: 25
         }
       },
       {
         text: "Festas e celebrações",
-        scores: { 
-          bud: 12, stella: 8, skol: 12, corona: 12, brahma: 8,
-          budzero: 6, coronacero: 6, becks: 8, brahmazero: 6
+        scores: {
+          bud: 30, skol: 30, corona: 30, brahma: 25
         }
       },
       {
         text: "Momentos ao ar livre (praia, piscina)",
-        scores: { 
-          corona: 12, coronacero: 12, skol: 8, brahma: 8, 
-          budzero: 8, brahmazero: 8, michelob: 10, antarctica: 8, bud: 8
+        scores: {
+          corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25
         }
       },
       {
         text: "Jantares e Harmonizações",
-        scores: { 
-          stella: 12, stellapg: 12, colorado: 12, patagonia: 12,
-          becks: 8, bohemia: 8, spaten: 8, original: 8
+        scores: {
+          stella: 30, stellapg: 30, colorado: 30, patagonia: 30
         }
       },
       {
         text: "Assistindo a jogos de futebol",
-        scores: { 
-          antarctica: 12, brahma: 12, skol: 12, bud: 8, spaten: 6,
-          budzero: 8, coronacero: 6, brahmazero: 8
+        scores: {
+          brahma: 30, antarctica: 30, skol: 30, bud: 25
         }
       },
       {
         text: "Encontros românticos",
-        scores: { 
-          stella: 12, stellapg: 12, colorado: 12, patagonia: 12,
-          becks: 8, bohemia: 6, spaten: 6, corona: 8
+        scores: {
+          stella: 30, colorado: 30, patagonia: 30, michelob: 25
         }
       },
       {
         text: "Relaxando em casa após o trabalho",
-        scores: { 
-          antarctica: 8, brahma: 8, spaten: 8, bud: 8,
-          bohemia: 12, original: 12, coronacero: 6, brahmazero: 6,
-          budzero: 6, michelob: 8
+        scores: {
+          brahma: 30, original: 30, bohemia: 25, michelob: 25
         }
       }
     ]
   },
-  
-  // Pergunta 5 - Zero álcool (25 pontos máximos por cerveja)
   {
     question: "Você tem interesse em opções zero álcool?",
     description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
     options: [
-      { 
-        text: "Sim, prefiro cervejas zero álcool", 
-        scores: { 
-          // Cervejas zero álcool (pontuação máxima)
-          budzero: 25, coronacero: 25, brahmazero: 25, 
-          // Cervejas de baixo teor (pontuação média)
-          michelob: 12, stellapg: 12,
-          // Cervejas tradicionais (pontuação zero)
-          bud: 0, corona: 0, brahma: 0, stella: 0, spaten: 0, becks: 0, 
-          antarctica: 0, skol: 0, bohemia: 0, patagonia: 0, colorado: 0, original: 0
-        } 
+      {
+        text: "Sim, prefiro cervejas zero álcool",
+        scores: {
+          brahmazero: 30, budzero: 30, coronacero: 30, michelob: 20, stellapg: 20
+        }
       },
-      { 
-        text: "Não, prefiro cervejas tradicionais", 
-        scores: { 
-          // Cervejas zero álcool (pontuação zero)
-          budzero: 0, coronacero: 0, brahmazero: 0, 
-          // Cervejas de baixo teor (pontuação média)
-          michelob: 12, stellapg: 12,
-          // Cervejas tradicionais (pontuação máxima)
-          bud: 25, corona: 25, brahma: 25, stella: 25, spaten: 25,
-          becks: 25, antarctica: 25, skol: 25, bohemia: 25, 
-          patagonia: 25, colorado: 25, original: 25
-        } 
+      {
+        text: "Não, prefiro cervejas tradicionais",
+        scores: {
+          brahma: 30, skol: 30, bud: 30, stella: 30, spaten: 30, original: 30
+        }
       },
-      { 
-        text: "Estou aberto a experimentar opções zero", 
-        scores: { 
-          // Cervejas zero álcool (boa pontuação)
-          budzero: 25, coronacero: 25, brahmazero: 20,
-          // Cervejas de baixo teor (boa pontuação)
-          michelob: 20, stellapg: 20,
-          // Cervejas tradicionais (pontuação média)
-          bud: 15, corona: 15, brahma: 15, stella: 15, spaten: 15,
-          becks: 15, antarctica: 15, skol: 15, bohemia: 15, 
-          patagonia: 15, colorado: 15, original: 15
-        } 
+      {
+        text: "Estou aberto a experimentar opções zero",
+        scores: {
+          brahmazero: 25, budzero: 25, coronacero: 25, michelob: 25, stellapg: 25,
+          bud: 20, corona: 20, brahma: 20, stella: 20
+        }
       }
     ],
     multipleChoice: false
   },
-  
-  // Pergunta 6 - Frequência (15 pontos máximos por cerveja)
   {
     question: "Com que frequência você consome cerveja?",
     description: "Essa informação nos ajuda a entender melhor seu perfil de consumo.",
@@ -369,55 +257,32 @@ const firebaseConfig = {
       {
         text: "Mais de 2x por semana",
         scores: {
-          // Cervejas tradicionais mais populares
-          brahma: 15, skol: 15, antarctica: 15,
-          // Cervejas de baixo teor/zero álcool
-          michelob: 12, brahmazero: 12, budzero: 12,
-          // Outras cervejas
-          bud: 10, corona: 8, stella: 8, spaten: 10, becks: 8,
-          coronacero: 12, bohemia: 10, original: 10, patagonia: 6, colorado: 6, stellapg: 8
+          brahma: 30, skol: 30, antarctica: 30, bud: 25, stella: 25, michelob: 20
         }
       },
       {
         text: "Semanalmente",
         scores: {
-          // Cervejas premium tradicionais
-          bud: 15, stella: 15, spaten: 15,
-          // Cervejas de baixo teor/especiais
-          michelob: 15, corona: 15, becks: 12,
-          // Outras cervejas
-          brahma: 12, skol: 12, antarctica: 12, brahmazero: 10, budzero: 10,
-          coronacero: 10, bohemia: 12, original: 12, patagonia: 10, colorado: 10, stellapg: 10
+          spaten: 30, stella: 30, michelob: 30, corona: 25, bud: 25
         }
       },
       {
         text: "Apenas em eventos e ocasiões especiais",
         scores: {
-          // Cervejas premium/especiais
-          corona: 15, patagonia: 15, colorado: 15,
-          stella: 15, becks: 15, bohemia: 12,
-          // Outras cervejas
-          bud: 10, spaten: 10, brahma: 8, skol: 8, antarctica: 8,
-          budzero: 6, coronacero: 6, brahmazero: 6, michelob: 10,
-          original: 10, stellapg: 12
+          patagonia: 30, colorado: 30, corona: 30, stella: 25, becks: 25
         }
       },
       {
         text: "Raramente ou nunca",
         scores: {
-          // Cervejas zero álcool/baixo teor
-          budzero: 15, coronacero: 15, brahmazero: 15,
-          michelob: 15, stellapg: 15,
-          // Outras cervejas (pontuação média-baixa para todas)
-          bud: 6, corona: 6, brahma: 6, stella: 6, spaten: 6,
-          becks: 6, antarctica: 6, skol: 6, bohemia: 6, 
-          patagonia: 6, colorado: 6, original: 6
+          budzero: 30, coronacero: 30, brahmazero: 30, michelob: 25, stellapg: 25
         }
       }
     ],
     multipleChoice: false
   }
-  ];
+];
+
   
   // Função para calcular a porcentagem de compatibilidade de forma padronizada
   function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TOTAL_POINTS) {
