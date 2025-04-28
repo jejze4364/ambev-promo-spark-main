@@ -291,256 +291,229 @@ const questions = [
     document.querySelector('.progress-fill').style.width = `${percent}%`;
   }
   
-  // Modifique a função loadQuestion para incluir responsividade para mobile
   function loadQuestion() {
-    
   const container = document.getElementById('question-container');
   const q = questions[currentQuestion];
-  
+
   container.innerHTML = ''; // Limpa o conteúdo atual
-  
+
   let questionContent = `
-  <h2>${q.question}</h2>
-  ${q.description ? `<p style="color: var(--text-light); margin-bottom: 1.5rem;">${q.description}</p>` : ''}
+    <h2>${q.question}</h2>
+    ${q.description ? `<p style="color: var(--text-light); margin-bottom: 1.5rem;">${q.description}</p>` : ''}
   `;
-  
+
   container.innerHTML = questionContent;  // Adiciona o conteúdo da pergunta ao container
-  
+
   const optionsDiv = document.createElement('div');
   optionsDiv.classList.add('options-container');
-  
-  // Aplica layout em duas colunas na primeira pergunta ou se gridLayout é true
-  // (usado para a questão 4 ou outras onde isso faça sentido)
+
   if (currentQuestion === 0 || q.gridLayout) {
-  optionsDiv.classList.add('grid-layout');
+    optionsDiv.classList.add('grid-layout');
   }
+
   // Verifica se é dropdown
   if (q.dropdown) {
     const select = document.createElement('select');
     select.classList.add('dropdown-select');
-  
-    // Placeholder
+
     const placeholder = document.createElement('option');
-    placeholder.textContent = 'Selecione um município';
+    placeholder.textContent = 'Selecione uma opção';
     placeholder.disabled = true;
     placeholder.selected = true;
     select.appendChild(placeholder);
-  
-    // Adiciona opções do dropdown
+
     q.options.forEach((opt, i) => {
       const option = document.createElement('option');
       option.value = i;
       option.textContent = opt.text;
       select.appendChild(option);
     });
-  
+
     const continueBtn = document.createElement('button');
     continueBtn.textContent = 'Continuar';
     continueBtn.classList.add('btn-continue');
-  
+
     continueBtn.onclick = () => {
       const selectedIdx = select.value;
-      if (selectedIdx === '') return alert('Por favor, selecione um município.');
-  
+      if (selectedIdx === '') return alert('Por favor, selecione uma opção.');
+
       const opt = q.options[selectedIdx];
       respostas[`pergunta${currentQuestion + 1}`] = opt.text;
       document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
-  
-      // Nenhuma pontuação atribuída nesse caso, mas se quiser somar, pode ativar abaixo:
+
       Object.entries(opt.scores).forEach(([key, value]) => {
         scores[key] = (scores[key] || 0) + value;
       });
-  
+
       nextQuestion();
     };
-  
+
     optionsDiv.appendChild(select);
     optionsDiv.appendChild(continueBtn);
     container.appendChild(optionsDiv);
-    return; // Interrompe o resto do render padrão
+    return;
   }
-  
-  // Verifica se a pergunta é de múltiplas escolhas
+
+  // Verifica se é múltipla escolha
   if (q.multipleChoice) {
-    
-  q.options.forEach((opt, i) => {
-    const label = document.createElement('label');
-    label.classList.add('checkbox-option');
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.dataset.idx = i;
-    input.name = `checkbox-question-${currentQuestion}`;
-    const box = document.createElement('div');
-    box.classList.add('checkbox');
-    label.appendChild(input);
-    label.appendChild(box);
-    label.append(opt.text);
-    optionsDiv.appendChild(label);
-  
-    input.addEventListener('change', () => {
-      label.classList.toggle('selected', input.checked);
-      
-      // Verificar contagem de seleções para perguntas com limite
-      if (q.requiredChoices) {
-        const selected = optionsDiv.querySelectorAll('input:checked').length;
-        // Desativa opções adicionais se o limite for atingido
-        if (selected >= q.requiredChoices) {
-          optionsDiv.querySelectorAll('input:not(:checked)').forEach(inp => {
-            inp.disabled = true;
-            inp.parentElement.classList.add('disabled');
-          });
-        } else {
-          optionsDiv.querySelectorAll('input').forEach(inp => {
-            inp.disabled = false;
-            inp.parentElement.classList.remove('disabled');
-          });
-        }
-      }
+    q.options.forEach((opt, i) => {
+      const label = document.createElement('label');
+      label.classList.add('checkbox-option');
+
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.dataset.idx = i;
+      input.name = `checkbox-question-${currentQuestion}`;
+
+      const box = document.createElement('div');
+      box.classList.add('checkbox');
+
+      label.appendChild(input);
+      label.appendChild(box);
+      label.append(opt.text);
+      optionsDiv.appendChild(label);
     });
-  });
-  
-  const btn = document.createElement('button');
-  btn.innerText = "Continuar";
-  btn.classList.add('btn-continue');
-  btn.onclick = () => {
-    const selected = optionsDiv.querySelectorAll('input:checked');
-  
-  if (q.requiredChoices != null && selected.length !== q.requiredChoices) {
-      alert(`Selecione exatamente ${q.requiredChoices} opções.`);
-      return;
-    }
-  
-    let selectedAnswers = [];
-    selected.forEach(sel => {
-      const opt = q.options[+sel.dataset.idx];
-      selectedAnswers.push(opt.text);
-  
-      // Somar pontuações
-      Object.entries(opt.scores).forEach(([key, value]) => {
-        scores[key] = (scores[key] || 0) + value;
-      });
-    });
-  
-    
-    respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
-    document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
-    nextQuestion();
-  };
-  
-  container.appendChild(optionsDiv);
-  container.appendChild(btn);
-  } else {
-  q.options.forEach(opt => {
+
     const btn = document.createElement('button');
-    btn.classList.add('option-button');
-    btn.innerHTML = `<div class="circle"></div>${opt.text}`;
+    btn.innerText = "Continuar";
+    btn.classList.add('btn-continue');
+
     btn.onclick = () => {
-      Object.entries(opt.scores).forEach(([key, value]) => {
-        scores[key] = (scores[key] || 0) + value;
+      const selected = optionsDiv.querySelectorAll('input:checked');
+
+      // Só exige quantidade exata se for configurado no questionário
+      if (q.requiredChoices != null && selected.length !== q.requiredChoices) {
+        alert(`Por favor, selecione exatamente ${q.requiredChoices} opções.`);
+        return;
+      }
+
+      if (selected.length === 0) {
+        alert('Por favor, selecione pelo menos uma opção.');
+        return;
+      }
+
+      let selectedAnswers = [];
+      selected.forEach(sel => {
+        const opt = q.options[+sel.dataset.idx];
+        selectedAnswers.push(opt.text);
+
+        Object.entries(opt.scores).forEach(([key, value]) => {
+          scores[key] = (scores[key] || 0) + value;
+        });
       });
-  
-      respostas[`pergunta${currentQuestion + 1}`] = opt.text;
-      document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+
+      respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
+      document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
+
       nextQuestion();
     };
-    optionsDiv.appendChild(btn);
-  });
-  container.appendChild(optionsDiv);
+
+    container.appendChild(optionsDiv);
+    container.appendChild(btn);
+  } else {
+    // Caso contrário: única escolha (botões normais)
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.classList.add('option-button');
+      btn.innerHTML = `<div class="circle"></div>${opt.text}`;
+      btn.onclick = () => {
+        Object.entries(opt.scores).forEach(([key, value]) => {
+          scores[key] = (scores[key] || 0) + value;
+        });
+
+        respostas[`pergunta${currentQuestion + 1}`] = opt.text;
+        document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+
+        nextQuestion();
+      };
+      optionsDiv.appendChild(btn);
+    });
+    container.appendChild(optionsDiv);
   }
-  
-  // Adicione estilos extras para as opções de checkbox
+
+  // Estilos de seleção
   const styleElement = document.createElement('style');
   styleElement.textContent = `
-  .checkbox-option.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .options-container {
-    margin-bottom: 2rem;
-  }
-  
-  .grid-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  
-  @media (max-width: 768px) {
-    .grid-layout {
-      grid-template-columns: 1fr;
+    .checkbox-option.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
-  }
-  
-  .checkbox-option {
-    padding: 0.9rem;
-    border-radius: 8px;
-    background-color: #f8f8f8;
-    transition: all 0.2s ease;
-    margin-bottom: 0.8rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-  
-  .checkbox-option:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .checkbox-option.selected {
-    background-color: rgba(247, 168, 0, 0.1);
-    border: 1px solid var(--primary-color, #f7a800);
-  }
-  
-  .checkbox {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-    position: relative;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-  }
-  
-  .checkbox-option.selected .checkbox {
-    border-color: var(--primary-color, #f7a800);
-    background-color: var(--primary-color, #f7a800);
-  }
-  
-  .checkbox-option.selected .checkbox:after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 7px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
-  
-  .btn-continue {
-    background-color: var(--primary-color, #f7a800);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    display: block;
-    margin: 1.5rem auto 0;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-continue:hover {
-    background-color: #e69a00;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
-  }
+    .options-container {
+      margin-bottom: 2rem;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .checkbox-option {
+      padding: 0.9rem;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+      transition: all 0.2s ease;
+      margin-bottom: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .checkbox-option:hover {
+      background-color: #f0f0f0;
+    }
+    .checkbox-option.selected {
+      background-color: rgba(247, 168, 0, 0.1);
+      border: 1px solid var(--primary-color, #f7a800);
+    }
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+      position: relative;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .checkbox-option.selected .checkbox {
+      border-color: var(--primary-color, #f7a800);
+      background-color: var(--primary-color, #f7a800);
+    }
+    .checkbox-option.selected .checkbox:after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 7px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .btn-continue {
+      background-color: var(--primary-color, #f7a800);
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      margin: 1.5rem auto 0;
+      transition: all 0.3s ease;
+    }
+    .btn-continue:hover {
+      background-color: #e69a00;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
+    }
   `;
   document.head.appendChild(styleElement);
-  }
+}
+
   function updateSelectionCounter(questionIndex, selectedCount, required) {
   const counterElement = document.getElementById(`selection-counter-${questionIndex}`);
   if (!counterElement) return;
