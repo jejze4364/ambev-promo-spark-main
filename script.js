@@ -5,7 +5,7 @@ const firebaseConfig = {
   storageBucket: "pesquisa-8a0f9.firebasestorage.app",
   messagingSenderId: "453188166697",
   appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
-  measurementId: "G-H34QHPSPS1"
+  measurementId: "G-H34QHPSPS1",
   };
   // Inicializa o Firebase
   const app = firebase.initializeApp(firebaseConfig);
@@ -405,7 +405,7 @@ const questions = [
   btn.onclick = () => {
     const selected = optionsDiv.querySelectorAll('input:checked');
   
-    if (q.requiredChoices && selected.length !== q.requiredChoices) {
+  if (q.requiredChoices != null && selected.length !== q.requiredChoices) {
       alert(`Selecione exatamente ${q.requiredChoices} opções.`);
       return;
     }
