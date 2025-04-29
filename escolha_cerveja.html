@@ -54,53 +54,97 @@
       margin-bottom: 0.5rem;
     }
     .footer-spacer {
-  height: 90px; /* aumentei de 80px para garantir espaço */
-  flex-shrink: 0;
-}
-
+      height: 90px;
+      flex-shrink: 0;
+    }
     footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111827;
-  color: white;
-  display: flex;
-  justify-content: space-around;
-  padding: 0.75rem 0;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-  z-index: 10;
-}
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111827;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+    }
+    .footer-link {
+      text-align: center;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: white;
+    }
+    .footer-link i {
+      font-size: 1.2rem;
+      display: block;
+    }
+    .footer-link.active,
+    .footer-link:hover {
+      color: #facc15;
+    }
+    main {
+      min-height: calc(100vh - 90px - 72px);
+    }
 
-.footer-link {
-  text-align: center;
-  font-size: 0.85rem;
-  text-decoration: none;
-  color: white;
-}
-
-.footer-link i {
-  font-size: 1.2rem;
-  display: block;
-}
-
-.footer-link.active,
-.footer-link:hover {
-  color: #facc15;
-}
-
-    #heatmap {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-main {
-  min-height: calc(100vh - 90px - 72px); /* viewport - footer - header */
-}
-
-  
+    #rankingSection {
+      margin-top: 2rem;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      overflow-x: auto;
+    }
+    .ranking-title {
+      text-align: center;
+      color: #1f2937;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background-color: #facc15;
+      color: #1f2937;
+      font-size: 1.1rem;
+    }
+    tr:hover {
+      background-color: #fef9c3;
+    }
+    .emoji {
+      font-size: 1.5rem;
+    }
+    .top1 {
+      color: #d97706;
+    }
+    .top2 {
+      color: #6d28d9;
+    }
+    .top3 {
+      color: #2563eb;
+    }
+    #refreshButton {
+      display: block;
+      margin: 1rem auto;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #refreshButton:hover {
+      background: #1d4ed8;
+    }
   </style>
 </head>
 <body>
@@ -109,46 +153,47 @@ main {
   </header>
 
   <main class="container">
-    <p class="text-center" style="text-align:center; color: #6b7280; margin-bottom: 1rem;">
+    <p style="text-align:center; color: #6b7280; margin-bottom: 1rem;">
       Clique na cerveja que você mais gosta! Seu voto será registrado automaticamente.
     </p>
 
     <div id="beerList" class="beer-grid"></div>
-    <section id="heatmapSection" style="margin-top: 2rem; display:none;">
-      <h2 style="text-align:center; color:#1f2937;">Popularidade das Cervejas (Mapa de Calor)</h2>
-      <div id="heatmap" class="beer-grid"></div>
-    </section>
     
+    <section id="rankingSection">
+      <h2 class="ranking-title">Ranking das Cervejas</h2>
+      <div id="rankingList">
+        <p style="text-align:center; color:#6b7280;">Carregando ranking...</p>
+      </div>
+      <button id="refreshButton">Atualizar Ranking</button>
+    </section>
   </main>
 
   <div class="footer-spacer"></div>
 
   <footer>
-    <a href="index.html" class="footer-link">
-      <i class="fas fa-home" aria-hidden="true"></i>
+    <a href="Inicial.html" class="footer-link">
+      <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
     <a href="escolha_cerveja.html" class="footer-link active">
-      <i class="fas fa-beer" aria-hidden="true"></i>
+      <i class="fas fa-beer"></i>
       <span>Cervejas</span>
     </a>
     <a href="promocoes.html" class="footer-link">
-      <i class="fas fa-percent" aria-hidden="true"></i>
+      <i class="fas fa-percent"></i>
       <span>Promoções</span>
     </a>
   </footer>
 
-
   <script>
-    // Configuração Firebase (substitua com sua própria config)
     const firebaseConfig = {
       apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
-    authDomain: "pesquisa-8a0f9.firebaseapp.com",
-    projectId: "pesquisa-8a0f9",
-    storageBucket: "pesquisa-8a0f9.firebasestorage.app",
-    messagingSenderId: "453188166697",
-    appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
-    measurementId: "G-H34QHPSPS1"
+      authDomain: "pesquisa-8a0f9.firebaseapp.com",
+      projectId: "pesquisa-8a0f9",
+      storageBucket: "pesquisa-8a0f9.firebasestorage.app",
+      messagingSenderId: "453188166697",
+      appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+      measurementId: "G-H34QHPSPS1"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -161,99 +206,96 @@ main {
     ];
 
     const beerList = document.getElementById("beerList");
-
+    
     beers.forEach(name => {
       const card = document.createElement('div');
       card.className = 'beer-card';
       card.innerHTML = `<i class="fas fa-beer"></i><div>${name}</div>`;
-      card.addEventListener('click', async () => {
-  try {
-    const ref = db.collection("votos").doc(name);
-    await db.runTransaction(async (t) => {
-      const doc = await t.get(ref);
-      const current = doc.exists ? doc.data().total || 0 : 0;
-      t.set(ref, { total: current + 1 });
-    });
-    alert(`Voto registrado com sucesso para ${name}!`);
-
-    renderHeatmap(); // chama o mapa após o voto
-  } catch (err) {
-    console.error("Erro ao registrar voto:", err);
-    alert("Erro ao registrar voto. Tente novamente.");
-  }
-});
+      card.addEventListener('click', () => votarCerveja(name));
       beerList.appendChild(card);
     });
-    async function renderHeatmap() {
-  const heatmapContainer = document.getElementById('heatmap');
-  const section = document.getElementById('heatmapSection');
-  heatmapContainer.innerHTML = '';
 
-  const snapshot = await db.collection("votos").get();
-  const votos = {};
-  let maxVotos = 0;
-
-  snapshot.forEach(doc => {
-    const val = doc.data().total || 0;
-    if (val > 0) {
-      votos[doc.id] = val;
-      if (val > maxVotos) maxVotos = val;
+    async function votarCerveja(name) {
+      try {
+        const ref = db.collection("votos").doc(name);
+        await db.runTransaction(async (t) => {
+          const doc = await t.get(ref);
+          const current = doc.exists ? doc.data().total || 0 : 0;
+          t.set(ref, { total: current + 1 });
+        });
+        alert(`Voto registrado para ${name}!`);
+        atualizarRanking();
+      } catch (err) {
+        console.error("Erro ao registrar voto:", err);
+        alert("Erro ao registrar voto. Tente novamente.");
+      }
     }
-  });
 
-  // Ordena cervejas por número de votos
-  const ordenadas = Object.entries(votos)
-    .sort((a, b) => b[1] - a[1]);
+    async function atualizarRanking() {
+      const rankingList = document.getElementById('rankingList');
+      rankingList.innerHTML = '<p style="text-align:center; color:#6b7280;">Carregando ranking...</p>';
+      
+      try {
+        const snapshot = await db.collection("votos").get();
+        let cervejas = [];
+        
+        snapshot.forEach(doc => {
+          const total = doc.data().total || 0;
+          cervejas.push({ nome: doc.id, votos: total });
+        });
 
-  // Filtra top 5 + empates
-  const top = [];
-  let limite = 5;
-  let ultimoValor = 0;
+        cervejas.sort((a, b) => b.votos - a.votos);
+        
+        if (cervejas.length === 0 || cervejas.every(c => c.votos === 0)) {
+          rankingList.innerHTML = '<p style="text-align:center; color:#6b7280;">Nenhum voto registrado ainda.</p>';
+        } else {
+          let tabelaHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>🏆</th>
+                  <th>Cerveja</th>
+                  <th>Votos</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+          
+          cervejas.forEach((cerveja, index) => {
+            if (cerveja.votos > 0) {
+              let emoji = '';
+              let classe = '';
+              
+              if (index === 0) { emoji = '🥇'; classe = 'top1'; }
+              else if (index === 1) { emoji = '🥈'; classe = 'top2'; }
+              else if (index === 2) { emoji = '🥉'; classe = 'top3'; }
+              else { emoji = `${index + 1}º`; }
 
-  for (let i = 0; i < ordenadas.length; i++) {
-    const [nome, total] = ordenadas[i];
+              tabelaHTML += `
+                <tr>
+                  <td class="emoji ${classe}">${emoji}</td>
+                  <td>${cerveja.nome}</td>
+                  <td>${cerveja.votos}</td>
+                </tr>
+              `;
+            }
+          });
 
-    if (i < 5) {
-      top.push([nome, total]);
-      ultimoValor = total;
-    } else if (total === ultimoValor) {
-      top.push([nome, total]);
-    } else {
-      break;
+          tabelaHTML += `
+              </tbody>
+            </table>
+          `;
+
+          rankingList.innerHTML = tabelaHTML;
+        }
+      } catch (error) {
+        console.error("Erro ao carregar ranking:", error);
+        rankingList.innerHTML = '<p style="text-align:center; color:red;">Erro ao carregar o ranking. Tente novamente.</p>';
+      }
     }
-  }
 
-  if (top.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-
-  // Renderiza bolhas
-  top.forEach(([name, votosBeer]) => {
-    const intensidade = votosBeer / maxVotos;
-    const tamanho = 60 + intensidade * 100; // entre 60 e 160px
-    const cor = `hsl(${(1 - intensidade) * 40}, 100%, 60%)`; // de vermelho pra amarelo
-
-    const bolha = document.createElement('div');
-    bolha.style.width = `${tamanho}px`;
-    bolha.style.height = `${tamanho}px`;
-    bolha.style.backgroundColor = cor;
-    bolha.style.borderRadius = '50%';
-    bolha.style.display = 'flex';
-    bolha.style.alignItems = 'center';
-    bolha.style.justifyContent = 'center';
-    bolha.style.fontSize = '0.9rem';
-    bolha.style.fontWeight = 'bold';
-    bolha.style.color = '#1f2937';
-    bolha.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-    bolha.style.transition = 'all 0.3s ease';
-    bolha.textContent = name;
-
-    heatmapContainer.appendChild(bolha);
-  });
-
-  section.style.display = 'block';
-}
+    document.getElementById('refreshButton').addEventListener('click', atualizarRanking);
+    document.addEventListener('DOMContentLoaded', atualizarRanking);
   </script>
 </body>
 </html>

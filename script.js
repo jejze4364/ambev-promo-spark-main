@@ -1,3 +1,4 @@
+//script.js
 const firebaseConfig = {
   apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
   authDomain: "pesquisa-8a0f9.firebaseapp.com",
@@ -6,13 +7,14 @@ const firebaseConfig = {
   messagingSenderId: "453188166697",
   appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
   measurementId: "G-H34QHPSPS1",
-  };
-  // Inicializa o Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const analytics = firebase.analytics();
-  const db = firebase.firestore();
-  
-  function saveDataToFirebase(data) {
+};
+
+// Inicializa o Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics();
+const db = firebase.firestore();
+
+function saveDataToFirebase(data) {
   // Gere um ID único para este registro
   const surveyId = "survey_" + new Date().getTime();
   const startTime = new Date();
@@ -31,8 +33,9 @@ const firebaseConfig = {
     console.error("Erro ao salvar dados:", error);
     return false;
   });
-  }
-  function getData() {
+}
+
+function getData() {
   const db = firebase.firestore();
   
   // Acessar a coleção "pesquisas" no Firestore
@@ -47,48 +50,90 @@ const firebaseConfig = {
     .catch((error) => {
       console.error("Erro ao obter dados do Firestore:", error);
     });
-  }
-  // Declaração de variáveis globais
-  let currentQuestion = 0;
-  const scores = {};
-  const respostas = {};
-  // Primeiro, precisamos definir a pontuação máxima que cada cerveja pode alcançar
-  // Vamos considerar todas as perguntas e definir um valor máximo consistente
+}
+
+// Declaração de variáveis globais
+let currentQuestion = 0;
+const scores = {};
+const respostas = {};
+
+// Lista completa das cervejas no sistema
+const allBeers = [
+  'brahma', 'spaten', 'corona', 'bud', 'stella', 'budzero', 'coronacero',
+  'becks', 'antarctica', 'michelob', 'brahmazero', 'skol', 'bohemia',
+  'original', 'patagonia', 'colorado', 'stellapg'
+];
+
+// Adicionando o objeto beerDescriptions que estava faltando
+const beerDescriptions = {
+  'brahma': 'Cerveja leve e refrescante, com sabor equilibrado e notas de malte.',
+  'spaten': 'Cerveja premium com tradição alemã, sabor encorpado e notas de lúpulo.',
+  'corona': 'Cerveja mexicana refrescante, leve e cítrica, ideal para dias quentes.',
+  'bud': 'Cerveja americana equilibrada, com sabor suave e refrescante.',
+  'stella': 'Cerveja premium belga, com sabor rico e encorpado.',
+  'budzero': 'Versão sem álcool da Budweiser, mantendo o sabor refrescante.',
+  'coronacero': 'Corona sem álcool, mantendo o frescor e notas cítricas.',
+  'becks': 'Cerveja alemã premium, sabor marcante com amargor característico.',
+  'antarctica': 'Cerveja brasileira tradicional, leve e refrescante.',
+  'michelob': 'Cerveja ultra premium, equilibrada com notas maltadas.',
+  'brahmazero': 'Versão zero álcool da Brahma, mantendo o sabor original.',
+  'skol': 'Cerveja leve e refrescante, ideal para momentos descontraídos.',
+  'bohemia': 'Primeira cerveja do Brasil, com sabor premium e notas de malte.',
+  'original': 'Cerveja com receita original, sabor autêntico e encorpado.',
+  'patagonia': 'Cerveja artesanal premium, com ingredientes selecionados.',
+  'colorado': 'Cerveja artesanal com ingredientes brasileiros e sabor único.',
+  'stellapg': 'Versão premium da Stella Artois, com sabor refinado.'
+};
+
+// Adicionando o objeto friendlyNames que estava faltando
+const friendlyNames = {
+  'brahma': 'Brahma',
+  'spaten': 'Spaten',
+  'corona': 'Corona',
+  'bud': 'Budweiser',
+  'stella': 'Stella Artois',
+  'budzero': 'Budweiser Zero',
+  'coronacero': 'Corona Cero',
+  'becks': 'Beck\'s',
+  'antarctica': 'Antarctica',
+  'michelob': 'Michelob Ultra',
+  'brahmazero': 'Brahma Zero',
+  'skol': 'Skol',
+  'bohemia': 'Bohemia',
+  'original': 'Original',
+  'patagonia': 'Patagonia',
+  'colorado': 'Colorado',
+  'stellapg': 'Stella Artois Premium'
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Torna o container visível
+  document.querySelector('.container').style.display = 'flex';
+
+  const container = document.getElementById('question-container');
+  container.innerHTML = "<p>Teste de carregamento</p>";
+
+  console.log("Inicializando aplicação...");
   
-  // Lista completa das cervejas no sistema
-  const allBeers = [
-    'brahma', 'spaten', 'corona', 'bud', 'stella', 'budzero', 'coronacero',
-    'becks', 'antarctica', 'michelob', 'brahmazero', 'skol', 'bohemia',
-    'original', 'patagonia', 'colorado', 'stellapg'
-  ];
-  document.addEventListener("DOMContentLoaded", function() {
-    // Torna o container visível
-    document.querySelector('.container').style.display = 'flex';
-  
-    const container = document.getElementById('question-container');
-    container.innerHTML = "<p>Teste de carregamento</p>";
-  
-    console.log("Inicializando aplicação...");
-    
-    try {
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      
-      allBeers.forEach(beer => {
-        scores[beer] = 0;
-      });
-      
-      console.log("Carregando primeira pergunta...");
-      loadQuestion();
-      updateProgressBar();
-    } catch (error) {
-      console.error("Erro na inicialização:", error);
-      alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
-  });
-  
-  // Pontuações máximas por pergunta
+    
+    allBeers.forEach(beer => {
+      scores[beer] = 0;
+    });
+    
+    console.log("Carregando primeira pergunta...");
+    loadQuestion();
+    updateProgressBar();
+  } catch (error) {
+    console.error("Erro na inicialização:", error);
+    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
+  }
+});
+
+// Pontuações máximas por pergunta
 const MAX_POINTS_PER_QUESTION = [
   0,  // Localização (não pontua)
   0,  // Faixa etária (não pontua)
@@ -100,8 +145,6 @@ const MAX_POINTS_PER_QUESTION = [
 
 // Pontuação total máxima
 const MAX_TOTAL_POINTS = MAX_POINTS_PER_QUESTION.reduce((sum, val) => sum + val, 0);
-
-// Objeto friendlyNames e beerDescriptions mantidos como estavam (não alterei)
 
 const questions = [
   {
@@ -168,47 +211,46 @@ const questions = [
     multipleChoice: false
   },
   {
-  question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha quantas quiser)",
-  description: "Selecione todas as ocasiões que combinam com o seu estilo.",
-  multipleChoice: true,
-  requiredChoices: null, // <<< NÃO DEFINE UM LIMITE
-  gridLayout: true,
-  options: [
-    {
-      text: "Churrasco com amigos e família",
-      scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
-    },
-    {
-      text: "Happy hours e eventos corporativos",
-      scores: { stella: 30, bud: 30, spaten: 25, michelob: 25 }
-    },
-    {
-      text: "Festas e celebrações",
-      scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
-    },
-    {
-      text: "Momentos ao ar livre (praia, piscina)",
-      scores: { corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
-    },
-    {
-      text: "Jantares e Harmonizações",
-      scores: { stella: 30, stellapg: 30, colorado: 30, patagonia: 30 }
-    },
-    {
-      text: "Assistindo a jogos de futebol",
-      scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25 }
-    },
-    {
-      text: "Encontros românticos",
-      scores: { stella: 30, colorado: 30, patagonia: 30, michelob: 25 }
-    },
-    {
-      text: "Relaxando em casa após o trabalho",
-      scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
-    }
-  ]
-},
-
+    question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha quantas quiser)",
+    description: "Selecione todas as ocasiões que combinam com o seu estilo.",
+    multipleChoice: true,
+    requiredChoices: null, // <<< NÃO DEFINE UM LIMITE
+    gridLayout: true,
+    options: [
+      {
+        text: "Churrasco com amigos e família",
+        scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
+      },
+      {
+        text: "Happy hours e eventos corporativos",
+        scores: { stella: 30, bud: 30, spaten: 25, michelob: 25 }
+      },
+      {
+        text: "Festas e celebrações",
+        scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
+      },
+      {
+        text: "Momentos ao ar livre (praia, piscina)",
+        scores: { corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
+      },
+      {
+        text: "Jantares e Harmonizações",
+        scores: { stella: 30, stellapg: 30, colorado: 30, patagonia: 30 }
+      },
+      {
+        text: "Assistindo a jogos de futebol",
+        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25 }
+      },
+      {
+        text: "Encontros românticos",
+        scores: { stella: 30, colorado: 30, patagonia: 30, michelob: 25 }
+      },
+      {
+        text: "Relaxando em casa após o trabalho",
+        scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
+      }
+    ]
+  },
   {
     question: "Você tem interesse em opções zero álcool?",
     description: "Cervejas zero álcool mantêm o sabor e são ideais para quem dirige ou busca alternativas mais leves.",
@@ -268,30 +310,29 @@ const questions = [
   }
 ];
 
+// Função para calcular a porcentagem de compatibilidade de forma padronizada
+function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TOTAL_POINTS) {
+  // Para cada cerveja, calcular a porcentagem com base na pontuação máxima
+  const percentages = {};
   
-  // Função para calcular a porcentagem de compatibilidade de forma padronizada
-  function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TOTAL_POINTS) {
-    // Para cada cerveja, calcular a porcentagem com base na pontuação máxima
-    const percentages = {};
-    
-    for (const [beer, score] of Object.entries(beerScores)) {
-      if (beerDescriptions[beer]) { // Verifica se é uma cerveja válida
-        const percentage = Math.round((score / maxPossiblePoints) * 100);
-        percentages[beer] = percentage;
-      }
+  for (const [beer, score] of Object.entries(beerScores)) {
+    if (beerDescriptions[beer]) { // Verifica se é uma cerveja válida
+      const percentage = Math.round((score / maxPossiblePoints) * 100);
+      percentages[beer] = percentage;
     }
-    
-    return percentages;
   }
   
-  function updateProgressBar() {
-    const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
-    document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
-    document.getElementById('progress-percent').textContent = `${percent}%`;
-    document.querySelector('.progress-fill').style.width = `${percent}%`;
-  }
-  
-  function loadQuestion() {
+  return percentages;
+}
+
+function updateProgressBar() {
+  const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
+  document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
+  document.getElementById('progress-percent').textContent = `${percent}%`;
+  document.querySelector('.progress-fill').style.width = `${percent}%`;
+}
+
+function loadQuestion() {
   const container = document.getElementById('question-container');
   const q = questions[currentQuestion];
 
@@ -373,6 +414,17 @@ const questions = [
       label.append(opt.text);
       optionsDiv.appendChild(label);
     });
+
+// Adicionar JS para seleção visual diretamente
+optionsDiv.querySelectorAll('input[type="checkbox"]').forEach(input => {
+  input.addEventListener('change', function() {
+    if (this.checked) {
+      this.parentElement.classList.add('selected');
+    } else {
+      this.parentElement.classList.remove('selected');
+    }
+  });
+});
 
     const btn = document.createElement('button');
     btn.innerText = "Continuar";
@@ -514,120 +566,119 @@ const questions = [
   document.head.appendChild(styleElement);
 }
 
-  function updateSelectionCounter(questionIndex, selectedCount, required) {
+function updateSelectionCounter(questionIndex, selectedCount, required) {
   const counterElement = document.getElementById(`selection-counter-${questionIndex}`);
   if (!counterElement) return;
   
   counterElement.textContent = `${selectedCount}/${required} selecionadas`;
   
   if (selectedCount === required) {
-  counterElement.classList.add('complete');
+    counterElement.classList.add('complete');
   } else {
-  counterElement.classList.remove('complete');
+    counterElement.classList.remove('complete');
   }
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+    updateProgressBar();
+  } else {
+    showResults();
   }
+}
+
+// Modificação na função showResults para usar porcentagens reais de compatibilidade
+function showResults() {
+  const container = document.getElementById('question-container');
   
-  function nextQuestion() {
-    currentQuestion++;
-    if (currentQuestion < questions.length) {
-      loadQuestion();
-      updateProgressBar();
-    } else {
-      showResults();
-    }
-  }
+  // Calcular as porcentagens de compatibilidade
+  const beerPercentages = calculateCompatibilityPercentage(scores);
   
-  // Modificação na função showResults para usar porcentagens reais de compatibilidade
-  function showResults() {
-    const container = document.getElementById('question-container');
-    
-    // Calcular as porcentagens de compatibilidade
-    const beerPercentages = calculateCompatibilityPercentage(scores);
-    
-    // Ordenar cervejas por porcentagem de compatibilidade
-    const topBeers = Object.entries(beerPercentages)
-      .filter(([key]) => beerDescriptions[key])
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3);
-    
-    const dataToSave = {
-      respostas: respostas,
-      resultados: {
-        cervejas: topBeers.map(([beer]) => friendlyNames[beer]),
-        porcentagens: topBeers.map(([beer, percentage]) => `${friendlyNames[beer]}: ${percentage}%`)
-      },
-      scores: scores,
-      porcentagensCompatibilidade: beerPercentages
-    };
+  // Ordenar cervejas por porcentagem de compatibilidade
+  const topBeers = Object.entries(beerPercentages)
+    .filter(([key]) => beerDescriptions[key])
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
   
-    saveDataToFirebase(dataToSave).then(success => {
-      if (success) getData();
-    });
-  
-    container.innerHTML = `
-    <div class="results-container">
-      <div class="results-header">
-        <h2>Seu Perfil Cervejeiro</h2>
-        <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
-      </div>
-  
-      <div class="action-buttons">
-        <a href="index.html" class="btn-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Conheça o Projeto
-        </a>
-        <a href="promocoes.html" class="btn-promo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Conheça as Promoções <span class="btn-indicator">→</span>
-        </a>
-      </div>
-  
-      <div class="results-section">
-        <h3>Cervejas Ideais Para Você</h3>
-        <div class="beer-list">
-          ${topBeers.map(([beer, percentage], index) => `
-            <div class="beer-card ${index === 0 ? 'top-match' : ''}">
-              <div class="beer-image">
-                <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
-                ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
-              </div>
-              <div class="beer-info">
-                <h4>${friendlyNames[beer]}</h4>
-                <p>${beerDescriptions[beer]}</p>
-                <div class="match-percent">${percentage}% de compatibilidade</div>
-              </div>
+  const dataToSave = {
+    respostas: respostas,
+    resultados: {
+      cervejas: topBeers.map(([beer]) => friendlyNames[beer]),
+      porcentagens: topBeers.map(([beer, percentage]) => `${friendlyNames[beer]}: ${percentage}%`)
+    },
+    scores: scores,
+    porcentagensCompatibilidade: beerPercentages
+  };
+
+  saveDataToFirebase(dataToSave).then(success => {
+    if (success) getData();
+  });
+
+  container.innerHTML = `
+  <div class="results-container">
+    <div class="results-header">
+      <h2>Seu Perfil Cervejeiro</h2>
+      <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
+    </div>
+
+    <div class="action-buttons">
+      <a href="index.html" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Conheça o Projeto
+      </a>
+      <a href="promocoes.html" class="btn-promo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Conheça as Promoções <span class="btn-indicator">→</span>
+      </a>
+    </div>
+
+    <div class="results-section">
+      <h3>Cervejas Ideais Para Você</h3>
+      <div class="beer-list">
+        ${topBeers.map(([beer, percentage], index) => `
+          <div class="beer-card ${index === 0 ? 'top-match' : ''}">
+            <div class="beer-image">
+              <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
+              ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
             </div>
-          `).join('')}
-        </div>
-      </div>
-  
-      <div class="share-section">
-        <h3>Compartilhe Seu Resultado</h3>
-        <div class="share-buttons">
-          <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
-          <i class="fab fa-facebook-f"></i> Facebook
-          </a>
-          <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-          <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
-          <i class="fab fa-instagram"></i> Instagram
-        </a>
-        </div>
-      </div>
-  
-      <div class="try-again-section">
-      <button class="btn-outline" onclick="location.reload()">
-        <i class="fas fa-redo-alt"></i> Fazer o Teste Novamente
-      </button>
+            <div class="beer-info">
+              <h4>${friendlyNames[beer]}</h4>
+              <p>${beerDescriptions[beer]}</p>
+              <div class="match-percent">${percentage}% de compatibilidade</div>
+            </div>
+          </div>
+        `).join('')}
       </div>
     </div>
-    `;
-  
-    setTimeout(() => {
-      document.querySelector('.facebook')?.addEventListener('click', () => window.open('https://www.facebook.com', '_blank'));
-      document.querySelector('.whatsapp')?.addEventListener('click', () => window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank'));
-      document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
-    }, 100);
-  }
-  
+
+    <div class="share-section">
+      <h3>Compartilhe Seu Resultado</h3>
+      <div class="share-buttons">
+        <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
+        <i class="fab fa-facebook-f"></i> Facebook
+        </a>
+        <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
+        <i class="fab fa-instagram"></i> Instagram
+      </a>
+      </div>
+    </div>
+
+    <div class="try-again-section">
+    <button class="btn-outline" onclick="location.reload()">
+      <i class="fas fa-redo-alt"></i> Fazer o Teste Novamente
+    </button>
+    </div>
+  </div>
+  `;
+
+  setTimeout(() => {
+    document.querySelector('.facebook')?.addEventListener('click', () => window.open('https://www.facebook.com', '_blank'));
+    document.querySelector('.whatsapp')?.addEventListener('click', () => window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank'));
+    document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
+  }, 100);
+}
