@@ -56,6 +56,7 @@ function getData() {
 let currentQuestion = 0;
 const scores = {};
 const respostas = {};
+let selectedMunicipio = ""; // Nova variável para armazenar o município selecionado
 
 // Lista completa das cervejas no sistema
 const allBeers = [
@@ -104,6 +105,21 @@ const friendlyNames = {
   'patagonia': 'Patagonia',
   'colorado': 'Colorado',
   'stellapg': 'Stella Artois Premium'
+};
+
+// Mapeamento de municípios para URLs de promoções
+const municipioPromoPages = {
+  "Rio de Janeiro": "promoriojaneiro.html",
+  "São Gonçalo": "promosaogoncalo.html",
+  "Duque de Caxias": "promoduquecaxias.html", 
+  "Nova Iguaçu": "promonovaiguacu.html",
+  "Belford Roxo": "promobelfordroxo.html",
+  "Niterói": "promoniteroi.html",
+  "Campos dos Goytacazes": "promocamposgoytacazes.html",
+  "São João de Meriti": "promosaojoaomeriti.html",
+  "Volta Redonda": "promovoltaredonda.html",
+  "Petrópolis": "promopetropolis.html",
+  "Outro(s)": "promocoes.html" // Default page para outros municípios
 };
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -317,7 +333,8 @@ function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TO
   
   for (const [beer, score] of Object.entries(beerScores)) {
     if (beerDescriptions[beer]) { // Verifica se é uma cerveja válida
-      const percentage = Math.round((score / maxPossiblePoints) * 100);
+      // Limita a porcentagem a 100% mesmo se a pontuação ultrapassar o máximo
+      const percentage = Math.min(100, Math.round((score / maxPossiblePoints) * 100));
       percentages[beer] = percentage;
     }
   }
@@ -381,6 +398,11 @@ function loadQuestion() {
       const opt = q.options[selectedIdx];
       respostas[`pergunta${currentQuestion + 1}`] = opt.text;
       document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+      
+      // Salvar o município selecionado
+      if (currentQuestion === 0) {
+        selectedMunicipio = opt.text;
+      }
 
       Object.entries(opt.scores).forEach(([key, value]) => {
         scores[key] = (scores[key] || 0) + value;
@@ -609,12 +631,16 @@ function showResults() {
       porcentagens: topBeers.map(([beer, percentage]) => `${friendlyNames[beer]}: ${percentage}%`)
     },
     scores: scores,
-    porcentagensCompatibilidade: beerPercentages
+    porcentagensCompatibilidade: beerPercentages,
+    municipio: selectedMunicipio
   };
 
   saveDataToFirebase(dataToSave).then(success => {
     if (success) getData();
   });
+
+  // Determinar a página de promoções apropriada baseada no município selecionado
+  const promoPageURL = municipioPromoPages[selectedMunicipio] || "promocoes.html";
 
   container.innerHTML = `
   <div class="results-container">
@@ -628,7 +654,7 @@ function showResults() {
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Conheça o Projeto
       </a>
-      <a href="promocoes.html" class="btn-promo">
+      <a href="${promoPageURL}" class="btn-promo">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Conheça as Promoções <span class="btn-indicator">→</span>
       </a>

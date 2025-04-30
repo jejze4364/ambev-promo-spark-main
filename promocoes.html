@@ -21,7 +21,7 @@
         <!-- Header com navegação -->
         <header class="app-header">
             <div class="header-content">
-                <a href="index.html" class="back-btn" aria-label="Voltar para página inicial">
+                <a href="Inicial.html" class="back-btn" aria-label="Voltar para página inicial">
                     <i class="fas fa-arrow-left"></i>
                 </a>
                 <h1>Promoções</h1>
@@ -31,7 +31,29 @@
                 </div>
             </div>
         </header>
-
+            <!-- Seletor de Município -->
+    <section class="location-selector">
+        <div class="location-title">
+          <i class="fas fa-map-marker-alt"></i> 
+          Selecione seu município
+        </div>
+        <div class="location-dropdown">
+          <select id="municipio-select">
+            <option value="">-- Escolha seu município --</option>
+            <option value="riodejaneiro">Rio de Janeiro</option>
+            <option value="saogoncalo">São Gonçalo</option>
+            <option value="duquedecaxias">Duque de Caxias</option>
+            <option value="novaiguacu">Nova Iguaçu</option>
+            <option value="belfordroxo">Belford Roxo</option>
+            <option value="niteroi">Niterói</option>
+            <option value="camposdosgoytacazes">Campos dos Goytacazes</option>
+            <option value="saojoaodemeriti">São João de Meriti</option>
+            <option value="voltaredonda">Volta Redonda</option>
+            <option value="petropolis">Petrópolis</option>
+            <option value="outros">Outro(s)</option>
+          </select>
+        </div>
+      </section>
         <!-- Banner principal rotativo -->
         <div class="promo-carousel-container">
             <div class="promo-carousel" id="banner-carousel">
@@ -373,7 +395,7 @@
 
         <!-- Rodapé -->
         <footer class="app-footer">
-            <a href="index.html" class="footer-link">
+            <a href="Inicial.html" class="footer-link">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
@@ -401,7 +423,12 @@
                 recoverEssentialFunctions();
             }
         });
-
+        document.getElementById('municipio-select').addEventListener('change', function() {
+            const municipio = this.value;
+            if (municipio) {
+                window.location.href = `promo${municipio}.html`;
+            }
+            });
         function initCarousel() {
             const carousel = document.getElementById('banner-carousel');
             const slides = carousel.querySelectorAll('.promo-slide');
