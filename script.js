@@ -326,21 +326,21 @@ const questions = [
   }
 ];
 
-// Função para calcular a porcentagem de compatibilidade de forma padronizada
-function calculateCompatibilityPercentage(beerScores, maxPossiblePoints = MAX_TOTAL_POINTS) {
-  // Para cada cerveja, calcular a porcentagem com base na pontuação máxima
+function calculateCompatibilityPercentage(beerScores) {
   const percentages = {};
-  
+  const maxBeerScore = Math.max(...Object.values(beerScores));
+
   for (const [beer, score] of Object.entries(beerScores)) {
-    if (beerDescriptions[beer]) { // Verifica se é uma cerveja válida
-      // Limita a porcentagem a 100% mesmo se a pontuação ultrapassar o máximo
-      const percentage = Math.min(100, Math.round((score / maxPossiblePoints) * 100));
+    if (beerDescriptions[beer]) {
+      // Define o maior score como 100% e os demais proporcionalmente
+      const percentage = Math.round((score / maxBeerScore) * 100);
       percentages[beer] = percentage;
     }
   }
-  
+
   return percentages;
 }
+
 
 function updateProgressBar() {
   const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
