@@ -24,15 +24,12 @@
   
   <!-- Estilo externo referenciado -->
   <link rel="stylesheet" href="painel.css">
-  <script src="painel.js"></script>
   
   <!-- Biblioteca para exportação XLSX -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-
 </head>
 
 <body>
-  
   <div class="dashboard-container">
     <!-- Cabeçalho do Dashboard -->
     <div class="dashboard-header">
@@ -45,7 +42,7 @@
           <i class="fas fa-arrow-left"></i> Voltar ao Início
         </a>
         <button id="export-xlsx" class="btn btn-outline">
-          <i class="fas fa-file-xlsx"></i> Exportar XLSX
+          <i class="fas fa-file-excel"></i> Exportar XLSX
         </button>
         <button id="refresh-btn" class="btn btn-primary">
           <i class="fas fa-sync-alt"></i> Atualizar Dados
@@ -59,21 +56,21 @@
     <!-- Barra de filtros -->
     <div class="filter-bar">
       <div class="filter-group">
-        <label class="filter-label">Período:</label>
+        <label for="date-range" class="filter-label">Período:</label>
         <input type="text" id="date-range" class="filter-input date-range-picker" placeholder="Selecione o período">
       </div>
       
       <div class="filter-divider"></div>
       
       <div class="filter-group">
-        <label class="filter-label">Município:</label>
+        <label for="filter-city" class="filter-label">Município:</label>
         <select id="filter-city" class="filter-input">
           <option value="">Todos</option>
         </select>
       </div>
       
       <div class="filter-group">
-        <label class="filter-label">Faixa Etária:</label>
+        <label for="filter-age" class="filter-label">Faixa Etária:</label>
         <select id="filter-age" class="filter-input">
           <option value="">Todas</option>
         </select>
@@ -82,7 +79,7 @@
       <div class="filter-divider"></div>
       
       <div class="filter-group">
-        <label class="filter-label">Marca:</label>
+        <label for="filter-brand" class="filter-label">Marca:</label>
         <select id="filter-brand" class="filter-input">
           <option value="">Todas</option>
         </select>
@@ -236,8 +233,15 @@
     </div>
   </div>
   
+  <script src="painel.js"></script>
   <script>
-    // Carregar filtros dinâmicos de Município e Faixa Etária
+    // Inicialização do Firebase (adicione suas configurações)
+    const firebaseConfig = {
+      // Suas configurações do Firebase aqui
+    };
+    
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const filterCityElement = document.getElementById("filter-city");
     const filterAgeElement = document.getElementById("filter-age");
@@ -251,6 +255,8 @@
           option.textContent = doc.data().nome;
           filterCityElement.appendChild(option);
         });
+      }).catch((error) => {
+        console.error("Erro ao carregar municípios:", error);
       });
 
       // Carregar faixas etárias
@@ -261,35 +267,43 @@
           option.textContent = doc.data().faixa;
           filterAgeElement.appendChild(option);
         });
+      }).catch((error) => {
+        console.error("Erro ao carregar faixas etárias:", error);
       });
     }
 
-    loadFilters();
-
-    // Função de exportação para XLSX
+    // Adiciona tratamento de erros na exportação
     document.getElementById('export-xlsx').addEventListener('click', function () {
-      const wb = XLSX.utils.book_new();
-      const ws_data = [];
-      
-      // Criação do cabeçalho da planilha
-      ws_data.push(['Data', 'Município', 'Faixa Etária', 'Preço', 'Ocasiões', 'Zero Álcool', 'Frequência', 'Cerveja Recomendada', 'Score']);
-      
-      // Adiciona os dados da tabela
-      const rows = document.querySelectorAll('#results-table tbody tr');
-      rows.forEach((row) => {
-        const rowData = [];
-        row.querySelectorAll('td').forEach((cell) => {
-          rowData.push(cell.textContent.trim());
+      try {
+        const wb = XLSX.utils.book_new();
+        const ws_data = [];
+        
+        // Criação do cabeçalho da planilha
+        ws_data.push(['Data', 'Município', 'Faixa Etária', 'Preço', 'Ocasiões', 'Zero Álcool', 'Frequência', 'Cerveja Recomendada', 'Score']);
+        
+        // Adiciona os dados da tabela
+        const rows = document.querySelectorAll('#results-table tbody tr');
+        rows.forEach((row) => {
+          const rowData = [];
+          row.querySelectorAll('td').forEach((cell) => {
+            rowData.push(cell.textContent.trim());
+          });
+          ws_data.push(rowData);
         });
-        ws_data.push(rowData);
-      });
 
-      const ws = XLSX.utils.aoa_to_sheet(ws_data);
-      XLSX.utils.book_append_sheet(wb, ws, "Resultados");
-      
-      // Faz o download do arquivo
-      XLSX.writeFile(wb, "pesquisa_amil.xlsx");
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, "Resultados");
+        
+        // Faz o download do arquivo
+        XLSX.writeFile(wb, "pesquisa_ambev.xlsx");
+      } catch (error) {
+        console.error("Erro na exportação do arquivo:", error);
+        alert("Não foi possível exportar o arquivo. Verifique os dados.");
+      }
     });
+
+    // Carrega filtros quando o documento estiver pronto
+    document.addEventListener('DOMContentLoaded', loadFilters);
   </script>
 </body>
 </html>
