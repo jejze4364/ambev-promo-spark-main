@@ -140,49 +140,10 @@
       font-size: 0.9rem;
     }
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #111827;
-      color: white;
-      display: flex;
-      justify-content: space-around;
-      padding: 0.75rem 0;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-      z-index: 10;
-    }
-
-    .footer-link {
-      text-align: center;
-      font-size: 0.85rem;
-      text-decoration: none;
-      color: white;
-    }
-
-    .footer-link i {
-      font-size: 1.2rem;
-      display: block;
-    }
-
-    .footer-link.active,
-    .footer-link:hover {
-      color: #facc15;
-    }
-
-    .footer-spacer {
-      height: 80px;
-    }
-
     @media (max-width: 640px) {
       .option-cards {
         flex-direction: column;
         align-items: center;
-      }
-      
-      .footer-spacer {
-        height: 100px;
       }
     }
     #age-modal {
@@ -453,25 +414,6 @@
       </p>
     </section>
   </main>
-
-  <!-- Espaço para footer fixo -->
-  <div class="footer-spacer"></div>
-
-  <!-- Rodapé -->
-  <footer>
-    <a href="Inicial.html" class="footer-link active">
-      <i class="fas fa-home" aria-hidden="true"></i>
-      <span>Home</span>
-    </a>
-    <a href="escolha_cerveja.html" class="footer-link">
-      <i class="fas fa-beer" aria-hidden="true"></i>
-      <span>Cervejas</span>
-    </a>
-    <a href="promocoes.html" class="footer-link">
-      <i class="fas fa-percent" aria-hidden="true"></i>
-      <span>Promoções</span>
-    </a>
-  </footer>
 <script>
   
 function verifyAge(ok) {
