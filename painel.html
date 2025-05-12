@@ -25,31 +25,33 @@
   <!-- Estilo externo referenciado -->
   <link rel="stylesheet" href="painel.css">
   <script src="painel.js"></script>
+  
+  <!-- Biblioteca para exportação XLSX -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
 </head>
 
 <body>
   
   <div class="dashboard-container">
-<!-- Cabeçalho do Dashboard -->
-<div class="dashboard-header">
-  <div>
-    <h1 class="dashboard-title">Dashboard de Pesquisas</h1>
-    <p class="dashboard-subtitle">Análise de resultados da pesquisa "Descubra Sua Cerveja Ideal"</p>
-  </div>
-  <div class="header-controls">
-    <a href="Inicial.html" class="btn btn-outline" style="margin-right: 1rem;">
-      <i class="fas fa-arrow-left"></i> Voltar ao Início
-    </a>
-    <button id="export-csv" class="btn btn-outline">
-      <i class="fas fa-file-csv"></i> Exportar CSV
-    </button>
-    <button id="refresh-btn" class="btn btn-primary">
-      <i class="fas fa-sync-alt"></i> Atualizar Dados
-    </button>
-  </div>
-</div>
-
+    <!-- Cabeçalho do Dashboard -->
+    <div class="dashboard-header">
+      <div>
+        <h1 class="dashboard-title">Dashboard de Pesquisas</h1>
+        <p class="dashboard-subtitle">Análise de resultados da pesquisa "Descubra Sua Cerveja Ideal"</p>
+      </div>
+      <div class="header-controls">
+        <a href="Inicial.html" class="btn btn-outline" style="margin-right: 1rem;">
+          <i class="fas fa-arrow-left"></i> Voltar ao Início
+        </a>
+        <button id="export-xlsx" class="btn btn-outline">
+          <i class="fas fa-file-xlsx"></i> Exportar XLSX
+        </button>
+        <button id="refresh-btn" class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> Atualizar Dados
+        </button>
+      </div>
+    </div>
     
     <!-- Mensagem de erro -->
     <div id="error-message" class="error-message"></div>
@@ -233,5 +235,61 @@
       <p>Dashboard de Pesquisas Ambev © 2025</p>
     </div>
   </div>
+  
+  <script>
+    // Carregar filtros dinâmicos de Município e Faixa Etária
+    const db = firebase.firestore();
+    const filterCityElement = document.getElementById("filter-city");
+    const filterAgeElement = document.getElementById("filter-age");
+
+    function loadFilters() {
+      // Carregar municípios
+      db.collection("municipios").get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const option = document.createElement("option");
+          option.value = doc.id;
+          option.textContent = doc.data().nome;
+          filterCityElement.appendChild(option);
+        });
+      });
+
+      // Carregar faixas etárias
+      db.collection("faixas_etarias").get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const option = document.createElement("option");
+          option.value = doc.id;
+          option.textContent = doc.data().faixa;
+          filterAgeElement.appendChild(option);
+        });
+      });
+    }
+
+    loadFilters();
+
+    // Função de exportação para XLSX
+    document.getElementById('export-xlsx').addEventListener('click', function () {
+      const wb = XLSX.utils.book_new();
+      const ws_data = [];
+      
+      // Criação do cabeçalho da planilha
+      ws_data.push(['Data', 'Município', 'Faixa Etária', 'Preço', 'Ocasiões', 'Zero Álcool', 'Frequência', 'Cerveja Recomendada', 'Score']);
+      
+      // Adiciona os dados da tabela
+      const rows = document.querySelectorAll('#results-table tbody tr');
+      rows.forEach((row) => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach((cell) => {
+          rowData.push(cell.textContent.trim());
+        });
+        ws_data.push(rowData);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Resultados");
+      
+      // Faz o download do arquivo
+      XLSX.writeFile(wb, "pesquisa_amil.xlsx");
+    });
+  </script>
 </body>
 </html>
