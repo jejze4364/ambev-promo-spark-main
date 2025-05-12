@@ -6,311 +6,473 @@
   <title>Home | Projeto de Estágio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #eff6ff, #ffffff);
-      color: #1f2937;
-    }
-
-    header, main {
-      max-width: 1024px;
-      margin: auto;
-      padding: 1.5rem 1rem;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      color: #1d4ed8;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #4b5563; /* Melhor contraste */
-      margin-bottom: 2rem;
-    }
-
+  /* Beer Project - Main Styles */
+  :root {
+    --primary-blue: #1e50c8;
+    --light-blue: #e8f2ff;
+    --dark-blue: #1e40af;
+    --white: #ffffff;
+    --gray: #f5f7fa;
+    --beer-yellow: #f2c94c;
+    --max-width: 1024px;
+    --border-radius: 12px;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    background: linear-gradient(to bottom, #eff6ff, #ffffff);
+    color: #1f2937;
+  }
+  
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+  
+  /* Header Section */
+  header {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    max-width: var(--max-width);
+    margin: auto;
+  }
+  
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #4b5563;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+  }
+  
+  /* Cards Grid */
+  .option-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+  
+  .option-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  
+  .option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .option-card h3 {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  
+  .option-card p {
+    color: #374151;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Buttons */
+  .card-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  
+  .card-btn:hover {
+    background-color: var(--dark-blue);
+  }
+  
+  .beer-icon::before {
+    content: "🍺";
+  }
+  
+  /* Bottom Navigation */
+  .button-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+  
+  .main-btn {
+    background: var(--primary-blue);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  
+  .main-btn:hover {
+    background: var(--dark-blue);
+  }
+  
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111827;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.75rem 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+  }
+  
+  .footer-link {
+    text-align: center;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .footer-link i {
+    font-size: 1.2rem;
+    display: block;
+  }
+  
+  .footer-link.active,
+  .footer-link:hover {
+    color: var(--beer-yellow);
+  }
+  
+  .footer-spacer {
+    height: 80px;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 640px) {
     .option-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
+      grid-template-columns: 1fr;
     }
-
+    
     .option-card {
-      background: white;
-      border: 2px solid transparent;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-      padding: 1.25rem;
-      width: 250px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative; /* Para adicionar overlay acessível */
+      max-width: 100%;
     }
+    
+    .footer-spacer {
+      height: 100px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  /* Age Modal Styles */
+  #age-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+  }
+  
+  #age-modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .age-icon {
+    margin-left: 1rem;
+    color: var(--beer-yellow);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  #age-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
 
-    .option-card:hover {
-      border-color: #1d4ed8;
-      transform: translateY(-2px);
-    }
+#age-modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+  position: relative;
+}
 
-    .option-card a {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      text-indent: -9999px;
-      z-index: 1;
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .option-card h3 {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
 
-    .button-row {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin: 2rem 0;
-      flex-wrap: wrap;
-    }
+.age-icon {
+  margin-left: 1rem;
+  color: var(--primary-color, #f7a800);
+  animation: pulse 2s infinite;
+}
 
-    .main-btn {
-      background: #2563eb;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      font-weight: bold;
-      border-radius: 8px;
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-decoration: none;
-    }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
 
-    .main-btn:hover {
-      background: #1e40af;
-    }
+#age-modal-content h2 {
+  font-size: 2rem;
+  color: var(--primary-color, #f7a800);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
 
-    .info-section {
-      text-align: center;
-      margin-top: 3rem;
-    }
+.modal-description {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
 
-    .info-section h2 {
-      color: #2563eb;
-      font-size: 1.4rem;
-      margin-bottom: 2rem;
-    }
+.age-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
 
-    .info-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      text-align: center;
-    }
+.btn-yes, .btn-no {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: none;
+}
 
-    .info-card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-    }
+.btn-yes {
+  background-color: var(--primary-color, #f7a800);
+  color: #fff;
+  border: 2px solid var(--primary-color, #f7a800);
+}
 
-    .info-card i {
-      font-size: 1.5rem;
-      color: #2563eb;
-      margin-bottom: 0.5rem;
-    }
+.btn-yes:hover {
+  background-color: #e69a00;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
+}
 
-    .info-card h3 {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
+.btn-no {
+  background-color: transparent;
+  color: #777;
+  border: 2px solid #ddd;
+}
 
-    .info-card p {
-      color: #4b5563; /* Melhor contraste */
-      font-size: 0.9rem;
-    }
+.btn-no:hover {
+  background-color: #f5f5f5;
+  color: #555;
+  border-color: #ccc;
+}
 
-    @media (max-width: 640px) {
-      .option-cards {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-    #age-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(6px);
-    }
-    
-    #age-modal-content {
-      background: #fff;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      animation: fadeIn 0.5s ease-out;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .modal-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-    
-    .age-icon {
-      margin-left: 1rem;
-      color: var(--primary-color, #f7a800);
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    
-    #age-modal-content h2 {
-      font-size: 2rem;
-      color: var(--primary-color, #f7a800);
-      margin-bottom: 1rem;
-      font-weight: 700;
-    }
-    
-    .modal-description {
-      font-size: 1.1rem;
-      color: #444;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-    
-    .age-options {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    
-    .btn-yes, .btn-no {
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      border: none;
-    }
-    
-    .btn-yes {
-      background-color: var(--primary-color, #f7a800);
-      color: #fff;
-      border: 2px solid var(--primary-color, #f7a800);
-    }
-    
-    .btn-yes:hover {
-      background-color: #e69a00;
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
-    }
-    
-    .btn-no {
-      background-color: transparent;
-      color: #777;
-      border: 2px solid #ddd;
-    }
-    
-    .btn-no:hover {
-      background-color: #f5f5f5;
-      color: #555;
-      border-color: #ccc;
-    }
-    
-    .legal-notice {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #eee;
-    }
-    
-    .legal-notice p {
-      font-size: 0.85rem;
-      color: #888;
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-    }
-    
-    /* Também precisamos estilizar a mensagem quando o usuário é menor de idade */
-    .age-denied-container {
-      text-align: center;
-      padding: 3rem 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    
-    .age-denied-container h2 {
-      color: var(--primary-color, #f7a800);
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .age-denied-container p {
-      color: #666;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-    
-    .age-denied-container .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 2rem;
-      background-color: var(--primary-color, #f7a800);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .age-denied-container .btn-primary:hover {
-      background-color: #e69a00;
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
+.legal-notice {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.legal-notice p {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.age-denied-container {
+  text-align: center;
+  padding: 3rem 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.age-denied-container h2 {
+  color: var(--primary-color, #f7a800);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.age-denied-container p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.age-denied-container .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background-color: var(--primary-color, #f7a800);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.age-denied-container .btn-primary:hover {
+  background-color: #e69a00;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.info-section {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.info-section h2 {
+  color: #2563eb;
+  font-size: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  text-align: center;
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+}
+
+.info-card i {
+  font-size: 1.5rem;
+  color: #2563eb;
+  margin-bottom: 0.5rem;
+}
+
+.info-card h3 {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.info-card p {
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
   </style>
 </head>
 <body>
@@ -361,31 +523,38 @@
     <nav>
       <div class="option-cards">
         <div class="option-card">
-          <a href="index.html">Descobrir Minha Cerveja</a>
           <h3>Responder Pesquisa</h3>
-          <p>Descubra Sua Cerveja Ideal em menos de 1 minuto.</p>
+          <p>Descubra sua Cerveja Ideal em menos de 1 minuto</p>
+          <a href="Inicial.html" class="card-btn"><i class="fas fa-beer"></i> Começar</a>
         </div>
+
         <div class="option-card">
-          <a href="promocoes.html">Resultados</a>
-          <h3>Todas as Promoções</h3>
-          <p>Acesse todas as promoçoes ativas no seu municipio</p>
-        </div>
+          <h3>Todas as Promoções </h3>
+          <p>Venha conhecer as Promoções ativas!</p>
+          <a href="promocoes.html" class="card-btn"><i class="fas fa-shopping-cart"></i>Conhecer</a>
+        </div>      
+
         <div class="option-card">
-          <a href="mercados.html">Conheça os Integrantes</a>
-          <h3>Mercados Parceiros</h3>
-          <p>Venha conhecer os mercados que estão com promoçoes ativas</p>
+          <h3>Resultados</h3>
+          <p>Explore nosso Projeto por meio de um dashboard interativo!</p>
+          <a href="login.html" class="card-btn"><i class="fas fa-tachometer"></i>Ver Dashboard</a>
         </div>
+      
+
       </div>
+      
 
       <div class="button-row">
-        <a href="login.html" class="main-btn">
-          <i class="fas fa-percent" aria-hidden="true"></i>
-          Resultados
-        </a>
-        <a href="integrantes.html" class="main-btn">
+        <a href="Integrantes.html" class="main-btn">
+          <i class="fas fa-award"></i>
           Conheça os Integrantes
         </a>
+        <a href="mercados.html" class="main-btn">
+          <i class="fas fa-globe"></i>
+          Mercados Parceiros
+        </a>
       </div>
+      
     </nav>
   </header>
 
@@ -414,6 +583,7 @@
       </p>
     </section>
   </main>
+
 <script>
   
 function verifyAge(ok) {
