@@ -365,22 +365,57 @@ html, body {
     cursor: pointer;
 }
 
-/* Section Header */
-.promo-section {
-    padding: 0 16px;
-    margin-bottom: 30px;
-}
-
 .section-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+    justify-content: space-between; /* Espaça título e possíveis botões */
+    align-items: center; /* Alinha verticalmente */
+    margin-bottom: 16px;
+    padding: 0 8px; /* Pequeno padding lateral para não colar na borda */
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto; /* Centraliza horizontalmente dentro do container */
 }
 
 .section-header h2 {
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Um pouco maior para destaque */
+    font-weight: 700; /* Mais forte */
+    color: var(--gray-900);
+    margin: 0; /* Remove margem padrão */
+    padding: 4px 0; /* Espaço vertical para respirar */
+    line-height: 1.2;
+}
+
+/* Caso tenha botão ou link na header, alinhe a direita */
+.section-header .see-all {
+    color: var(--secondary-color);
+    font-size: 0.95rem;
     font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.section-header .see-all:hover {
+    color: var(--secondary-dark);
+}
+
+/* Para garantir responsividade e evitar que o título fique muito grande */
+@media (max-width: 480px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .section-header .see-all {
+        align-self: flex-end;
+    }
 }
 
 .see-all {
