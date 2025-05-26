@@ -643,13 +643,7 @@ function showResults() {
   const promoPageURL = municipioPromoPages[selectedMunicipio] || "promocoes.html";
 
   container.innerHTML = `
-  <div class="results-container">
-    <div class="results-header">
-      <h2>Seu Perfil Cervejeiro</h2>
-      <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
-    </div>
-
-    <div class="action-buttons">
+      <div class="action-buttons">
       <a href="index.html" class="btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Conheça o Projeto
@@ -658,6 +652,12 @@ function showResults() {
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Conheça as Promoções <span class="btn-indicator">→</span>
       </a>
+    </div>
+    
+  <div class="results-container">
+    <div class="results-header">
+      <h2>Seu Perfil Cervejeiro</h2>
+      <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
     </div>
 
     <div class="results-section">
