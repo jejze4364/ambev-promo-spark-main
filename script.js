@@ -274,7 +274,7 @@ const questions = [
       {
         text: "Sim, prefiro cervejas zero álcool",
         scores: {
-          brahmazero: 30, budzero: 30, coronacero: 30, michelob: 20, stellapg: 20
+          brahmazero: 100, budzero: 100, coronacero: 100, michelob: 95, stellapg: 95
         }
       },
       {
@@ -286,7 +286,7 @@ const questions = [
       {
         text: "Estou aberto a experimentar opções zero",
         scores: {
-          brahmazero: 25, budzero: 25, coronacero: 25, michelob: 25, stellapg: 25,
+          brahmazero: 35, budzero: 35, coronacero: 35, michelob: 25, stellapg: 25,
           bud: 20, corona: 20, brahma: 20, stella: 20
         }
       }
