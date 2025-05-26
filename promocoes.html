@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Aproveite as melhores promoções de cerveja no Esportanos. Cupons, ofertas e descontos exclusivos." />
-        <title>Promoções de Cerveja | Esportanos</title>
+        <title>Promoções de Cerveja</title>
       
         <!-- Fonte Inter para modernização -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -132,173 +132,276 @@
             </button>
         </div>
 
-    <!-- Seção de cupons -->
-    <section class="promo-section" data-category="coupon">
-        <div class="section-header">
-          <h2>Seus Cupons</h2>
+    <!-- Cupons (De X por Y) -->
+<section class="promo-section" data-category="coupon">
+  <div class="section-header">
+    <h2>Cupons - Promoções Primeira Quinzena</h2>
+  </div>
+  <div class="coupons-container">
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/90128594c8795d6436.jpg" alt="Corona Long Neck" width="60" height="60" />
         </div>
-        <div class="coupons-container">
-          <div class="coupon">
-            <div class="coupon-content">
-              <div class="coupon-brand">
-                <img src="brahma.jpg" alt="Brahma" width="60" height="60">
-              </div>
-              <div class="coupon-details">
-                <h3>20% OFF</h3>
-                <p>Em Brahma para todos os mercados</p>
-                <span class="coupon-expiry">Expira em 2 dias</span>
-              </div>
-            </div>
-            <div class="coupon-action">
-              <button class="use-coupon" onclick="location.href='cupom-brahma.html'">USAR</button>
-            </div>
-          </div>
-  
-          <div class="coupon">
-            <div class="coupon-content">
-              <div class="coupon-brand">
-                <img src="bud.jpg" alt="bud" width="60" height="60">
-              </div>
-              <div class="coupon-details">
-                <h3>R$10 OFF</h3>
-                <p>Em compras acima de R$50</p>
-                <span class="coupon-expiry">Expira hoje!</span>
-              </div>
-            </div>
-            <div class="coupon-action">
-              <button class="use-coupon urgent" onclick="location.href='cupom-bud.html'">USAR AGORA</button>
-            </div>
-          </div>
-  
-          <div class="coupon new-coupon" data-category="exclusive">
-            <div class="coupon-content">
-              <div class="coupon-brand">
-                <img src="corona.jpg" alt="Corona" width="60" height="60">
-              </div>
-              <div class="coupon-details">
-                <div class="new-tag">NOVO</div>
-                <h3>Leve 6, Pague 5</h3>
-                <p>Em Corona Long Neck</p>
-                <span class="coupon-expiry">Válido por 7 dias</span>
-                <span class="exclusiva" style="display:none">Exclusiva</span>
-              </div>
-            </div>
-            <div class="coupon-action">
-              <button class="use-coupon" onclick="location.href='cupom-corona.html'">USAR</button>
-            </div>
-          </div>
-  
-          <div class="coupon" data-category="cashback">
-            <div class="coupon-content">
-              <div class="coupon-brand">
-                <img src="patagonia.jpg" alt="Patagonia" width="60" height="60">
-              </div>
-              <div class="coupon-details">
-                <h3>5% Cashback</h3>
-                <p>Em Patagonia 600ml</p>
-                <span class="coupon-expiry">Válido por 5 dias</span>
-              </div>
-            </div>
-            <div class="coupon-action">
-              <button class="use-coupon" onclick="location.href='cupom-patagonia.html'">USAR</button>
-            </div>
-          </div>
+        <div class="coupon-details">
+          <h3>De R$7,19 por R$6,49</h3>
+          <p>Em Corona Long Neck</p>
+          <span class="coupon-expiry">Válido até 16/06</span>
         </div>
-      </section>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Corona aplicado!')">USAR</button>
+      </div>
+    </div>
 
-        <!-- Seção de missões -->
-    <section class="promo-section missions-section" data-category="missions">
-        <div class="section-header">
-          <h2>Missões Ativas</h2>
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/93d6d774428522d3.jpg" alt="Stella Artois Long Neck" width="60" height="60" />
         </div>
-        <div class="missions-container">
-          <div class="mission-card">
-            <div class="mission-header">
-              <img src="stella.jpg" alt="Stella Artois" class="mission-brand" width="80" height="40">
-              <div class="mission-reward">
-                <i class="fas fa-gift" aria-hidden="true"></i>
-                <span>1 Stella Grátis</span>
-              </div>
-            </div>
-            <div class="mission-body">
-              <h3>Desafio Stella</h3>
-              <p>Compre 5 Stella Artois em 30 dias</p>
-              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-fill" style="width: 60%"></div>
-              </div>
-              <div class="mission-progress">
-                <span>3/5</span>
-                <span>60% completo</span>
-              </div>
-            </div>
-            <button class="mission-btn" onclick="location.href='missao-stella.html'">CONTINUAR</button>
-          </div>
-  
-          <div class="mission-card">
-            <div class="mission-header">
-              <img src="spaten.jpg" alt="Spaten" class="mission-brand" width="80" height="40">
-              <div class="mission-reward">
-                <i class="fas fa-percent" aria-hidden="true"></i>
-                <span>30% OFF</span>
-              </div>
-            </div>
-            <div class="mission-body">
-              <h3>Experimentador Spaten</h3>
-              <p>Experimente 3 tipos de Spaten</p>
-              <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-fill" style="width: 33%"></div>
-              </div>
-              <div class="mission-progress">
-                <span>1/3</span>
-                <span>33% completo</span>
-              </div>
-            </div>
-            <button class="mission-btn" onclick="location.href='missao-spaten.html'">CONTINUAR</button>
-          </div>
+        <div class="coupon-details">
+          <h3>De R$5,79 por R$5,19</h3>
+          <p>Em Stella Artois Long Neck</p>
+          <span class="coupon-expiry">Válido até 16/06</span>
         </div>
-      </section>
-  
-           <!-- Ofertas por perfil -->
-    <section class="promo-section" data-category="recommendation">
-        <div class="section-header">
-          <h2>Recomendado para Você</h2>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Stella aplicado!')">USAR</button>
+      </div>
+    </div>
+
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/00702b35a1972219.jpg" alt="Budweiser 473ml" width="60" height="60" />
         </div>
-        <div class="profile-recommendations">
-          <div class="profile-badge">
-            <div class="badge-icon">
-              <i class="fas fa-star" aria-hidden="true"></i>
-            </div>
-            <span>Amante de IPA</span>
-          </div>
-          <div class="recommended-items">
-            <div class="promo-item">
-              <div class="discount-tag">20% OFF</div>
-              <img src="colorado.jpg" alt="Colorado" class="promo-img" width="100" height="120">
-              <div class="promo-details">
-                <h3>Colorado IPA</h3>
-                <p class="promo-price">
-                  <span class="original-price">R$9,90</span>
-                  <span class="current-price">R$7,92</span>
-                </p>
-                <button class="add-to-cart" onclick="location.href='produto-colorado.html'">ADICIONAR</button>
-              </div>
-            </div>
-            <div class="promo-item">
-              <div class="discount-tag">15% OFF</div>
-              <img src="patagonia.jpg" alt="Patagonia" class="promo-img" width="100" height="120">
-              <div class="promo-details">
-                <h3>Patagonia IPA</h3>
-                <p class="promo-price">
-                  <span class="original-price">R$12,90</span>
-                  <span class="current-price">R$10,96</span>
-                </p>
-                <button class="add-to-cart" onclick="location.href='produto-patagonia.html'">ADICIONAR</button>
-              </div>
-            </div>
-          </div>
+        <div class="coupon-details">
+          <h3>De R$5,19 por R$4,99</h3>
+          <p>Em Budweiser 473ml</p>
+          <span class="coupon-expiry">Válido até 16/06</span>
         </div>
-      </section>
-        
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Budweiser aplicado!')">USAR</button>
+      </div>
+    </div>
+
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/c45c9b6f69e9e238.jpg" alt="Brahma 473ml" width="60" height="60" />
+        </div>
+        <div class="coupon-details">
+          <h3>De R$4,69 por R$4,49</h3>
+          <p>Em Brahma 473ml</p>
+          <span class="coupon-expiry">Válido até 16/06</span>
+        </div>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Brahma aplicado!')">USAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top: 40px;">
+    <h2>Cupons - Promoções Segunda Quinzena</h2>
+  </div>
+  <div class="coupons-container">
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/7f1fca74e98d13d2.jpg" alt="Antarctica Original 473ml" width="60" height="60" />
+        </div>
+        <div class="coupon-details">
+          <h3>De R$5,29 por R$4,79</h3>
+          <p>Em Antarctica Original 473ml</p>
+          <span class="coupon-expiry">Válido até 30/06</span>
+        </div>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Antarctica aplicado!')">USAR</button>
+      </div>
+    </div>
+
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/0f79580119e9f765.jpg" alt="Spaten Long Neck" width="60" height="60" />
+        </div>
+        <div class="coupon-details">
+          <h3>De R$5,39 por R$4,99</h3>
+          <p>Em Spaten Long Neck</p>
+          <span class="coupon-expiry">Válido até 30/06</span>
+        </div>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Spaten aplicado!')">USAR</button>
+      </div>
+    </div>
+
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/00702b35a1972219.jpg" alt="Budweiser Long Neck" width="60" height="60" />
+        </div>
+        <div class="coupon-details">
+          <h3>De R$5,19 por R$4,79</h3>
+          <p>Em Budweiser Long Neck</p>
+          <span class="coupon-expiry">Válido até 30/06</span>
+        </div>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Budweiser LN aplicado!')">USAR</button>
+      </div>
+    </div>
+
+    <div class="coupon">
+      <div class="coupon-content">
+        <div class="coupon-brand">
+          <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/7f1fca74e98d13d2.jpg" alt="Antarctica Pilsen 473ml" width="60" height="60" />
+        </div>
+        <div class="coupon-details">
+          <h3>De R$4,29 por R$3,99</h3>
+          <p>Em Antarctica Pilsen 473ml</p>
+          <span class="coupon-expiry">Válido até 30/06</span>
+        </div>
+      </div>
+      <div class="coupon-action">
+        <button class="use-coupon" onclick="alert('Cupom Antarctica Pilsen aplicado!')">USAR</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Missões (Leve N Pague M) -->
+<section class="promo-section missions-section" data-category="missions">
+  <div class="section-header">
+    <h2>Missões - Promoções Primeira Quinzena</h2>
+  </div>
+  <div class="missions-container">
+    <div class="mission-card">
+      <div class="mission-header">
+        <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/7f1fca74e98d13d2.jpg" alt="Antarctica Original 473ml" class="mission-brand" width="80" height="40" />
+        <div class="mission-reward">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          <span>Leve 12 Pague 10</span>
+        </div>
+      </div>
+      <div class="mission-body">
+        <h3>Missão Antarctica Original</h3>
+        <p>Compre 12 Antarctica Original, pague só 10</p>
+        <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="12">
+          <div class="progress-fill" style="width: calc((5 / 12) * 100%)"></div>
+        </div>
+        <div class="mission-progress">
+          <span>5/12</span>
+          <span>42% completo</span>
+        </div>
+      </div>
+      <button class="mission-btn" onclick="alert('Missão Antarctica em andamento!')">CONTINUAR</button>
+    </div>
+
+    <div class="mission-card">
+      <div class="mission-header">
+        <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/00702b35a1972219.jpg" alt="Budweiser Long Neck" class="mission-brand" width="80" height="40" />
+        <div class="mission-reward">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          <span>Leve 6 Pague 5</span>
+        </div>
+      </div>
+      <div class="mission-body">
+        <h3>Missão Budweiser Long Neck</h3>
+        <p>Compre 6 Budweiser Long Neck, pague só 5</p>
+        <div class="progress-bar" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="6">
+          <div class="progress-fill" style="width: calc((3 / 6) * 100%)"></div>
+        </div>
+        <div class="mission-progress">
+          <span>3/6</span>
+          <span>50% completo</span>
+        </div>
+      </div>
+      <button class="mission-btn" onclick="alert('Missão Budweiser em andamento!')">CONTINUAR</button>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top: 40px;">
+    <h2>Missões - Promoções Segunda Quinzena</h2>
+  </div>
+  <div class="missions-container">
+    <div class="mission-card">
+      <div class="mission-header">
+        <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/00702b35a1972219.jpg" alt="Budweiser Lata 473ml" class="mission-brand" width="80" height="40" />
+        <div class="mission-reward">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          <span>Leve 12 Pague 10</span>
+        </div>
+      </div>
+      <div class="mission-body">
+        <h3>Missão Budweiser Lata</h3>
+        <p>Compre 12 Budweiser Lata, ganhe desconto</p>
+        <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="12">
+          <div class="progress-fill" style="width: calc((2 / 12) * 100%)"></div>
+        </div>
+        <div class="mission-progress">
+          <span>2/12</span>
+          <span>17% completo</span>
+        </div>
+      </div>
+      <button class="mission-btn" onclick="alert('Missão Budweiser Lata em andamento!')">CONTINUAR</button>
+    </div>
+
+    <div class="mission-card">
+      <div class="mission-header">
+        <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/c45c9b6f69e9e238.jpg" alt="Brahma Chopp 350ml" class="mission-brand" width="80" height="40" />
+        <div class="mission-reward">
+          <i class="fas fa-percent" aria-hidden="true"></i>
+          <span>Leve 12 Ganhe 20% de Desconto</span>
+        </div>
+      </div>
+      <div class="mission-body">
+        <h3>Missão Brahma Chopp</h3>
+        <p>Compre 12 Brahma Chopp e ganhe 20% OFF</p>
+        <div class="progress-bar" role="progressbar" aria-valuenow="7" aria-valuemin="0" aria-valuemax="12">
+          <div class="progress-fill" style="width: calc((7 / 12) * 100%)"></div>
+        </div>
+        <div class="mission-progress">
+          <span>7/12</span>
+          <span>58% completo</span>
+        </div>
+      </div>
+      <button class="mission-btn" onclick="alert('Missão Brahma Chopp em andamento!')">CONTINUAR</button>
+    </div>
+  </div>
+</section>
+
+<!-- Recomendações -->
+<section class="promo-section" data-category="recommendation">
+  <div class="section-header">
+    <h2>Recomendado para Você</h2>
+  </div>
+  <div class="profile-recommendations">
+    <div class="promo-item">
+      <div class="discount-tag">3 por R$20</div>
+      <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/00702b35a1972219.jpg" alt="Budweiser Long Neck" class="promo-img" width="100" height="120" />
+      <div class="promo-details">
+        <h3>Budweiser Long Neck</h3>
+        <p class="promo-price">Oferta imperdível!</p>
+        <button class="add-to-cart" onclick="alert('Produto Budweiser adicionado!')">ADICIONAR</button>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div class="discount-tag">R$49,90</div>
+      <img src="https://cdn.awsli.com.br/600x600/2014/2014340/produto/corona.jpg" alt="Corona 6-pack" class="promo-img" width="100" height="120" />
+      <div class="promo-details">
+        <h3>Corona 6-pack</h3>
+        <p class="promo-price">Preço promocional</p>
+        <button class="add-to-cart" onclick="alert('Produto Corona adicionado!')">ADICIONAR</button>
+      </div>
+    </div>
+  </div>
+</section>
+
         <!-- Integração com Zé Delivery -->
         <section class="promo-section delivery-integration" data-category="integration">
             <div class="integration-card ze-delivery-section">
