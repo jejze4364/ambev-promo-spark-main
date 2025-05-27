@@ -60,12 +60,28 @@ html, body {
 }
 
 .header-content {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;  /* centraliza o h1 */
     max-width: var(--max-width);
     margin: 0 auto;
 }
+
+.notification-icon {
+    position: absolute;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gray-100);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
 
 .back-btn {
     color: var(--gray-800);
