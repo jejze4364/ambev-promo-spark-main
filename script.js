@@ -212,14 +212,14 @@ const questions = [
       {
         text: "Entre R$ 6,00 e R$ 7,99 por unidade",
         scores: {
-          stella: 40, becks: 40, corona: 40, patagonia: 35, colorado: 35,
+          stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
           michelob: 30, brahmazero: 20, budzero: 20
         }
       },
       {
         text: "R$ 8,00 ou mais por unidade",
         scores: {
-          patagonia: 40, colorado: 40, stellapg: 40, michelob: 30,
+          patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
           stella: 30, becks: 30, corona: 30
         }
       }
@@ -247,7 +247,7 @@ const questions = [
       },
       {
         text: "Momentos ao ar livre (praia, piscina)",
-        scores: { corona: 30, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
+        scores: { corona: 40, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
       },
       {
         text: "Jantares e Harmonizações",
@@ -259,7 +259,7 @@ const questions = [
       },
       {
         text: "Encontros românticos",
-        scores: { stella: 30, colorado: 30, patagonia: 30, michelob: 25 }
+        scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 25 }
       },
       {
         text: "Relaxando em casa após o trabalho",
@@ -274,7 +274,7 @@ const questions = [
       {
         text: "Sim, prefiro cervejas zero álcool",
         scores: {
-          brahmazero: 100, budzero: 100, coronacero: 100, michelob: 55, stellapg: 55
+          brahmazero: 150, budzero: 150, coronacero: 150, michelob: 55, stellapg: 55
         }
       },
       {
@@ -300,7 +300,7 @@ const questions = [
       {
         text: "Mais de 2x por semana",
         scores: {
-          brahma: 30, skol: 30, antarctica: 30, bud: 25, stella: 25, michelob: 20
+          brahma: 30, skol: 30, antarctica: 30, bud: 25, stella: 25
         }
       },
       {
