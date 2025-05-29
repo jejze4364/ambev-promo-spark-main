@@ -1,58 +1,49 @@
-console.log("Firebase:", firebase);
-console.log("Firestore:", firebase.firestore);
+// Variáveis globais e configurações iniciais
+const municipios = [
+  "Rio de Janeiro", "São Gonçalo", "Duque de Caxias", "Nova Iguaçu", "Belford Roxo",
+  "Niterói", "Campos dos Goytacazes", "São João de Meriti", "Volta Redonda", "Petrópolis", "Outro(s)"
+];
 
-// Inicialização do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
-  authDomain: "pesquisa-8a0f9.firebaseapp.com",
-  projectId: "pesquisa-8a0f9",
-  storageBucket: "pesquisa-8a0f9.appspot.com",
-  messagingSenderId: "453188166697",
-  appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
-  measurementId: "G-H34QHPSPS1"
+const faixasEtarias = [
+  "18 a 27 anos", "28 a 37 anos", "38 a 45 anos", "Acima de 45 anos"
+];
+
+const municipioPromoPages = {
+  "Rio de Janeiro": "promoriojaneiro.html",
+  "São Gonçalo": "promosaogoncalo.html",
+  "Duque de Caxias": "promoduquecaxias.html",
+  "Nova Iguaçu": "promonovaiguacu.html",
+  "Belford Roxo": "promobelfordroxo.html",
+  "Niterói": "promoniteroi.html",
+  "Campos dos Goytacazes": "promocamposgoytacazes.html",
+  "São João de Meriti": "promosaojoaomeriti.html",
+  "Volta Redonda": "promovoltaredonda.html",
+  "Petrópolis": "promopetropolis.html",
+  "Outro(s)": "promocoes.html"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-const analytics = firebase.analytics();
-const db = firebase.firestore();
-
-firebase.firestore().collection("pesquisas").limit(1).get()
-  .then(snapshot => {
-    if (snapshot.empty) {
-      console.warn("⚠️ A coleção 'pesquisas' está vazia.");
-    } else {
-      console.log("✅ Firestore conectado com sucesso!");
-      snapshot.forEach(doc => console.log("Documento exemplo:", doc.data()));
-    }
-  })
-  .catch(error => {
-    console.error("❌ Erro ao conectar com Firestore:", error);
-  });
-
-
-
-// Variáveis globais do painel
 let allSurveys = [];
+let pieChart = null;
 let filteredSurveys = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 
 const friendlyNames = {
-  brahma: "Brahma",
-  spaten: "Spaten",
-  corona: "Corona",
+  brahma: "Brahma", 
+  spaten: "Spaten", 
+  corona: "Corona", 
   bud: "Budweiser",
-  stella: "Stella Artois",
-  budzero: "Budweiser Zero",
+  stella: "Stella Artois", 
+  budzero: "Budweiser Zero", 
   coronacero: "Corona Cero",
-  becks: "Beck's",
-  antarctica: "Antarctica",
+  becks: "Beck's", 
+  antarctica: "Antarctica", 
   michelob: "Michelob Ultra",
-  brahmazero: "Brahma Zero",
-  skol: "Skol",
+  brahmazero: "Brahma Zero", 
+  skol: "Skol", 
   bohemia: "Bohemia",
-  original: "Original",
-  patagonia: "Patagonia",
+  original: "Original", 
+  patagonia: "Patagonia", 
   colorado: "Colorado",
   stellapg: "Stella Artois Sem Glúten"
 };
@@ -66,275 +57,350 @@ const questionLabels = {
   pergunta6: "Frequência"
 };
 
-function getTopBeer(scores) {
-  if (!scores) return null;
-  let topBeer = null;
-  let topScore = -1;
-  Object.entries(scores).forEach(([beer, score]) => {
-    const numScore = parseFloat(score);
-    if (beer && typeof beer === 'string' && !isNaN(numScore) && numScore > topScore) {
-      topBeer = beer;
-      topScore = numScore;
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDvMFh5CNWeCXqBo98GJvj-YGACSlmB81c",
+  authDomain: "pesquisa-8a0f9.firebaseapp.com",
+  projectId: "pesquisa-8a0f9",
+  storageBucket: "pesquisa-8a0f9.appspot.com",
+  messagingSenderId: "453188166697",
+  appId: "1:453188166697:web:c1144b2abeb1edc3b16838",
+  measurementId: "G-H34QHPSPS1"
+};
+
+let app, analytics, db;
+
+// Variáveis globais para gráficos
+let brandChart = null;
+let correlationChart = null;
+
+// Utilitários
+function safeGet(obj, path, defaultValue = null) {
+  try {
+    return path.split('.').reduce((o, p) => o && o[p], obj) || defaultValue;
+  } catch {
+    return defaultValue;
+  }
+}
+
+function formatDate(date) {
+  if (!date) return 'N/D';
+  try {
+    if (typeof date.toDate === 'function') return date.toDate().toLocaleDateString('pt-BR');
+    if (date instanceof Date) return date.toLocaleDateString('pt-BR');
+    return new Date(date).toLocaleDateString('pt-BR');
+  } catch {
+    return 'N/D';
+  }
+}
+
+function parseNumber(value, defaultValue = 0) {
+  const num = parseFloat(value);
+  return isNaN(num) ? defaultValue : num;
+}
+
+function showError(message) {
+  const errorElement = document.getElementById('error-message');
+  if (errorElement) {
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+  console.error(message);
+}
+
+function hideError() {
+  const errorElement = document.getElementById('error-message');
+  if (errorElement) {
+    errorElement.style.display = 'none';
+  }
+}
+
+// Inicialização Firebase
+function initializeFirebase() {
+  try {
+    if (typeof firebase === 'undefined') {
+      throw new Error('Firebase SDK não carregado.');
     }
-  });
+    app = firebase.initializeApp(firebaseConfig);
+    if (firebase.analytics) analytics = firebase.analytics();
+    if (firebase.firestore) db = firebase.firestore();
+    hideError();
+  } catch (error) {
+    showError('Erro ao inicializar Firebase: ' + error.message);
+  }
+}
+
+// Obter cerveja com maior pontuação
+function getTopBeer(scores) {
+  if (!scores || typeof scores !== 'object') return null;
+  
+  let topBeer = null;
+  let topScore = -Infinity;
+  
+  for (const [beer, score] of Object.entries(scores)) {
+    if (!beer || beer === 'undefined' || beer === 'null') continue;
+    
+    const numScore = parseNumber(score, -Infinity);
+    if (numScore > topScore) {
+      topScore = numScore;
+      topBeer = beer;
+    }
+  }
+  
   return topBeer;
 }
 
+// Atualiza KPIs no painel
 function atualizarKPIs(surveys) {
-  const total = surveys.length;
-  if (document.getElementById('total-respostas')) {
-    document.getElementById('total-respostas').textContent = total;
-  }
+  if (!Array.isArray(surveys)) return;
 
+  const totalElement = document.getElementById('total-respostas');
+  const idadeElement = document.getElementById('idade-media');
+  const ticketElement = document.getElementById('ticket-medio');
+  const favoritaElement = document.getElementById('cerveja-favorita');
+
+  const total = surveys.length;
+  if (totalElement) totalElement.textContent = total;
+
+  // Cálculo de idade média
   const faixaIdadeMedia = {
     "18 a 27 anos": 22.5,
     "28 a 37 anos": 32.5,
     "38 a 45 anos": 41.5,
     "Acima de 45 anos": 50
   };
-  const idades = surveys.map(s => faixaIdadeMedia[s.respostas?.pergunta2]).filter(n => !isNaN(n));
   
-  const idadeMedia = idades.length ? (idades.reduce((a, b) => a + b, 0) / idades.length).toFixed(1) : '-';
-  if (document.getElementById('idade-media')) {
-    document.getElementById('idade-media').textContent = idadeMedia + ' anos';
+  const idades = surveys
+    .map(s => faixaIdadeMedia[safeGet(s, 'respostas.pergunta2')])
+    .filter(idade => !isNaN(idade));
+    
+  const idadeMedia = idades.length > 0 ? 
+    (idades.reduce((a, b) => a + b, 0) / idades.length).toFixed(1) : '-';
+  
+  if (idadeElement) {
+    idadeElement.textContent = idadeMedia !== '-' ? `${idadeMedia} anos` : '-';
   }
 
+  // Cálculo de ticket médio
   const gastoMedio = {
     "Até R$ 4,00 por unidade": 4,
     "Entre R$ 4,00 e R$ 5,99 por unidade": 5,
     "Entre R$ 6,00 e R$ 7,99 por unidade": 7,
     "R$ 8,00 ou mais por unidade": 9
   };
-  const gastos = surveys.map(s => gastoMedio[s.respostas?.pergunta3]).filter(n => !isNaN(n));
   
-  const ticket = gastos.length ? 'R$ ' + (gastos.reduce((a, b) => a + b, 0) / gastos.length).toFixed(2) : '-';
-  if (document.getElementById('ticket-medio')) {
-    document.getElementById('ticket-medio').textContent = ticket;
-  }
+  const gastos = surveys
+    .map(s => gastoMedio[safeGet(s, 'respostas.pergunta3')])
+    .filter(gasto => !isNaN(gasto));
+    
+  const ticket = gastos.length > 0 ? 
+    'R$ ' + (gastos.reduce((a, b) => a + b, 0) / gastos.length).toFixed(2) : '-';
+  
+  if (ticketElement) ticketElement.textContent = ticket;
 
-  const cervejas = {};
+  // Cerveja mais votada
+  const cervejasCount = {};
   surveys.forEach(s => {
     const favorita = getTopBeer(s.scores);
-    if (favorita) cervejas[favorita] = (cervejas[favorita] || 0) + 1;
+    if (favorita) {
+      cervejasCount[favorita] = (cervejasCount[favorita] || 0) + 1;
+    }
   });
-  const maisVotada = Object.entries(cervejas).sort((a, b) => b[1] - a[1])[0];
-  if (document.getElementById('cerveja-favorita')) {
-    document.getElementById('cerveja-favorita').textContent = maisVotada ? (friendlyNames[maisVotada[0]] || maisVotada[0]) : '-';
+  
+  const maisVotada = Object.entries(cervejasCount)
+    .sort((a, b) => b[1] - a[1])[0];
+    
+  if (favoritaElement) {
+    favoritaElement.textContent = maisVotada ? 
+      (friendlyNames[maisVotada[0]] || maisVotada[0]) : '-';
   }
 }
 
+// Carrega dados do Firebase Firestore
 function loadDataFromFirebase() {
   showLoading(true);
-  if (document.getElementById('error-message')) {
-    document.getElementById('error-message').textContent = '';
+  hideError();
+
+  if (!db) {
+    showError('Firestore não inicializado.');
+    showLoading(false);
+    return;
   }
 
-  db.collection("pesquisas")
-    .get()
-    .then((querySnapshot) => {
+  db.collection("pesquisas").get()
+    .then(snapshot => {
       allSurveys = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        let dataFormatada = data.timestamp ? data.timestamp.toDate() : null;
-
-        const survey = {
-          id: doc.id,
-          data: dataFormatada,
-          respostas: data.respostas || {},
-          scores: data.scores || {}
-        };
-
-        allSurveys.push(survey);
+      
+      snapshot.forEach(doc => {
+        try {
+          const data = doc.data();
+          let dataFormatada = null;
+          
+          if (data.timestamp) {
+            if (typeof data.timestamp.toDate === 'function') {
+              dataFormatada = data.timestamp.toDate();
+            } else if (data.timestamp instanceof Date) {
+              dataFormatada = data.timestamp;
+            } else {
+              dataFormatada = new Date(data.timestamp);
+            }
+          }
+          
+          allSurveys.push({
+            id: doc.id,
+            data: dataFormatada,
+            respostas: data.respostas || {},
+            scores: data.scores || {}
+          });
+        } catch (error) {
+          console.warn('Erro ao processar documento:', doc.id, error);
+        }
       });
-
+      
       filteredSurveys = [...allSurveys];
       renderDashboard();
       showLoading(false);
+      hideError();
     })
-    .catch((error) => {
-      console.error("Erro ao carregar dados:", error);
-      if (document.getElementById('error-message')) {
-        document.getElementById('error-message').textContent = 'Erro ao carregar dados: ' + error.message;
-      }
+    .catch(error => {
+      showError('Erro ao carregar dados: ' + error.message);
       showLoading(false);
     });
 }
 
-
-function populateFilterOptions() {
-  // Preencher seletores de filtro
-  const citySelect = document.getElementById('filter-city');
-  const ageSelect = document.getElementById('filter-age');
-  const brandSelect = document.getElementById('filter-brand');
-  const comparisonBrand1 = document.getElementById('comparison-brand1');
-  const comparisonBrand2 = document.getElementById('comparison-brand2');
-  const correlationX = document.getElementById('correlation-x');
-  const correlationY = document.getElementById('correlation-y');
-  
-  // Limpar opções existentes
-  [citySelect, ageSelect, brandSelect, comparisonBrand1, comparisonBrand2].forEach(select => {
-    if (select) {
-      select.innerHTML = '<option value="">Todos</option>';
-    }
-  });
-  
-  // Adicionar perguntas aos seletores de correlação
-  if (correlationX && correlationY) {
-    correlationX.innerHTML = '<option value="">Selecione a pergunta (X)</option>';
-    correlationY.innerHTML = '<option value="">Selecione a pergunta (Y)</option>';
-    
-    for (let i = 1; i <= 6; i++) {
-      const key = `pergunta${i}`;
-      const option = document.createElement('option');
-      option.value = key;
-      option.textContent = questionLabels[key] || key;
-      correlationX.appendChild(option.cloneNode(true));
-      correlationY.appendChild(option);
-    }
-  }
-  
-  // Adicionar cidades ao filtro de cidades
-  const cities = getUniqueValues('pergunta1');
-  if (citySelect) {
-    cities.forEach(city => {
-      const option = document.createElement('option');
-      option.value = city;
-      option.textContent = city;
-      citySelect.appendChild(option);
-    });
-  }
-  
-  // Adicionar faixas etárias ao filtro de idade
-  const ages = getUniqueValues('pergunta2');
-  if (ageSelect) {
-    ages.forEach(age => {
-      const option = document.createElement('option');
-      option.value = age;
-      option.textContent = age;
-      ageSelect.appendChild(option);
-    });
-  }
-  
-  // Adicionar marcas aos seletores
-  Object.entries(friendlyNames).forEach(([key, name]) => {
-    const option = document.createElement('option');
-    option.value = key;
-    option.textContent = name;
-    
-    if (brandSelect) brandSelect.appendChild(option.cloneNode(true));
-    if (comparisonBrand1) comparisonBrand1.appendChild(option.cloneNode(true));
-    if (comparisonBrand2) comparisonBrand2.appendChild(option);
-  });
-}
-
+// Funções de filtro
 function applyFilters() {
-  const dateRange = $('#date-range').data('daterangepicker');
-  const startDate = dateRange ? dateRange.startDate.toDate() : null;
-  const endDate = dateRange ? dateRange.endDate.toDate() : null;
-  const citySelect = document.getElementById('filter-city');
-  const ageSelect = document.getElementById('filter-age');
-  const brandSelect = document.getElementById('filter-brand');
-  
-  const city = citySelect ? citySelect.value : '';
-  const age = ageSelect ? ageSelect.value : '';
-  const brand = brandSelect ? brandSelect.value : '';
-  
-  filteredSurveys = allSurveys.filter(survey => {
-    // Filtro de data
-    if (startDate && endDate && survey.data) {
-      if (survey.data < startDate || survey.data > endDate) return false;
+  try {
+    let startDate = null, endDate = null;
+    
+    // Date range picker
+    const dateRangeElement = document.getElementById('date-range');
+    if (dateRangeElement && typeof $ !== 'undefined' && $(dateRangeElement).data('daterangepicker')) {
+      const dr = $(dateRangeElement).data('daterangepicker');
+      startDate = dr.startDate.toDate();
+      endDate = dr.endDate.toDate();
     }
-    
-    // Filtro de cidade
-    if (city && survey.respostas.pergunta1 !== city) return false;
-    
-    // Filtro de idade
-    if (age && survey.respostas.pergunta2 !== age) return false;
-    
-    // Filtro de marca favorita
-    if (brand) {
-      const topBeer = getTopBeer(survey.scores);
-      if (topBeer !== brand) return false;
-    }
-    
-    return true;
-  });
-  
-  currentPage = 1;
-  renderDashboard();
+
+    const city = safeGet(document.getElementById('filter-city'), 'value', '');
+    const age = safeGet(document.getElementById('filter-age'), 'value', '');
+    const brand = safeGet(document.getElementById('filter-brand'), 'value', '');
+
+    filteredSurveys = allSurveys.filter(survey => {
+      // Filtro de data
+      if (startDate && endDate && survey.data) {
+        if (survey.data < startDate || survey.data > endDate) return false;
+      }
+      
+      // Filtro de cidade
+      if (city && safeGet(survey, 'respostas.pergunta1') !== city) return false;
+      
+      // Filtro de idade
+      if (age && safeGet(survey, 'respostas.pergunta2') !== age) return false;
+      
+      // Filtro de marca
+      if (brand) {
+        const topBeer = getTopBeer(survey.scores);
+        if (topBeer !== brand) return false;
+      }
+      
+      return true;
+    });
+
+    currentPage = 1;
+    renderDashboard();
+  } catch (error) {
+    showError('Erro ao aplicar filtros: ' + error.message);
+  }
 }
 
 function clearFilters() {
-  // Resetar filtros para o valor padrão
-  const dateRange = $('#date-range').data('daterangepicker');
-  if (dateRange) {
-    dateRange.setStartDate(moment().subtract(30, 'days'));
-    dateRange.setEndDate(moment());
-  }
-  
-  const citySelect = document.getElementById('filter-city');
-  const ageSelect = document.getElementById('filter-age');
-  const brandSelect = document.getElementById('filter-brand');
-  
-  if (citySelect) citySelect.value = '';
-  if (ageSelect) ageSelect.value = '';
-  if (brandSelect) brandSelect.value = '';
-  
-  // Restaurar todos os dados
-  filteredSurveys = [...allSurveys];
-  currentPage = 1;
-  renderDashboard();
-}
-
-function exportToCSV() {
-  if (filteredSurveys.length === 0) {
-    alert('Não há dados para exportar.');
-    return;
-  }
-  
-  let csvContent = "data:text/csv;charset=utf-8,";
-  
-  // Cabeçalho
-  csvContent += "Data,Município,Faixa Etária,Preço,Ocasiões,Zero Álcool,Frequência,Cerveja Favorita,Score\n";
-  
-  // Dados
-  filteredSurveys.forEach(s => {
-    const data = s.data instanceof Date ? s.data.toLocaleDateString('pt-BR') : '';
-    const municipio = escapeCSV(s.respostas.pergunta1 || '');
-    const idade = escapeCSV(s.respostas.pergunta2 || '');
-    const preco = escapeCSV(s.respostas.pergunta3 || '');
-    const ocasioes = escapeCSV(s.respostas.pergunta4 || '');
-    const zeroAlcool = escapeCSV(s.respostas.pergunta5 || '');
-    const frequencia = escapeCSV(s.respostas.pergunta6 || '');
+  try {
+    // Reset date range picker
+    const dateRangeElement = document.getElementById('date-range');
+    if (dateRangeElement && typeof $ !== 'undefined' && $(dateRangeElement).data('daterangepicker')) {
+      const dr = $(dateRangeElement).data('daterangepicker');
+      dr.setStartDate(moment().subtract(30, 'days'));
+      dr.setEndDate(moment());
+    }
     
-    const topBeer = getTopBeer(s.scores);
-    const cerveja = escapeCSV(topBeer ? (friendlyNames[topBeer] || topBeer) : '');
-    const score = topBeer && s.scores[topBeer] ? parseFloat(s.scores[topBeer]).toFixed(0) : '';
-    
-    csvContent += `${data},${municipio},${idade},${preco},${ocasioes},${zeroAlcool},${frequencia},${cerveja},${score}\n`;
-  });
-  
-  // Criar link de download
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "pesquisa_cervejas.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+    // Reset select elements
+    const selects = ['filter-city', 'filter-age', 'filter-brand'];
+    selects.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) element.value = '';
+    });
 
+    filteredSurveys = [...allSurveys];
+    currentPage = 1;
+    renderDashboard();
+  } catch (error) {
+    showError('Erro ao limpar filtros: ' + error.message);
+  }
+}
+function exportToExcel() {
+  try {
+    if (filteredSurveys.length === 0) {
+      alert('Não há dados para exportar.');
+      return;
+    }
+
+    const data = [];
+
+    // Cabeçalhos
+    data.push([
+      "Data", "Município", "Faixa Etária", "Preço", "Ocasiões",
+      "Zero Álcool", "Frequência", "Cerveja Favorita", "Score"
+    ]);
+
+    // Linhas
+    filteredSurveys.forEach(s => {
+      const dataLinha = formatDate(s.data);
+      const municipio = safeGet(s, 'respostas.pergunta1', '');
+      const idade = safeGet(s, 'respostas.pergunta2', '');
+      const preco = safeGet(s, 'respostas.pergunta3', '');
+      const ocasioes = safeGet(s, 'respostas.pergunta4', '');
+      const zeroAlcool = safeGet(s, 'respostas.pergunta5', '');
+      const frequencia = safeGet(s, 'respostas.pergunta6', '');
+      
+      const topBeer = getTopBeer(s.scores);
+      const cerveja = topBeer ? (friendlyNames[topBeer] || topBeer) : '';
+      const score = topBeer && s.scores[topBeer] !== undefined ? 
+        parseNumber(s.scores[topBeer]).toFixed(0) : '';
+
+      data.push([
+        dataLinha, municipio, idade, preco, ocasioes,
+        zeroAlcool, frequencia, cerveja, score
+      ]);
+    });
+
+    // Cria uma planilha
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pesquisa");
+
+    // Gera o arquivo
+    XLSX.writeFile(workbook, "pesquisa_cervejas.xlsx");
+
+  } catch (error) {
+    showError('Erro ao exportar Excel: ' + error.message);
+  }
+}
+// Renderizar dashboard completo
 function renderDashboard() {
-  atualizarKPIs(filteredSurveys);
-  renderStats();
-  renderBeerRankings();
-  renderResultsTable();
-  renderBrandChart();
-  renderBrandComparison();
-  renderQuestionCharts();
-  renderCorrelationChart();
+  try {
+    atualizarKPIs(filteredSurveys);
+    renderStats();
+    renderBeerRankings();
+    renderResultsTable();
+    renderBrandChart();
+    renderBrandComparison();
+    renderPieChartTop5();
+  } catch (error) {
+    showError('Erro ao renderizar dashboard: ' + error.message);
+  }
 }
 
+// Função auxiliar para mostrar/ocultar loading
 function showLoading(show) {
   document.body.style.cursor = show ? 'wait' : 'default';
   document.querySelectorAll('button').forEach(btn => {
@@ -342,60 +408,49 @@ function showLoading(show) {
       btn.disabled = show;
     }
   });
-}
-
-function escapeCSV(text) {
-  if (typeof text !== 'string') return '';
-  text = text.replace(/"/g, '""');
-  if (text.includes(',') || text.includes('\n') || text.includes('"')) {
-    text = `"${text}"`;
+  
+  const loadingElement = document.getElementById('loading');
+  if (loadingElement) {
+    loadingElement.style.display = show ? 'block' : 'none';
   }
-  return text;
 }
 
-function getUniqueValues(question) {
-  const values = new Set();
-  allSurveys.forEach(survey => {
-    if (survey.respostas && survey.respostas[question]) {
-      values.add(survey.respostas[question]);
-    }
-  });
-  return Array.from(values).sort();
-}
-
+// Estatísticas gerais
 function renderStats() {
   const totalSurveys = filteredSurveys.length;
   const uniqueUsers = new Set();
-
+  
   filteredSurveys.forEach(survey => {
-    const key = `${survey.respostas.pergunta1 || ''}-${survey.respostas.pergunta2 || ''}`;
+    const key = `${safeGet(survey, 'respostas.pergunta1', '')}-${safeGet(survey, 'respostas.pergunta2', '')}`;
     uniqueUsers.add(key);
   });
 
-  if (document.getElementById('total-surveys')) {
-    document.getElementById('total-surveys').textContent = totalSurveys;
-  }
-  if (document.getElementById('unique-users')) {
-    document.getElementById('unique-users').textContent = uniqueUsers.size;
-  }
+  const totalElement = document.getElementById('total-surveys');
+  const uniqueElement = document.getElementById('unique-users');
+  
+  if (totalElement) totalElement.textContent = totalSurveys;
+  if (uniqueElement) uniqueElement.textContent = uniqueUsers.size;
 }
 
+// Ranking de cervejas
 function renderBeerRankings() {
   const container = document.getElementById('beer-rankings');
   if (!container) return;
-  
+
   const scores = {};
   filteredSurveys.forEach(s => {
-    for (let k in s.scores) {
-      const score = parseFloat(s.scores[k]);
-      if (!isNaN(score)) {
-        scores[k] = (scores[k] || 0) + score;
-      }
+    if (s.scores && typeof s.scores === 'object') {
+      Object.entries(s.scores).forEach(([beer, score]) => {
+        if (beer && beer !== 'undefined' && beer !== 'null') {
+          const numScore = parseNumber(score);
+          scores[beer] = (scores[beer] || 0) + numScore;
+        }
+      });
     }
   });
 
   const sorted = Object.entries(scores)
-    .filter(([b]) => b && b !== 'undefined' && b !== 'null')
+    .filter(([beer]) => beer && beer !== 'undefined' && beer !== 'null')
     .sort((a, b) => b[1] - a[1]);
 
   if (sorted.length === 0) {
@@ -403,20 +458,87 @@ function renderBeerRankings() {
     return;
   }
 
+  const maxScore = sorted[0][1];
   container.innerHTML = sorted.map(([beer, score], i) => `
     <div class="ranking-item">
       <div class="ranking-position">${i + 1}</div>
       <div class="ranking-details">
         <div class="ranking-name">${friendlyNames[beer] || beer}</div>
         <div class="ranking-bar-container">
-          <div class="ranking-bar" style="width: ${(score / sorted[0][1]) * 100}%"></div>
+          <div class="ranking-bar" style="width: ${maxScore > 0 ? (score / maxScore) * 100 : 0}%"></div>
           <span class="ranking-score">${Math.round(score)}</span>
         </div>
       </div>
     </div>
   `).join('');
 }
+function renderPieChartTop5() {
+  const canvas = document.getElementById('pie-chart');
+  if (!canvas) return;
 
+  // Destruir gráfico anterior se existir
+  if (pieChart) {
+    pieChart.destroy();
+    pieChart = null;
+  }
+
+  // Somar as pontuações por marca
+  const scores = {};
+  filteredSurveys.forEach(s => {
+    if (s.scores && typeof s.scores === 'object') {
+      Object.entries(s.scores).forEach(([beer, score]) => {
+        if (beer && beer !== 'undefined' && beer !== 'null') {
+          const numScore = parseNumber(score);
+          scores[beer] = (scores[beer] || 0) + numScore;
+        }
+      });
+    }
+  });
+
+  // Pegar as 5 maiores marcas
+  const sorted = Object.entries(scores)
+    .filter(([beer]) => beer && beer !== 'undefined' && beer !== 'null')
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  if (sorted.length === 0) return;
+
+  const labels = sorted.map(([beer]) => friendlyNames[beer] || beer);
+  const data = sorted.map(([_, score]) => score);
+
+  if (typeof Chart !== 'undefined') {
+    pieChart = new Chart(canvas, {
+      type: 'pie',
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: [
+            '#f94144',
+            '#f3722c',
+            '#f8961e',
+            '#f9844a',
+            '#f9c74f'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right'
+          },
+          title: {
+            display: true,
+            text: 'Top 5 Marcas por Pontuação'
+          }
+        }
+      }
+    });
+  }
+}
+
+// Renderizar tabela de resultados paginada
 function renderResultsTable() {
   const tbody = document.getElementById('results-tbody');
   const pageInfo = document.getElementById('page-info');
@@ -426,7 +548,8 @@ function renderResultsTable() {
   if (!tbody) return;
 
   tbody.innerHTML = '';
-  if (!filteredSurveys.length) {
+  
+  if (filteredSurveys.length === 0) {
     tbody.innerHTML = '<tr><td colspan="9" class="no-data">Nenhum dado disponível.</td></tr>';
     if (pageInfo) pageInfo.textContent = 'Página 0 de 0';
     if (prevButton) prevButton.disabled = true;
@@ -446,180 +569,71 @@ function renderResultsTable() {
     const s = filteredSurveys[i];
     const row = document.createElement('tr');
 
+    // Data
     const dateCell = document.createElement('td');
-    dateCell.textContent = s.data instanceof Date ? s.data.toLocaleDateString('pt-BR') : 'N/D';
+    dateCell.textContent = formatDate(s.data);
     row.appendChild(dateCell);
 
+    // Perguntas 1-6
     for (let j = 1; j <= 6; j++) {
       const cell = document.createElement('td');
-      cell.textContent = (s.respostas[`pergunta${j}`] || '').split(',').map(v => v.trim()).join(', ');
+      const value = safeGet(s, `respostas.pergunta${j}`, '');
+      cell.textContent = String(value).split(',').map(v => v.trim()).join(', ');
       row.appendChild(cell);
     }
 
-    const top = getTopBeer(s.scores);
+    // Cerveja favorita
+    const topBeer = getTopBeer(s.scores);
     const beerCell = document.createElement('td');
-    beerCell.textContent = top ? (friendlyNames[top] || top) : '-';
+    beerCell.textContent = topBeer ? (friendlyNames[topBeer] || topBeer) : '-';
     row.appendChild(beerCell);
 
+    // Score
     const scoreCell = document.createElement('td');
-    const score = top && s.scores[top] !== undefined ? s.scores[top] : 0;
-    scoreCell.textContent = !isNaN(parseFloat(score)) ? parseFloat(score).toFixed(0) : '-';
+    const score = topBeer && s.scores && s.scores[topBeer] !== undefined ? 
+      parseNumber(s.scores[topBeer]).toFixed(0) : '-';
+    scoreCell.textContent = score;
     row.appendChild(scoreCell);
 
     tbody.appendChild(row);
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Inicializar o date range picker se existir
-  const dateRangeElement = document.getElementById('date-range');
-  if (dateRangeElement && typeof $ !== 'undefined' && typeof $.fn.daterangepicker !== 'undefined') {
-    $(dateRangeElement).daterangepicker({
-      startDate: moment().subtract(30, 'days'),
-      endDate: moment(),
-      locale: {
-        format: 'DD/MM/YYYY'
-      }
-    });
-  }
-  
-  // Carregar dados do Firebase
-  loadDataFromFirebase();
-  
-  // Popular opções de filtro
-  populateFilterOptions();
-  
-  // Adicionar event listeners para filtros
-  const applyFilterBtn = document.getElementById('apply-filters');
-  if (applyFilterBtn) {
-    applyFilterBtn.addEventListener('click', applyFilters);
-  }
-  
-  const clearFilterBtn = document.getElementById('clear-filters');
-  if (clearFilterBtn) {
-    clearFilterBtn.addEventListener('click', clearFilters);
-  }
-  
-  const exportBtn = document.getElementById('export-csv');
-  if (exportBtn) {
-    exportBtn.addEventListener('click', exportToCSV);
-  }
-  
-  // Adicionar event listeners para paginação
-  const prevPageBtn = document.getElementById('prev-page');
-  if (prevPageBtn) {
-    prevPageBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderResultsTable();
-      }
-    });
-  }
-  
-  const nextPageBtn = document.getElementById('next-page');
-  if (nextPageBtn) {
-    nextPageBtn.addEventListener('click', () => {
-      const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderResultsTable();
-      }
-    });
-  }
-  
-  // Adicionar event listeners para as tabs
-  document.querySelectorAll('.tab-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const tabId = button.getAttribute('data-tab');
-      const tabContainer = button.closest('.panel-content');
-      
-      tabContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      tabContainer.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      
-      button.classList.add('active');
-      const tabContent = document.getElementById(`${tabId}-tab`);
-      if (tabContent) {
-        tabContent.classList.add('active');
-      }
-      
-      // Atualizar gráficos específicos
-      if (tabId === 'chart') {
-        renderBrandChart();
-      } else if (tabId === 'correlations') {
-        renderCorrelationChart();
-      }
-    });
-  });
-  
-  // Eventos para toggling de seções
-  document.querySelectorAll('.toggle-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const panel = button.closest('.panel-section');
-      if (panel) {
-        panel.classList.toggle('collapsed');
-        const icon = button.querySelector('i');
-        if (icon) {
-          if (panel.classList.contains('collapsed')) {
-            icon.className = 'fas fa-chevron-down';
-          } else {
-            icon.className = 'fas fa-chevron-up';
-          }
-        }
-      }
-    });
-  });
-  
-  // Eventos para comparação de marcas
-  const comparisonBrand1 = document.getElementById('comparison-brand1');
-  if (comparisonBrand1) {
-    comparisonBrand1.addEventListener('change', renderBrandComparison);
-  }
-  
-  const comparisonBrand2 = document.getElementById('comparison-brand2');
-  if (comparisonBrand2) {
-    comparisonBrand2.addEventListener('change', renderBrandComparison);
-  }
-  
-  // Eventos para correlações
-  const correlationX = document.getElementById('correlation-x');
-  if (correlationX) {
-    correlationX.addEventListener('change', renderCorrelationChart);
-  }
-  
-  const correlationY = document.getElementById('correlation-y');
-  if (correlationY) {
-    correlationY.addEventListener('change', renderCorrelationChart);
-  }
-});
-
+// Renderizar gráfico de marcas
 function renderBrandChart() {
   const canvas = document.getElementById('brands-chart');
   if (!canvas) return;
 
-  if (window.brandChart) window.brandChart.destroy();
+  // Destruir gráfico anterior
+  if (brandChart) {
+    brandChart.destroy();
+    brandChart = null;
+  }
 
   const scores = {};
   filteredSurveys.forEach(s => {
-    for (let k in s.scores) {
-      const score = parseFloat(s.scores[k]);
-      if (!isNaN(score)) {
-        scores[k] = (scores[k] || 0) + score;
-      }
+    if (s.scores && typeof s.scores === 'object') {
+      Object.entries(s.scores).forEach(([beer, score]) => {
+        if (beer && beer !== 'undefined' && beer !== 'null') {
+          const numScore = parseNumber(score);
+          scores[beer] = (scores[beer] || 0) + numScore;
+        }
+      });
     }
   });
 
   const sorted = Object.entries(scores)
-    .filter(([b]) => b && b !== 'undefined' && b !== 'null')
+    .filter(([beer]) => beer && beer !== 'undefined' && beer !== 'null')
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
 
   if (sorted.length === 0) return;
 
-  const labels = sorted.map(([b]) => friendlyNames[b] || b);
-  const data = sorted.map(([_, v]) => v);
+  const labels = sorted.map(([beer]) => friendlyNames[beer] || beer);
+  const data = sorted.map(([_, score]) => score);
 
   if (typeof Chart !== 'undefined') {
-    window.brandChart = new Chart(canvas, {
+    brandChart = new Chart(canvas, {
       type: 'bar',
       data: {
         labels,
@@ -642,22 +656,21 @@ function renderBrandChart() {
           }
         },
         scales: {
-          y: {
-            beginAtZero: true
-          }
+          y: { beginAtZero: true }
         }
       }
     });
   }
 }
 
+// Renderizar comparação entre duas marcas
 function renderBrandComparison() {
   const brand1Element = document.getElementById('comparison-brand1');
   const brand2Element = document.getElementById('comparison-brand2');
   const resultsElement = document.getElementById('comparison-results');
-  
+
   if (!brand1Element || !brand2Element || !resultsElement) return;
-  
+
   const brand1 = brand1Element.value;
   const brand2 = brand2Element.value;
 
@@ -670,13 +683,35 @@ function renderBrandComparison() {
   const stats2 = calculateBrandStats(brand2);
 
   resultsElement.innerHTML = `
-    <table class="comparison-table">
-      <thead><tr><th>Métrica</th><th>${friendlyNames[brand1]}</th><th>${friendlyNames[brand2]}</th></tr></thead>
+    <table class="comparison-table table table-bordered">
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>${friendlyNames[brand1] || brand1}</th>
+          <th>${friendlyNames[brand2] || brand2}</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr><td>Pontuação Total</td><td>${Math.round(stats1.totalScore)}</td><td>${Math.round(stats2.totalScore)}</td></tr>
-        <tr><td>1ª Opção</td><td>${stats1.firstChoice}</td><td>${stats2.firstChoice}</td></tr>
-        <tr><td>Faixa Etária Popular</td><td>${stats1.topAgeGroup}</td><td>${stats2.topAgeGroup}</td></tr>
-        <tr><td>Município Popular</td><td>${stats1.topCity}</td><td>${stats2.topCity}</td></tr>
+        <tr>
+          <td>Pontuação Total</td>
+          <td>${Math.round(stats1.totalScore)}</td>
+          <td>${Math.round(stats2.totalScore)}</td>
+        </tr>
+        <tr>
+          <td>1ª Opção</td>
+          <td>${stats1.firstChoice}</td>
+          <td>${stats2.firstChoice}</td>
+        </tr>
+        <tr>
+          <td>Faixa Etária Popular</td>
+          <td>${stats1.topAgeGroup}</td>
+          <td>${stats2.topAgeGroup}</td>
+        </tr>
+        <tr>
+          <td>Município Popular</td>
+          <td>${stats1.topCity}</td>
+          <td>${stats2.topCity}</td>
+        </tr>
       </tbody>
     </table>
   `;
@@ -690,22 +725,26 @@ function calculateBrandStats(brand) {
 
   filteredSurveys.forEach(survey => {
     if (survey.scores && survey.scores[brand] !== undefined) {
-      const score = parseFloat(survey.scores[brand]);
-      if (!isNaN(score)) totalScore += score;
+      const score = parseNumber(survey.scores[brand]);
+      totalScore += score;
 
       const topBeer = getTopBeer(survey.scores);
       if (topBeer === brand) {
         firstChoice++;
-        const ageGroup = survey.respostas.pergunta2;
+        
+        const ageGroup = safeGet(survey, 'respostas.pergunta2');
         if (ageGroup) ageGroups[ageGroup] = (ageGroups[ageGroup] || 0) + 1;
-        const city = survey.respostas.pergunta1;
+        
+        const city = safeGet(survey, 'respostas.pergunta1');
         if (city) cities[city] = (cities[city] || 0) + 1;
       }
     }
   });
 
-  const topAgeGroup = Object.entries(ageGroups).sort((a, b) => b[1] - a[1])[0];
-  const topCity = Object.entries(cities).sort((a, b) => b[1] - a[1])[0];
+  const topAgeGroup = Object.entries(ageGroups)
+    .sort((a, b) => b[1] - a[1])[0];
+  const topCity = Object.entries(cities)
+    .sort((a, b) => b[1] - a[1])[0];
 
   return {
     totalScore,
@@ -715,312 +754,209 @@ function calculateBrandStats(brand) {
   };
 }
 
-function renderQuestionCharts() {
-  const container = document.getElementById('question-charts');
-  if (!container) return;
+// Funções de navegação
+function previousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderResultsTable();
+  }
+}
 
-  container.innerHTML = '';
+function nextPage() {
+  const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderResultsTable();
+  }
+}
 
-  if (filteredSurveys.length === 0) {
-    container.innerHTML = '<p class="no-data">Nenhum dado disponível para análise.</p>';
-    return;
+// Função para popular selects de filtro
+function populateFilterOptions() {
+  const citySelect = document.getElementById('filter-city');
+  const ageSelect = document.getElementById('filter-age');
+  const brandSelect = document.getElementById('filter-brand');
+  const comparisonBrand1 = document.getElementById('comparison-brand1');
+  const comparisonBrand2 = document.getElementById('comparison-brand2');
+  const correlationX = document.getElementById('correlation-x');
+  const correlationY = document.getElementById('correlation-y');
+
+  // Popular filtro de cidades
+  if (citySelect) {
+    citySelect.innerHTML = '<option value="">Todas as cidades</option>';
+    municipios.forEach(city => {
+      const option = document.createElement('option');
+      option.value = city;
+      option.textContent = city;
+      citySelect.appendChild(option);
+    });
   }
 
-  const questions = ['pergunta1', 'pergunta2', 'pergunta3', 'pergunta4', 'pergunta5', 'pergunta6'];
-  const dataPerQuestion = {};
-  questions.forEach(q => dataPerQuestion[q] = {});
-
-  filteredSurveys.forEach(survey => {
-    questions.forEach(q => {
-      const answer = survey.respostas[q];
-      if (answer) {
-        const respostasSeparadas = answer.split(',').map(r => r.trim());
-        respostasSeparadas.forEach(resp => {
-          if (!dataPerQuestion[q][resp]) dataPerQuestion[q][resp] = 0;
-          dataPerQuestion[q][resp]++;
-        });
-      }
+  // Popular filtro de idades
+  if (ageSelect) {
+    ageSelect.innerHTML = '<option value="">Todas as idades</option>';
+    faixasEtarias.forEach(age => {
+      const option = document.createElement('option');
+      option.value = age;
+      option.textContent = age;
+      ageSelect.appendChild(option);
     });
+  }
+
+  // Popular filtro de marcas
+  if (brandSelect) {
+    brandSelect.innerHTML = '<option value="">Todas as marcas</option>';
+    Object.entries(friendlyNames).forEach(([key, name]) => {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = name;
+      brandSelect.appendChild(option);
+    });
+  }
+
+  // Popular selects de comparação
+  [comparisonBrand1, comparisonBrand2].forEach(select => {
+    if (select) {
+      select.innerHTML = '<option value="">Selecione uma marca</option>';
+      Object.entries(friendlyNames).forEach(([key, name]) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }
   });
 
-  container.className = 'questions-container';
-
-  if (typeof Chart === 'undefined') return;
-
-  questions.forEach(q => {
-    if (Object.keys(dataPerQuestion[q]).length === 0) return;
-    const isHorizontal = q === 'pergunta4';
-    const chartContainer = document.createElement('div');
-    chartContainer.className = 'chart-container';
-    chartContainer.style.marginBottom = '2rem';
-    if (isHorizontal) {
-      chartContainer.style.aspectRatio = '3 / 1';
-      chartContainer.style.maxWidth = '700px';
-    } else {
-      chartContainer.style.aspectRatio = '2 / 1';
+  // Popular selects de correlação
+  [correlationX, correlationY].forEach(select => {
+    if (select) {
+      select.innerHTML = '<option value="">Selecione uma pergunta</option>';
+      Object.entries(questionLabels).forEach(([key, label]) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = label;
+        select.appendChild(option);
+      });
     }
-    const title = document.createElement('h4');
-    title.textContent = questionLabels[q] || q;
-    chartContainer.appendChild(title);
-    const canvas = document.createElement('canvas');
-    chartContainer.appendChild(canvas);
-    container.appendChild(chartContainer);
-
-    const labels = Object.keys(dataPerQuestion[q]);
-    const values = Object.values(dataPerQuestion[q]);
-
-    new Chart(canvas, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Respostas',
-          data: values,
-          backgroundColor: '#2a9d8f'
-        }]
-      },
-      options: {
-        indexAxis: isHorizontal ? 'y' : 'x',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: `Distribuição: ${questionLabels[q]}`
-          },
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            beginAtZero: true
-          },
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
   });
 }
 
-
-function renderCorrelationChart() {
-  const canvas = document.getElementById('correlation-chart');
-  if (!canvas) return;
-  
-  const xElement = document.getElementById('correlation-x');
-  const yElement = document.getElementById('correlation-y');
-  
-  if (!xElement || !yElement) return;
-  
-  const qX = xElement.value;
-  const qY = yElement.value;
-
-  if (!qX || !qY || qX === qY) {
-    if (window.correlationChart) window.correlationChart.destroy();
-    return;
-  }
-
-  const dataMatrix = {};
-  filteredSurveys.forEach(s => {
-    const x = s.respostas[qX];
-    const y = s.respostas[qY];
-    if (x && y) {
-      const key = `${x}||${y}`;
-      dataMatrix[key] = (dataMatrix[key] || 0) + 1;
-    }
-  });
-
-  if (Object.keys(dataMatrix).length === 0) {
-    if (window.correlationChart) window.correlationChart.destroy();
-    return;
-  }
-
-  const labelsX = Array.from(new Set(Object.keys(dataMatrix).map(k => k.split('||')[0])));
-  const labelsY = Array.from(new Set(Object.keys(dataMatrix).map(k => k.split('||')[1])));
-
-  const datasets = labelsY.map((y, i) => {
-    const data = labelsX.map(x => dataMatrix[`${x}||${y}`] || 0);
-    return {
-      label: y,
-      data,
-      backgroundColor: `hsl(${(i * 45) % 360}, 70%, 60%)`
-    };
-  });
-
-  if (window.correlationChart) window.correlationChart.destroy();
-
-  if (typeof Chart !== 'undefined') {
-    window.correlationChart = new Chart(canvas, {
-      type: 'bar',
-      data: {
-        labels: labelsX,
-        datasets
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: `${questionLabels[qX]} x ${questionLabels[qY]}`
-          }
+// Função para inicializar date range picker
+function initializeDateRangePicker() {
+  const dateRangeElement = document.getElementById('date-range');
+  if (dateRangeElement && typeof $ !== 'undefined' && typeof moment !== 'undefined') {
+    try {
+      $(dateRangeElement).daterangepicker({
+        startDate: moment().subtract(30, 'days'),
+        endDate: moment(),
+        locale: {
+          format: 'DD/MM/YYYY',
+          separator: ' - ',
+          applyLabel: 'Aplicar',
+          cancelLabel: 'Cancelar',
+          fromLabel: 'De',
+          toLabel: 'Até',
+          customRangeLabel: 'Personalizado',
+          weekLabel: 'S',
+          daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+          monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          firstDay: 0
         },
-        scales: {
-          x: { stacked: true },
-          y: { stacked: true, beginAtZero: true }
+        ranges: {
+          'Hoje': [moment(), moment()],
+          'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+          'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+          'Este mês': [moment().startOf('month'), moment().endOf('month')],
+          'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
-      }
-    });
+      });
+
+      $(dateRangeElement).on('apply.daterangepicker', function() {
+        applyFilters();
+      });
+    } catch (error) {
+      console.warn('Erro ao inicializar date range picker:', error);
+    }
+  }
+}
+
+// Função para alternar seções do dashboard
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  const button = document.querySelector(`[onclick="toggleSection('${sectionId}')"]`);
+  
+  if (section && button) {
+    const isVisible = section.style.display !== 'none';
+    section.style.display = isVisible ? 'none' : 'block';
+    button.textContent = isVisible ? 'Mostrar' : 'Ocultar';
+  }
+}
+
+// Event listeners para comparação de marcas
+function setupBrandComparisonListeners() {
+  const brand1Select = document.getElementById('comparison-brand1');
+  const brand2Select = document.getElementById('comparison-brand2');
+
+  if (brand1Select) {
+    brand1Select.addEventListener('change', renderBrandComparison);
+  }
+  if (brand2Select) {
+    brand2Select.addEventListener('change', renderBrandComparison);
   }
 }
 
 
-
-// Função de inicialização
-function init() {
+// Função de inicialização principal
+function initializeDashboard() {
   try {
-    // Verificar se o Firebase está disponível
-    if (typeof firebase === 'undefined' && typeof initializeApp === 'undefined') {
-      console.error('Firebase não está disponível. Verifique se os scripts foram carregados corretamente.');
-      if (document.getElementById('error-message')) {
-        document.getElementById('error-message').textContent = 'Erro: Firebase não está disponível.';
-      }
-      return;
-    }
+    // Inicializar Firebase
+    initializeFirebase();
     
+    // Popular opções dos selects
+    populateFilterOptions();
+    
+    // Inicializar date range picker
+    initializeDateRangePicker();
+    
+    // Configurar event listeners
+    setupBrandComparisonListeners();
+
     // Carregar dados
     loadDataFromFirebase();
     
-    // Configurar eventos e interface
-    setupUI();
+    console.log('Dashboard inicializado com sucesso');
   } catch (error) {
-    console.error('Erro na inicialização:', error);
-    if (document.getElementById('error-message')) {
-      document.getElementById('error-message').textContent = 'Erro na inicialização: ' + error.message;
-    }
+    showError('Erro ao inicializar dashboard: ' + error.message);
   }
 }
 
-// Configuração da interface do usuário
-function setupUI() {
-  // Inicializar o date range picker se existir
-  const dateRangeElement = document.getElementById('date-range');
-  if (dateRangeElement && typeof $ !== 'undefined' && typeof $.fn.daterangepicker !== 'undefined') {
-    $(dateRangeElement).daterangepicker({
-      startDate: moment().subtract(30, 'days'),
-      endDate: moment(),
-      locale: {
-        format: 'DD/MM/YYYY'
-      }
-    });
-  }
-  
-  // Popular opções de filtro
-  populateFilterOptions();
-  
-  // Adicionar event listeners para filtros
-  const applyFilterBtn = document.getElementById('apply-filters');
-  if (applyFilterBtn) {
-    applyFilterBtn.addEventListener('click', applyFilters);
-  }
-  
-  const clearFilterBtn = document.getElementById('clear-filters');
-  if (clearFilterBtn) {
-    clearFilterBtn.addEventListener('click', clearFilters);
-  }
-  
-  const exportBtn = document.getElementById('export-csv');
-  if (exportBtn) {
-    exportBtn.addEventListener('click', exportToCSV);
-  }
-  
-  // Adicionar event listeners para paginação
-  const prevPageBtn = document.getElementById('prev-page');
-  if (prevPageBtn) {
-    prevPageBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderResultsTable();
-      }
-    });
-  }
-  
-  const nextPageBtn = document.getElementById('next-page');
-  if (nextPageBtn) {
-    nextPageBtn.addEventListener('click', () => {
-      const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderResultsTable();
-      }
-    });
-  }
-  
-  // Adicionar event listeners para as tabs
-  document.querySelectorAll('.tab-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const tabId = button.getAttribute('data-tab');
-      const tabContainer = button.closest('.panel-content');
-      
-      if (!tabContainer) return;
-      
-      tabContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      tabContainer.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      
-      button.classList.add('active');
-      const tabContent = document.getElementById(`${tabId}-tab`);
-      if (tabContent) {
-        tabContent.classList.add('active');
-      }
-      
-      // Atualizar gráficos específicos
-      if (tabId === 'chart') {
-        renderBrandChart();
-      } else if (tabId === 'correlations') {
-        renderCorrelationChart();
-      }
-    });
-  });
-  
-  // Eventos para toggling de seções
-  document.querySelectorAll('.toggle-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const panel = button.closest('.panel-section');
-      if (panel) {
-        panel.classList.toggle('collapsed');
-        const icon = button.querySelector('i');
-        if (icon) {
-          if (panel.classList.contains('collapsed')) {
-            icon.className = 'fas fa-chevron-down';
-          } else {
-            icon.className = 'fas fa-chevron-up';
-          }
-        }
-      }
-    });
-  });
-  
-  // Eventos para comparação de marcas
-  const comparisonBrand1 = document.getElementById('comparison-brand1');
-  if (comparisonBrand1) {
-    comparisonBrand1.addEventListener('change', renderBrandComparison);
-  }
-  
-  const comparisonBrand2 = document.getElementById('comparison-brand2');
-  if (comparisonBrand2) {
-    comparisonBrand2.addEventListener('change', renderBrandComparison);
-  }
-  
-  // Eventos para correlações
-  const correlationX = document.getElementById('correlation-x');
-  if (correlationX) {
-    correlationX.addEventListener('change', renderCorrelationChart);
-  }
-  
-  const correlationY = document.getElementById('correlation-y');
-  if (correlationY) {
-    correlationY.addEventListener('change', renderCorrelationChart);
-  }
+// Função para refresh manual dos dados
+function refreshData() {
+  showLoading(true);
+  loadDataFromFirebase();
 }
+
+// Auto-refresh a cada 5 minutos
+function setupAutoRefresh() {
+  setInterval(() => {
+    if (document.visibilityState === 'visible') {
+      refreshData();
+    }
+  }, 5 * 60 * 1000); // 5 minutos
+}
+
+// Inicializar quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+  initializeDashboard();
+  setupAutoRefresh();
+});
+
+// Funções globais expostas para uso em HTML
+window.applyFilters = applyFilters;
+window.clearFilters = clearFilters;
+window.exportToExcel = exportToExcel;
+window.previousPage = previousPage;
+window.nextPage = nextPage;
+window.refreshData = refreshData;
+window.toggleSection = toggleSection;

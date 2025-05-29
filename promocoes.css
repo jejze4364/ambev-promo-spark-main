@@ -60,28 +60,12 @@ html, body {
 }
 
 .header-content {
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;  /* centraliza o h1 */
+    justify-content: space-between;
     max-width: var(--max-width);
     margin: 0 auto;
 }
-
-.notification-icon {
-    position: absolute;
-    right: 16px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--gray-100);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-
 
 .back-btn {
     color: var(--gray-800);
@@ -379,17 +363,6 @@ html, body {
     border: none;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between; /* Espaça título e possíveis botões */
-    align-items: center; /* Alinha verticalmente */
-    margin-bottom: 16px;
-    padding: 0 8px; /* Pequeno padding lateral para não colar na borda */
-    max-width: var(--max-width);
-    margin-left: auto;
-    margin-right: auto; /* Centraliza horizontalmente dentro do container */
 }
 
 .section-header h2 {
@@ -1337,9 +1310,22 @@ body {
   .footer-spacer {
     height: 80px;
   }
-  .main-content {
+/* Conteúdo principal com padding e largura controlada para alinhamento */
+.main-content {
     padding: 20px 16px;
+    max-width: var(--max-width);
+    margin: 0 auto;
 }
+
+/* Ajuste do header das seções para alinhar com o conteúdo */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 16px; /* mesmo padding horizontal que main-content */
+}
+
 
 .location-selector {
     background-color: var(--white);
@@ -1468,12 +1454,6 @@ body {
     color: var(--black);
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
 
 .section-title {
     font-size: 1.2rem;
