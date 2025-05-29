@@ -205,8 +205,8 @@ const questions = [
       {
         text: "Entre R$ 4,00 e R$ 5,99 por unidade",
         scores: {
-          spaten: 40, bud: 40, brahmazero: 35, budzero: 30,
-          stella: 30, corona: 30, becks: 30, michelob: 25, coronacero: 25
+          spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
+          stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
         }
       },
       {
@@ -219,7 +219,7 @@ const questions = [
       {
         text: "R$ 8,00 ou mais por unidade",
         scores: {
-          patagonia: 40, colorado: 40, stellapg: 40, michelob: 35,
+          patagonia: 40, colorado: 40, stellapg: 40, michelob: 30,
           stella: 30, becks: 30, corona: 30
         }
       }
@@ -239,7 +239,7 @@ const questions = [
       },
       {
         text: "Happy hours e eventos corporativos",
-        scores: { stella: 30, bud: 30, spaten: 25, michelob: 25 }
+        scores: { stella: 30, bud: 30, spaten: 35, michelob: 20 }
       },
       {
         text: "Festas e celebrações",
@@ -255,7 +255,7 @@ const questions = [
       },
       {
         text: "Assistindo a jogos de futebol",
-        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25 }
+        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25, spaten:50 }
       },
       {
         text: "Encontros românticos",
@@ -274,7 +274,7 @@ const questions = [
       {
         text: "Sim, prefiro cervejas zero álcool",
         scores: {
-          brahmazero: 100, budzero: 100, coronacero: 100, michelob: 95, stellapg: 95
+          brahmazero: 100, budzero: 100, coronacero: 100, michelob: 55, stellapg: 55
         }
       },
       {
