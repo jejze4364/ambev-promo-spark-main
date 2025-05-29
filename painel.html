@@ -30,18 +30,32 @@
       <!-- Error Message -->
       <div id="error-message" class="alert alert-danger" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid">
-              <a class="navbar-brand" href="#">
-                  <i class="fas fa-beer me-2"></i>
-                  Dashboard - Pesquisa de Cervejas
-              </a>
-              <button class="btn btn-outline-light" onclick="refreshData()">
-                  <i class="fas fa-sync-alt me-1"></i>
-                  Atualizar
-              </button>
-          </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-beer me-2"></i>
+      Dashboard - Pesquisa de Cervejas
+    </a>
+    <button class="btn btn-outline-light" onclick="refreshData()">
+      <i class="fas fa-sync-alt me-1"></i>
+      Atualizar
+    </button>
+  </div>
+</nav>
+
+<!-- Botões logo após a navbar -->
+<div style="margin-top: 20px; text-align: center;">
+  <button onclick="window.location.href='Inicial.html'" style="padding: 10px 20px; margin: 10px; font-size: 16px; border-radius: 8px; border: none; background-color: #007bff; color: white; cursor: pointer;">
+    🔁 Refazer Pesquisa
+  </button>
+
+  <button onclick="window.location.href='index.html'" style="padding: 10px 20px; margin: 10px; font-size: 16px; border-radius: 8px; border: none; background-color: #28a745; color: white; cursor: pointer;">
+    ⬅️ Voltar ao Início
+  </button>
+</div>
+
+
       </nav>
 
       <div class="container-fluid mt-4">
