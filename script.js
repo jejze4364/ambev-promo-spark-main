@@ -238,7 +238,7 @@ const questions = [
         scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
       },
       {
-        text: "Happy hours e eventos corporativos",
+        text: "Happy hours",
         scores: { stella: 30, bud: 30, spaten: 35, michelob: 20 }
       },
       {
@@ -246,7 +246,7 @@ const questions = [
         scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
       },
       {
-        text: "Momentos ao ar livre (praia, piscina)",
+        text: "Momentos ao ar livre",
         scores: { corona: 40, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
       },
       {
@@ -262,7 +262,7 @@ const questions = [
         scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 25 }
       },
       {
-        text: "Relaxando em casa após o trabalho",
+        text: "Relaxando após o trabalho",
         scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
       }
     ]
