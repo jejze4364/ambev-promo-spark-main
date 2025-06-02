@@ -107,6 +107,24 @@ const friendlyNames = {
   'stellapg': 'Stella Artois Premium'
 };
 
+// Adicionando o objeto municipioPromoPages que estava faltando
+const municipioPromoPages = {
+  "Belford Roxo": "promocoes-belford-roxo.html",
+  "Campos dos Goytacazes": "promocoes-campos.html",
+  "Duque de Caxias": "promocoes-caxias.html",
+  "Nova Iguaçu": "promocoes-nova-iguacu.html",
+  "Niterói": "promocoes-niteroi.html",
+  "Outro(s)": "promocoes.html",
+  "Petrópolis": "promocoes-petropolis.html",
+  "Rio de Janeiro": "promocoes-rio.html",
+  "São Gonçalo": "promocoes-sao-goncalo.html",
+  "São João de Meriti": "promocoes-meriti.html",
+  "Serra": "promocoes-serra.html",
+  "Vila Velha": "promocoes-vila-velha.html",
+  "Vitória": "promocoes-vitoria.html",
+  "Volta Redonda": "promocoes-volta-redonda.html"
+};
+
 document.addEventListener("DOMContentLoaded", function() {
   // Torna o container visível
   document.querySelector('.container').style.display = 'flex';
@@ -169,8 +187,6 @@ const questions = [
     ],
     multipleChoice: false
   },
-];
-
   {
     question: "Qual a sua faixa etária?",
     description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
@@ -182,47 +198,46 @@ const questions = [
     ],
     multipleChoice: false
   },
-{
-  question: "Quanto você normalmente gasta em uma cerveja no mercado?",
-  description: "Selecione o valor médio que você costuma pagar por unidade.",
-  options: [
-    {
-      text: "Até R$ 4,00 por unidade",
-      scores: {
-        brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
+  {
+    question: "Quanto você normalmente gasta em uma cerveja no mercado?",
+    description: "Selecione o valor médio que você costuma pagar por unidade.",
+    options: [
+      {
+        text: "Até R$ 4,00 por unidade",
+        scores: {
+          brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
+        }
+      },
+      {
+        text: "Até R$ 6,00 por unidade",
+        scores: {
+          spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
+          stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
+        }
+      },
+      {
+        text: "Até R$ 8,00 por unidade",
+        scores: {
+          stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
+          michelob: 30, brahmazero: 20, budzero: 20
+        }
+      },
+      {
+        text: "Até R$ 11,99 por unidade",
+        scores: {
+          patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
+          stella: 30, becks: 30, corona: 30
+        }
+      },
+      {
+        text: "R$ 12,00 ou mais por unidade",
+        scores: {
+          colorado: 50, patagonia: 45, michelob: 40, stellapg: 40, corona: 35
+        }
       }
-    },
-    {
-      text: "Até R$ 6,00 por unidade",
-      scores: {
-        spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
-        stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
-      }
-    },
-    {
-      text: "Até R$ 8,00 por unidade",
-      scores: {
-        stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
-        michelob: 30, brahmazero: 20, budzero: 20
-      }
-    },
-    {
-      text: "Até R$ 11,99 por unidade",
-      scores: {
-        patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
-        stella: 30, becks: 30, corona: 30
-      }
-    },
-    {
-      text: "R$ 12,00 ou mais por unidade",
-      scores: {
-        colorado: 50, patagonia: 45, michelob: 40, stellapg: 40, corona: 35
-      }
-    }
-  ],
-  multipleChoice: false
-}
-
+    ],
+    multipleChoice: false
+  },
   {
     question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha quantas quiser)",
     description: "Selecione todas as ocasiões que combinam com o seu estilo.",
@@ -252,7 +267,7 @@ const questions = [
       },
       {
         text: "Assistindo a jogos de futebol",
-        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25, spaten:50 }
+        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25, spaten: 50 }
       },
       {
         text: "Encontros românticos",
@@ -338,7 +353,6 @@ function calculateCompatibilityPercentage(beerScores) {
   return percentages;
 }
 
-
 function updateProgressBar() {
   const percent = Math.round(((currentQuestion + 1) / questions.length) * 100);
   document.getElementById('progress-text').textContent = `Questão ${currentQuestion + 1} de ${questions.length}`;
@@ -394,7 +408,12 @@ function loadQuestion() {
 
       const opt = q.options[selectedIdx];
       respostas[`pergunta${currentQuestion + 1}`] = opt.text;
-      document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+      
+      // Verificar se o elemento existe antes de tentar acessá-lo
+      const perguntaElement = document.getElementById(`pergunta${currentQuestion + 1}`);
+      if (perguntaElement) {
+        perguntaElement.value = opt.text;
+      }
       
       // Salvar o município selecionado
       if (currentQuestion === 0) {
@@ -434,16 +453,16 @@ function loadQuestion() {
       optionsDiv.appendChild(label);
     });
 
-// Adicionar JS para seleção visual diretamente
-optionsDiv.querySelectorAll('input[type="checkbox"]').forEach(input => {
-  input.addEventListener('change', function() {
-    if (this.checked) {
-      this.parentElement.classList.add('selected');
-    } else {
-      this.parentElement.classList.remove('selected');
-    }
-  });
-});
+    // Adicionar JS para seleção visual diretamente
+    optionsDiv.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', function() {
+        if (this.checked) {
+          this.parentElement.classList.add('selected');
+        } else {
+          this.parentElement.classList.remove('selected');
+        }
+      });
+    });
 
     const btn = document.createElement('button');
     btn.innerText = "Continuar";
@@ -474,7 +493,12 @@ optionsDiv.querySelectorAll('input[type="checkbox"]').forEach(input => {
       });
 
       respostas[`pergunta${currentQuestion + 1}`] = selectedAnswers.join(', ');
-      document.getElementById(`pergunta${currentQuestion + 1}`).value = selectedAnswers.join(', ');
+      
+      // Verificar se o elemento existe antes de tentar acessá-lo
+      const perguntaElement = document.getElementById(`pergunta${currentQuestion + 1}`);
+      if (perguntaElement) {
+        perguntaElement.value = selectedAnswers.join(', ');
+      }
 
       nextQuestion();
     };
@@ -493,7 +517,12 @@ optionsDiv.querySelectorAll('input[type="checkbox"]').forEach(input => {
         });
 
         respostas[`pergunta${currentQuestion + 1}`] = opt.text;
-        document.getElementById(`pergunta${currentQuestion + 1}`).value = opt.text;
+        
+        // Verificar se o elemento existe antes de tentar acessá-lo
+        const perguntaElement = document.getElementById(`pergunta${currentQuestion + 1}`);
+        if (perguntaElement) {
+          perguntaElement.value = opt.text;
+        }
 
         nextQuestion();
       };
@@ -640,64 +669,65 @@ function showResults() {
   const promoPageURL = municipioPromoPages[selectedMunicipio] || "promocoes.html";
 
   container.innerHTML = `
-      <div class="action-buttons">
+    <div class="action-buttons">
       <a href="index.html" class="btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Conheça o Projeto
       </a>
-    <a href="promocoes.html" class="btn-promo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </svg>
-      Conheça as Promoções <span class="btn-indicator">→</span>
-    </a>
-
-  <div class="results-container">
-    <div class="results-header">
-      <h2>Seu Perfil Cervejeiro</h2>
-      <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
-    </div>
-
-    <div class="results-section">
-      <h3>Cervejas Ideais Para Você</h3>
-      <div class="beer-list">
-        ${topBeers.map(([beer, percentage], index) => `
-          <div class="beer-card ${index === 0 ? 'top-match' : ''}">
-            <div class="beer-image">
-              <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
-              ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
-            </div>
-            <div class="beer-info">
-              <h4>${friendlyNames[beer]}</h4>
-              <p>${beerDescriptions[beer]}</p>
-              <div class="match-percent">${percentage}% de compatibilidade</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-
-    <div class="share-section">
-      <h3>Compartilhe Seu Resultado</h3>
-      <div class="share-buttons">
-        <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
-        <i class="fab fa-facebook-f"></i> Facebook
-        </a>
-        <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
-        <i class="fab fa-instagram"></i> Instagram
+      <a href="${promoPageURL}" class="btn-promo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+        Conheça as Promoções <span class="btn-indicator">→</span>
       </a>
-      </div>
     </div>
 
-    <div class="try-again-section">
-    <button class="btn-outline" onclick="location.reload()">
-      <i class="fas fa-redo-alt"></i> Fazer o Teste Novamente
-    </button>
+    <div class="results-container">
+      <div class="results-header">
+        <h2>Seu Perfil Cervejeiro</h2>
+        <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
+      </div>
+
+      <div class="results-section">
+        <h3>Cervejas Ideais Para Você</h3>
+        <div class="beer-list">
+          ${topBeers.map(([beer, percentage], index) => `
+            <div class="beer-card ${index === 0 ? 'top-match' : ''}">
+              <div class="beer-image">
+                <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
+                ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
+              </div>
+              <div class="beer-info">
+                <h4>${friendlyNames[beer]}</h4>
+                <p>${beerDescriptions[beer]}</p>
+                <div class="match-percent">${percentage}% de compatibilidade</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="share-section">
+        <h3>Compartilhe Seu Resultado</h3>
+        <div class="share-buttons">
+          <a class="share-btn facebook" href="https://www.facebook.com" target="_blank">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </a>
+          <a class="share-btn whatsapp" href="https://wa.me/?text=Confira%20minha%20cerveja%20ideal!" target="_blank">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          <a class="share-btn instagram" href="https://www.instagram.com" target="_blank">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
+        </div>
+      </div>
+
+      <div class="try-again-section">
+        <button class="btn-outline" onclick="location.reload()">
+          <i class="fas fa-redo-alt"></i> Fazer o Teste Novamente
+        </button>
+      </div>
     </div>
-  </div>
   `;
 
   setTimeout(() => {
