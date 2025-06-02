@@ -637,24 +637,36 @@ function nextQuestion() {
   }
 }
 
-// Modificação na função showResults para usar porcentagens reais de compatibilidade
+
+// Modificação na função showResults para mostrar TODAS as cervejas com suas compatibilidades
 function showResults() {
   const container = document.getElementById('question-container');
+  
+  // Ocultar a barra de progresso
+  const progressBar = document.querySelector('.progress-bar');
+  if (progressBar) {
+    progressBar.style.display = 'none';
+  }
+  
+  // Ocultar o título principal
+  const mainTitle = document.querySelector('h1');
+  if (mainTitle) {
+    mainTitle.style.display = 'none';
+  }
   
   // Calcular as porcentagens de compatibilidade
   const beerPercentages = calculateCompatibilityPercentage(scores);
   
-  // Ordenar cervejas por porcentagem de compatibilidade
-  const topBeers = Object.entries(beerPercentages)
+  // Ordenar TODAS as cervejas por porcentagem de compatibilidade (não limitar a 3)
+  const allBeersRanked = Object.entries(beerPercentages)
     .filter(([key]) => beerDescriptions[key])
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
+    .sort((a, b) => b[1] - a[1]); // Ordenar do maior para o menor
   
   const dataToSave = {
     respostas: respostas,
     resultados: {
-      cervejas: topBeers.map(([beer]) => friendlyNames[beer]),
-      porcentagens: topBeers.map(([beer, percentage]) => `${friendlyNames[beer]}: ${percentage}%`)
+      cervejas: allBeersRanked.map(([beer]) => friendlyNames[beer]),
+      porcentagens: allBeersRanked.map(([beer, percentage]) => `${friendlyNames[beer]}: ${percentage}%`)
     },
     scores: scores,
     porcentagensCompatibilidade: beerPercentages,
@@ -684,15 +696,16 @@ container.innerHTML = `
 
     <div class="results-container">
       <div class="results-header">
-        <h2>Seu Perfil Cervejeiro</h2>
-        <p>Com base nas suas respostas, selecionamos as cervejas que mais combinam com você!</p>
+        <h2>Seu Perfil Cervejeiro Completo</h2>
+        <p>Aqui estão TODAS as cervejas rankeadas por compatibilidade com o seu perfil!</p>
       </div>
 
       <div class="results-section">
-        <h3>Cervejas Ideais Para Você</h3>
+        <h3>Ranking Completo de Compatibilidade</h3>
         <div class="beer-list">
-          ${topBeers.map(([beer, percentage], index) => `
-            <div class="beer-card ${index === 0 ? 'top-match' : ''}">
+          ${allBeersRanked.map(([beer, percentage], index) => `
+            <div class="beer-card ${index === 0 ? 'top-match' : ''} ${index < 3 ? 'top-three' : ''}">
+              <div class="ranking-position">#${index + 1}</div>
               <div class="beer-image">
                 <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
                 ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
