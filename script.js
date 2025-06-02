@@ -205,34 +205,33 @@ const questions = [
       {
         text: "Até R$ 4,00 por unidade",
         scores: {
-          brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
+          brahma: 40, antarctica: 40, skol: 40, bohemia: 40
         }
       },
       {
         text: "Até R$ 6,00 por unidade",
         scores: {
-          spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
-          stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
+          spaten: 40, bud: 40, brahmazero: 40, budzero: 40, original: 40,
+          corona: 40, coronacero: 40, brahma: 30
         }
       },
       {
         text: "Até R$ 8,00 por unidade",
         scores: {
-          stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
-          michelob: 30, brahmazero: 20, budzero: 20
+          stella: 40, corona: 30, spaten: 30, stellapg: 40
         }
       },
       {
         text: "Até R$ 11,99 por unidade",
         scores: {
-          patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
-          stella: 30, becks: 30, corona: 30
+          patagonia: 40, colorado: 40, michelob: 40,
+          becks: 40
         }
       },
       {
         text: "R$ 12,00 ou mais por unidade",
         scores: {
-          colorado: 50, patagonia: 45, michelob: 40, stellapg: 40, corona: 35
+          colorado: 50, patagonia: 50, michelob: 50, becks: 50
         }
       }
     ],
@@ -247,19 +246,19 @@ const questions = [
     options: [
       {
         text: "Churrasco com amigos e família",
-        scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
+        scores: { brahma: 40, antarctica: 30, skol: 30, bohemia: 30, original: 30 }
       },
       {
         text: "Happy hours",
-        scores: { stella: 30, bud: 30, spaten: 35, michelob: 20 }
+        scores: { stella: 30, bud: 30, spaten: 35, michelob: 20, stellapg:30 }
       },
       {
         text: "Festas e celebrações",
-        scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
+        scores: { bud: 30, corona: 30, brahma: 30, spaten: 30 }
       },
       {
         text: "Momentos ao ar livre",
-        scores: { corona: 40, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
+        scores: { corona: 40, michelob: 30, brahmazero: 30, coronacero: 40,budzero:30 }
       },
       {
         text: "Jantares e Harmonizações",
@@ -267,15 +266,15 @@ const questions = [
       },
       {
         text: "Assistindo a jogos de futebol",
-        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25, spaten: 50 }
+        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 30, spaten: 40 }
       },
       {
         text: "Encontros românticos",
-        scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 25 }
+        scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 40, stellapg: 40 }
       },
       {
         text: "Relaxando após o trabalho",
-        scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
+        scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25, stellapg: 30, brahmazero: 30, coronacero:30, budzero:30 }
       }
     ]
   },
@@ -286,20 +285,18 @@ const questions = [
       {
         text: "Sim, prefiro cervejas zero álcool",
         scores: {
-          brahmazero: 150, budzero: 150, coronacero: 150, michelob: 55, stellapg: 55
+          brahmazero: 150, budzero: 150, coronacero: 150, michelob: 100, stellapg: 100
         }
       },
       {
         text: "Não, prefiro cervejas tradicionais",
         scores: {
-          brahma: 30, skol: 30, bud: 30, stella: 30, spaten: 30, original: 30
         }
       },
       {
         text: "Estou aberto a experimentar opções zero",
         scores: {
-          brahmazero: 35, budzero: 35, coronacero: 35, michelob: 25, stellapg: 25,
-          bud: 20, corona: 20, brahma: 20, stella: 20
+          brahmazero: 35, budzero: 35, coronacero: 35, michelob: 25, stellapg: 25
         }
       }
     ],
@@ -312,19 +309,19 @@ const questions = [
       {
         text: "Mais de 2x por semana",
         scores: {
-          brahma: 30, skol: 30, antarctica: 30, bud: 25, stella: 25
+          brahma: 30, skol: 30, antarctica: 30, bud: 30
         }
       },
       {
         text: "Semanalmente",
         scores: {
-          spaten: 30, stella: 30, michelob: 30, corona: 25, bud: 25
+          spaten: 30, michelob: 30, corona: 30, bud: 30
         }
       },
       {
         text: "Apenas em eventos e ocasiões especiais",
         scores: {
-          patagonia: 30, colorado: 30, corona: 30, stella: 25, becks: 25
+          patagonia: 30, colorado: 30, corona: 30, stella: 30, becks: 30, patagonia: 30, colorado: 30
         }
       },
       {
