@@ -35,7 +35,10 @@
     font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
-html, body {
+body {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
     height: 100%;
     background-color: var(--background-color);
     color: var(--gray-800);
@@ -47,7 +50,9 @@ html, body {
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
+    padding-bottom: 80px;
 }
+
 
 /* Header Styles */
 .app-header {
@@ -476,8 +481,10 @@ html, body {
 .coupon-brand img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    border-radius: 50%;
 }
+
 
 .coupon-details {
     flex: 1;
@@ -595,10 +602,9 @@ html, body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
     border: 2px solid var(--white);
 }
-
 .mission-reward {
     display: flex;
     align-items: center;
@@ -730,11 +736,12 @@ html, body {
 }
 
 .promo-img {
-    width: 100%;
+    width: 1%;
     height: 120px;
     object-fit: contain;
-    padding: 10px;
+    padding: 0;
 }
+
 
 .promo-details {
     padding: 12px;
@@ -809,27 +816,6 @@ html, body {
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 600;
-}
-
-.market-logo {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 16px;
-    border: 2px solid var(--gray-200);
-}
-
-.market-info h3 {
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.market-info p {
-    color: var(--gray-600);
-    font-size: 0.9rem;
-    margin-bottom: 12px;
 }
 
 .best-offer {
@@ -919,11 +905,12 @@ html, body {
 .integration-logo {
     width: 100px;
     height: 50px;
-    object-fit: contain;
+    object-fit: cover;
     background-color: white;
-    padding: 8px;
+    padding: 0;
     border-radius: 8px;
 }
+
 
 .integration-info {
     color: white;
@@ -960,39 +947,6 @@ html, body {
     transform: translateY(-2px);
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #111827;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    padding: 0.75rem 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-  }
-
-  .footer-link {
-    text-align: center;
-    font-size: 0.85rem;
-    text-decoration: none;
-    color: white;
-  }
-
-  .footer-link i {
-    font-size: 1.2rem;
-    display: block;
-  }
-
-  .footer-link.active,
-  .footer-link:hover {
-    color: #facc15;
-  }
-
-  .footer-spacer {
-    height: 80px;
-  }
 /* Notification Modal */
 .notification-modal {
     position: fixed;
@@ -1238,10 +1192,15 @@ footer {
         padding: 30px;
     }
 
-    .partner-logo {
-        width: 80px;
-        height: 80px;
-    }
+   .partner-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: white;
+    padding: 0;
+    object-fit: cover;
+}
+
 
     .partner-text h3 {
         font-size: 1.8rem;
@@ -1262,54 +1221,7 @@ footer {
         padding-bottom: 16px;
     }
 }
-body {
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f9fafb;
-    color: #111827;
-  }
 
-  .app-container {
-    padding-bottom: 80px;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #111827;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    padding: 0.75rem 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
-    z-index: 10;
-  }
-
-  .footer-link {
-    text-align: center;
-    font-size: 0.85rem;
-    text-decoration: none;
-    color: white;
-  }
-
-  .footer-link i {
-    font-size: 1.2rem;
-    display: block;
-  }
-
-  .footer-link.active,
-  .footer-link:hover {
-    color: #facc15;
-  }
-
-  .footer-spacer {
-    height: 80px;
-  }
 /* Conteúdo principal com padding e largura controlada para alinhamento */
 .main-content {
     padding: 20px 16px;
@@ -1387,37 +1299,6 @@ body {
     flex-grow: 1;
 }
 
-
-.market-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-}
-
-.market-image {
-    height: 100px;
-    background-color: var(--gray-200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.market-image img {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-}
-
-.market-name {
-    font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 1rem;
-}
-
-.market-location {
-    font-size: 0.85rem;
-    color: var(--gray-600);
-    margin-bottom: 8px;
-}
 
 .promo-count {
     background-color: var(--gray-100);
