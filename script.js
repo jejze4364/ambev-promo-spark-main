@@ -167,20 +167,25 @@ const questions = [
     question: "Em qual desses municípios você costuma fazer suas compras de supermercado?",
     dropdown: true,
     options: [
-      { text: "Rio de Janeiro", scores: {} },
-      { text: "São Gonçalo", scores: {} },
+      { text: "Belford Roxo", scores: {} },
+      { text: "Campos dos Goytacazes", scores: {} },
       { text: "Duque de Caxias", scores: {} },
       { text: "Nova Iguaçu", scores: {} },
-      { text: "Belford Roxo", scores: {} },
       { text: "Niterói", scores: {} },
-      { text: "Campos dos Goytacazes", scores: {} },
-      { text: "São João de Meriti", scores: {} },
-      { text: "Volta Redonda", scores: {} },
+      { text: "Outro(s)", scores: {} },
       { text: "Petrópolis", scores: {} },
-      { text: "Outro(s)", scores: {} }
+      { text: "Rio de Janeiro", scores: {} },
+      { text: "São Gonçalo", scores: {} },
+      { text: "São João de Meriti", scores: {} },
+      { text: "Serra", scores: {} },
+      { text: "Vila Velha", scores: {} },
+      { text: "Vitória", scores: {} },
+      { text: "Volta Redonda", scores: {} }
     ],
     multipleChoice: false
   },
+];
+
   {
     question: "Qual a sua faixa etária?",
     description: "Esta informação nos ajuda a personalizar ainda melhor suas recomendações.",
@@ -192,40 +197,47 @@ const questions = [
     ],
     multipleChoice: false
   },
-  {
-    question: "Quanto você normalmente gasta em uma cerveja no mercado?",
-    description: "Valor médio por unidade que você costuma pagar.",
-    options: [
-      {
-        text: "Até R$ 4,00 por unidade",
-        scores: {
-          brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
-        }
-      },
-      {
-        text: "Entre R$ 4,00 e R$ 5,99 por unidade",
-        scores: {
-          spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
-          stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
-        }
-      },
-      {
-        text: "Entre R$ 6,00 e R$ 7,99 por unidade",
-        scores: {
-          stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
-          michelob: 30, brahmazero: 20, budzero: 20
-        }
-      },
-      {
-        text: "R$ 8,00 ou mais por unidade",
-        scores: {
-          patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
-          stella: 30, becks: 30, corona: 30
-        }
+{
+  question: "Quanto você normalmente gasta em uma cerveja no mercado?",
+  description: "Selecione o valor médio que você costuma pagar por unidade.",
+  options: [
+    {
+      text: "Até R$ 4,00 por unidade",
+      scores: {
+        brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
       }
-    ],
-    multipleChoice: false
-  },
+    },
+    {
+      text: "Até R$ 6,00 por unidade",
+      scores: {
+        spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
+        stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
+      }
+    },
+    {
+      text: "Até R$ 8,00 por unidade",
+      scores: {
+        stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
+        michelob: 30, brahmazero: 20, budzero: 20
+      }
+    },
+    {
+      text: "Até R$ 11,99 por unidade",
+      scores: {
+        patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
+        stella: 30, becks: 30, corona: 30
+      }
+    },
+    {
+      text: "R$ 12,00 ou mais por unidade",
+      scores: {
+        colorado: 50, patagonia: 45, michelob: 40, stellapg: 40, corona: 35
+      }
+    }
+  ],
+  multipleChoice: false
+}
+
   {
     question: "Em quais ocasiões você mais gosta de apreciar uma cerveja? (Escolha quantas quiser)",
     description: "Selecione todas as ocasiões que combinam com o seu estilo.",
