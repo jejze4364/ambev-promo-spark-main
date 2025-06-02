@@ -6,11 +6,10 @@
     <title>Escolha seu Supermercado - Rio de Janeiro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="promocoes.css"> <!-- AQUI ALTERADO -->
+    <link rel="stylesheet" href="promocoes.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Header com navegação -->
         <header class="app-header">
             <div class="header-content">
                 <a href="index.html" class="back-btn" aria-label="Voltar para página inicial">
@@ -25,8 +24,24 @@
         </header>
 
         <main class="main-content">
+            <div class="location-selector">
+                <div class="location-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h2>Selecione sua região</h2>
+                </div>
+                <div class="location-dropdown">
+                    <select id="region-selector">
+                        <option value="todos">Todas as regiões</option>
+                        <option value="zona-norte">Zona Norte</option>
+                        <option value="zona-sul">Zona Sul</option>
+                        <option value="zona-oeste">Zona Oeste</option>
+                        <option value="centro">Centro</option>
+                        <option value="baixada">Baixada Fluminense</option>
+                        <option value="niteroi">Niterói e São Gonçalo</option>
+                    </select>
+                </div>
+            </div>
 
-            <!-- Barra de pesquisa -->
             <div class="search-container">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
@@ -34,7 +49,6 @@
                 </div>
             </div>
 
-            <!-- Tabs de categorias -->
             <div class="category-tabs">
                 <button class="category-tab active" data-category="todos">Todos</button>
                 <button class="category-tab" data-category="super">Supermercados</button>
@@ -42,163 +56,125 @@
                 <button class="category-tab" data-category="popular">Mais populares</button>
             </div>
 
-            <!-- Grade de supermercados -->
             <div class="section-header">
-                <h3 class="section-title">Supermercados e Atacadões</h3>
+                <h3 class="section-title">Supermercados participantes</h3>
             </div>
             <div class="market-grid" id="market-grid">
-                <!-- Assaí -->
-                <a href="assai-promocoes.html" class="market-card" data-category="atacado" data-region="zona-norte zona-oeste baixada">
+                <div class="market-card" data-category="super" data-region="zona-norte zona-oeste">
                     <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Assaí Atacadista">
+                        <img src="/api/placeholder/160/100" alt="CARONE & CIA">
                         <span class="featured-tag">Destaque</span>
                     </div>
                     <div class="market-info">
-                        <h3 class="market-name">Assaí Atacadista</h3>
-                        <p class="market-location">12 lojas</p>
-                        <span class="promo-count">24 promoções</span>
+                        <h3 class="market-name">CARONE & CIA</h3>
+                        <p class="market-location">6 lojas</p>
+                        <span class="promo-count">10 promoções</span>
                     </div>
-                </a>
+                </div>
 
-                <!-- Guanabara -->
-                <a href="guanabara-promocoes.html" class="market-card" data-category="super" data-region="zona-sul zona-norte centro">
+                <div class="market-card" data-category="super" data-region="zona-sul centro">
                     <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Guanabara">
+                        <img src="/api/placeholder/160/100" alt="NICOLAS UNIDOS">
                     </div>
                     <div class="market-info">
-                        <h3 class="market-name">Guanabara</h3>
-                        <p class="market-location">18 lojas</p>
-                        <span class="promo-count">15 promoções</span>
+                        <h3 class="market-name">NICOLAS UNIDOS</h3>
+                        <p class="market-location">4 lojas</p>
+                        <span class="promo-count">7 promoções</span>
                     </div>
-                </a>
+                </div>
 
-                <!-- Prezunic -->
-                <a href="prezunic-promocoes.html" class="market-card" data-category="super" data-region="zona-oeste zona-norte baixada">
+                <div class="market-card" data-category="super" data-region="zona-sul zona-norte">
                     <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Prezunic">
+                        <img src="/api/placeholder/160/100" alt="PRINCESA AUTO SERV COMEST">
                     </div>
                     <div class="market-info">
-                        <h3 class="market-name">Prezunic</h3>
-                        <p class="market-location">16 lojas</p>
-                        <span class="promo-count">18 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Carrefour -->
-                <a href="carrefour-promocoes.html" class="market-card" data-category="super" data-region="zona-sul zona-oeste">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Carrefour">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Carrefour</h3>
-                        <p class="market-location">9 lojas</p>
-                        <span class="promo-count">22 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Extra -->
-                <a href="extra-promocoes.html" class="market-card" data-category="super" data-region="zona-norte zona-oeste">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Extra">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Extra</h3>
-                        <p class="market-location">7 lojas</p>
-                        <span class="promo-count">16 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Mundial -->
-                <a href="mundial-promocoes.html" class="market-card" data-category="super" data-region="zona-sul centro">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Mundial">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Mundial</h3>
-                        <p class="market-location">14 lojas</p>
-                        <span class="promo-count">19 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Atacadão -->
-                <a href="atacadao-promocoes.html" class="market-card" data-category="atacado" data-region="baixada zona-oeste">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Atacadão">
-                        <span class="featured-tag">Destaque</span>
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Atacadão</h3>
+                        <h3 class="market-name">PRINCESA AUTO SERV COMEST</h3>
                         <p class="market-location">5 lojas</p>
-                        <span class="promo-count">25 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Pão de Açúcar -->
-                <a href="pao-de-acucar-promocoes.html" class="market-card" data-category="super" data-region="zona-sul centro">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Pão de Açúcar">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Pão de Açúcar</h3>
-                        <p class="market-location">10 lojas</p>
                         <span class="promo-count">12 promoções</span>
                     </div>
-                </a>
+                </div>
 
-                <!-- Supermarket -->
-                <a href="supermarket-promocoes.html" class="market-card" data-category="super" data-region="zona-sul">
+                <div class="market-card" data-category="super" data-region="zona-oeste baixada">
                     <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Supermarket">
+                        <img src="/api/placeholder/160/100" alt="REALMAR">
                     </div>
                     <div class="market-info">
-                        <h3 class="market-name">Supermarket</h3>
-                        <p class="market-location">8 lojas</p>
+                        <h3 class="market-name">REALMAR</h3>
+                        <p class="market-location">3 lojas</p>
+                        <span class="promo-count">6 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="outros" data-region="todos">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="OUTROS">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">OUTROS</h3>
+                        <p class="market-location">Diversas lojas</p>
+                        <span class="promo-count">5 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="super" data-region="zona-norte">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="REDE MARKET">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">REDE MARKET</h3>
+                        <p class="market-location">9 lojas</p>
+                        <span class="promo-count">13 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="super" data-region="zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="SUMMER">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">SUMMER</h3>
+                        <p class="market-location">6 lojas</p>
+                        <span class="promo-count">11 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="super" data-region="zona-oeste baixada">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="SUMMER PREÇO BAIXO">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">SUMMER PREÇO BAIXO</h3>
+                        <p class="market-location">4 lojas</p>
+                        <span class="promo-count">8 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="super" data-region="zona-norte">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="SUPER BH">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">SUPER BH</h3>
+                        <p class="market-location">7 lojas</p>
+                        <span class="promo-count">10 promoções</span>
+                    </div>
+                </div>
+
+                <div class="market-card" data-category="super" data-region="zona-norte zona-oeste">
+                    <div class="market-image">
+                        <img src="/api/placeholder/160/100" alt="SUPERMERCADOS BH">
+                    </div>
+                    <div class="market-info">
+                        <h3 class="market-name">SUPERMERCADOS BH</h3>
+                        <p class="market-location">10 lojas</p>
                         <span class="promo-count">14 promoções</span>
                     </div>
-                </a>
-
-                <!-- Rede Economia -->
-                <a href="rede-economia-promocoes.html" class="market-card" data-category="super" data-region="zona-norte centro baixada">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Rede Economia">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Rede Economia</h3>
-                        <p class="market-location">20 lojas</p>
-                        <span class="promo-count">17 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Sam's Club -->
-                <a href="sams-club-promocoes.html" class="market-card" data-category="atacado" data-region="zona-oeste zona-norte">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Sam's Club">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Sam's Club</h3>
-                        <p class="market-location">3 lojas</p>
-                        <span class="promo-count">20 promoções</span>
-                    </div>
-                </a>
-
-                <!-- Makro -->
-                <a href="makro-promocoes.html" class="market-card" data-category="atacado" data-region="baixada zona-oeste">
-                    <div class="market-image">
-                        <img src="/api/placeholder/160/100" alt="Makro">
-                    </div>
-                    <div class="market-info">
-                        <h3 class="market-name">Makro</h3>
-                        <p class="market-location">4 lojas</p>
-                        <span class="promo-count">21 promoções</span>
-                    </div>
-                </a>
+                </div>
             </div>
 
-            <!-- Espaço para o footer -->
             <div class="footer-spacer"></div>
         </main>
 
-        <!-- Footer -->
         <footer class="app-footer">
             <a href="index.html" class="footer-link">
                 <i class="fas fa-home"></i>
@@ -217,62 +193,49 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Filtros por categoria
             const categoryTabs = document.querySelectorAll('.category-tab');
             const markets = document.querySelectorAll('.market-card');
-            
+
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remove active class from all tabs
                     categoryTabs.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
                     tab.classList.add('active');
-                    
-                    // Filter markets by category
-                    const category = tab.getAttribute('data-category');
                     filterMarkets();
                 });
             });
-            
-            // Filtros por região
+
             const regionSelector = document.getElementById('region-selector');
             regionSelector.addEventListener('change', filterMarkets);
-            
-            // Busca por nome
+
             const searchInput = document.getElementById('market-search');
             searchInput.addEventListener('input', filterMarkets);
-            
+
             function filterMarkets() {
                 const searchTerm = searchInput.value.toLowerCase();
                 const selectedCategory = document.querySelector('.category-tab.active').getAttribute('data-category');
                 const selectedRegion = regionSelector.value;
-                
+
                 markets.forEach(market => {
                     const marketName = market.querySelector('.market-name').textContent.toLowerCase();
                     const marketCategory = market.getAttribute('data-category');
                     const marketRegions = market.getAttribute('data-region');
-                    
-                    // Verificar se atende aos critérios de filtro
+
                     const matchesSearch = marketName.includes(searchTerm);
                     const matchesCategory = selectedCategory === 'todos' || marketCategory === selectedCategory || 
-                                          (selectedCategory === 'popular' && market.querySelector('.featured-tag'));
+                        (selectedCategory === 'popular' && market.querySelector('.featured-tag'));
                     const matchesRegion = selectedRegion === 'todos' || (marketRegions && marketRegions.includes(selectedRegion));
-                    
-                    // Exibir ou ocultar o item
+
                     if (matchesSearch && matchesCategory && matchesRegion) {
                         market.style.display = 'flex';
                     } else {
                         market.style.display = 'none';
                     }
                 });
-                
-                // Verificar se há resultados visíveis
+
                 const visibleMarkets = document.querySelectorAll('.market-card[style="display: flex;"]');
                 const marketGrid = document.getElementById('market-grid');
-                
+
                 if (visibleMarkets.length === 0) {
-                    // Se não houver resultados, mostrar mensagem
                     if (!document.querySelector('.no-results')) {
                         const noResults = document.createElement('div');
                         noResults.className = 'no-results';
@@ -287,7 +250,6 @@
                         marketGrid.appendChild(noResults);
                     }
                 } else {
-                    // Se houver resultados, remover mensagem de não encontrado
                     const noResults = document.querySelector('.no-results');
                     if (noResults) {
                         noResults.remove();
