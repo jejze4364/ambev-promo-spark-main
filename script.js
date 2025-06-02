@@ -290,7 +290,7 @@ const questions = [
       },
       {
         text: "Não, prefiro cervejas tradicionais",
-        scores: {
+        scores: {brahmazero: -30, budzero: -30, coronacero: -30, michelob: -30, stellapg: -30
         }
       },
       {
