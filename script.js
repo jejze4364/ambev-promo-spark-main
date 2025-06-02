@@ -534,82 +534,7 @@ function loadQuestion() {
   // Estilos de seleção
   const styleElement = document.createElement('style');
   styleElement.textContent = `
-    .checkbox-option.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .options-container {
-      margin-bottom: 2rem;
-    }
-    .grid-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    @media (max-width: 768px) {
-      .grid-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-    .checkbox-option {
-      padding: 0.9rem;
-      border-radius: 8px;
-      background-color: #f8f8f8;
-      transition: all 0.2s ease;
-      margin-bottom: 0.8rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-    .checkbox-option:hover {
-      background-color: #f0f0f0;
-    }
-    .checkbox-option.selected {
-      background-color: rgba(247, 168, 0, 0.1);
-      border: 1px solid var(--primary-color, #f7a800);
-    }
-    .checkbox {
-      width: 22px;
-      height: 22px;
-      border: 2px solid #ccc;
-      border-radius: 4px;
-      margin-right: 10px;
-      position: relative;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-    .checkbox-option.selected .checkbox {
-      border-color: var(--primary-color, #f7a800);
-      background-color: var(--primary-color, #f7a800);
-    }
-    .checkbox-option.selected .checkbox:after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 7px;
-      width: 5px;
-      height: 10px;
-      border: solid white;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-    .btn-continue {
-      background-color: var(--primary-color, #f7a800);
-      color: white;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      display: block;
-      margin: 1.5rem auto 0;
-      transition: all 0.3s ease;
-    }
-    .btn-continue:hover {
-      background-color: #e69a00;
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(247, 168, 0, 0.3);
-    }
+
   `;
   document.head.appendChild(styleElement);
 }
@@ -646,6 +571,10 @@ function showResults() {
   const progressBar = document.querySelector('.progress-bar');
   if (progressBar) {
     progressBar.style.display = 'none';
+  }
+    const progressContainer = document.querySelector('.progress-container');
+  if (progressContainer) {
+    progressContainer.style.display = 'none';
   }
   
   // Ocultar o título principal
@@ -697,7 +626,7 @@ container.innerHTML = `
     <div class="results-container">
       <div class="results-header">
         <h2>Seu Perfil Cervejeiro Completo</h2>
-        <p>Aqui estão TODAS as cervejas rankeadas por compatibilidade com o seu perfil!</p>
+        <p>Aqui estão as cervejas rankeadas por compatibilidade com o seu perfil!</p>
       </div>
 
       <div class="results-section">
