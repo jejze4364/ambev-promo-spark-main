@@ -57,6 +57,7 @@ let currentQuestion = 0;
 const scores = {};
 const respostas = {};
 let selectedMunicipio = ""; // Nova variável para armazenar o município selecionado
+let lastDataToSave = null; // Variável global para armazenar os dados do último resultado
 
 // Lista completa das cervejas no sistema
 const allBeers = [
@@ -124,6 +125,95 @@ const municipioPromoPages = {
   "Vitória": "promocoes-vitoria.html",
   "Volta Redonda": "promocoes-volta-redonda.html"
 };
+
+// Função global para gerar PDF - movida para fora de outras funções
+function gerarPDF(data) {
+  try {
+    console.log("Iniciando geração do PDF...", data);
+    
+    // Preenche os dados no conteúdo oculto
+    document.getElementById('pdf-municipio').textContent = `Município: ${data.municipio || 'Não informado'}`;
+    document.getElementById('pdf-data').textContent = `Data: ${new Date().toLocaleDateString('pt-BR')}`;
+
+    // Preencher o ranking
+    const ulRanking = document.getElementById('pdf-ranking');
+    ulRanking.innerHTML = '';
+    if (data.resultados && data.resultados.porcentagens) {
+      data.resultados.porcentagens.forEach((linha, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${i + 1}. ${linha}`;
+        li.style.marginBottom = '6px';
+        li.style.fontSize = '14px';
+        ulRanking.appendChild(li);
+      });
+    }
+
+    // Preencher as respostas
+    const ulRespostas = document.getElementById('pdf-respostas');
+    ulRespostas.innerHTML = '';
+    if (data.respostas) {
+      Object.entries(data.respostas).forEach(([key, value]) => {
+        const li = document.createElement('li');
+        li.textContent = `${key.replace("pergunta", "Pergunta ")}: ${value}`;
+        li.style.marginBottom = '6px';
+        li.style.fontSize = '12px';
+        ulRespostas.appendChild(li);
+      });
+    }
+
+    const pdfContent = document.getElementById('pdf-captura');
+    pdfContent.style.display = 'block'; // Torna visível para capturar
+
+ setTimeout(() => {
+  // Substitui temporariamente as imagens por texto
+  const images = pdfContent.querySelectorAll('img');
+  const originalSrcs = [];
+  
+  images.forEach((img, index) => {
+    originalSrcs[index] = img.src;
+    const textDiv = document.createElement('div');
+    textDiv.textContent = img.alt || 'Cerveja';
+    textDiv.style.cssText = 'width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;';
+    img.parentNode.replaceChild(textDiv, img);
+  });
+
+  html2canvas(pdfContent, { 
+    scale: 2,
+    backgroundColor: '#004c99'
+  }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        // Se a imagem for muito alta, ajustar para caber na página
+        if (pdfHeight > pdf.internal.pageSize.getHeight()) {
+          const ratio = pdf.internal.pageSize.getHeight() / pdfHeight;
+          const adjustedWidth = pdfWidth * ratio;
+          const adjustedHeight = pdf.internal.pageSize.getHeight();
+          pdf.addImage(imgData, 'PNG', (pdfWidth - adjustedWidth) / 2, 0, adjustedWidth, adjustedHeight);
+        } else {
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
+
+        pdf.save('perfil-cervejeiro.pdf');
+        console.log("PDF gerado com sucesso!");
+
+        pdfContent.style.display = 'none'; // Esconde novamente
+      }).catch(error => {
+        console.error("Erro ao gerar canvas:", error);
+        alert("Erro ao gerar PDF. Tente novamente.");
+        pdfContent.style.display = 'none';
+      });
+    }, 500);
+
+  } catch (error) {
+    console.error("Erro na função gerarPDF:", error);
+    alert("Erro ao gerar PDF. Verifique se todas as bibliotecas estão carregadas.");
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function() {
   // Torna o container visível
@@ -205,33 +295,34 @@ const questions = [
       {
         text: "Até R$ 4,00 por unidade",
         scores: {
-          brahma: 40, antarctica: 40, skol: 40, bohemia: 40
+          brahma: 40, antarctica: 40, skol: 35, bohemia: 35, original: 30
         }
       },
       {
         text: "Até R$ 6,00 por unidade",
         scores: {
-          spaten: 40, bud: 40, brahmazero: 40, budzero: 40, original: 40,
-          corona: 40, coronacero: 40, brahma: 30
+          spaten: 50, bud: 40, brahmazero: 35, budzero: 30,
+          stella: 30, corona: 30, becks: 30, michelob: 20, coronacero: 25
         }
       },
       {
         text: "Até R$ 8,00 por unidade",
         scores: {
-          stella: 40, corona: 30, spaten: 30, stellapg: 40
+          stella: 40, becks: 40, corona: 50, patagonia: 35, colorado: 35,
+          michelob: 30, brahmazero: 20, budzero: 20
         }
       },
       {
         text: "Até R$ 11,99 por unidade",
         scores: {
-          patagonia: 40, colorado: 40, michelob: 40,
-          becks: 40
+          patagonia: 50, colorado: 40, stellapg: 40, michelob: 30,
+          stella: 30, becks: 30, corona: 30
         }
       },
       {
         text: "R$ 12,00 ou mais por unidade",
         scores: {
-          colorado: 50, patagonia: 50, michelob: 50, becks: 50
+          colorado: 50, patagonia: 45, michelob: 40, stellapg: 40, corona: 35
         }
       }
     ],
@@ -246,19 +337,19 @@ const questions = [
     options: [
       {
         text: "Churrasco com amigos e família",
-        scores: { brahma: 40, antarctica: 30, skol: 30, bohemia: 30, original: 30 }
+        scores: { brahma: 30, antarctica: 30, skol: 30, bohemia: 25, original: 25 }
       },
       {
         text: "Happy hours",
-        scores: { stella: 30, bud: 30, spaten: 35, michelob: 20, stellapg:30 }
+        scores: { stella: 30, bud: 30, spaten: 35, michelob: 20 }
       },
       {
         text: "Festas e celebrações",
-        scores: { bud: 30, corona: 30, brahma: 30, spaten: 30 }
+        scores: { bud: 30, skol: 30, corona: 30, brahma: 25 }
       },
       {
         text: "Momentos ao ar livre",
-        scores: { corona: 40, michelob: 30, brahmazero: 30, coronacero: 40,budzero:30 }
+        scores: { corona: 40, skol: 30, michelob: 25, brahma: 25, coronacero: 25 }
       },
       {
         text: "Jantares e Harmonizações",
@@ -266,15 +357,15 @@ const questions = [
       },
       {
         text: "Assistindo a jogos de futebol",
-        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 30, spaten: 40 }
+        scores: { brahma: 30, antarctica: 30, skol: 30, bud: 25, spaten: 50 }
       },
       {
         text: "Encontros românticos",
-        scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 40, stellapg: 40 }
+        scores: { stella: 40, colorado: 40, patagonia: 40, michelob: 25 }
       },
       {
         text: "Relaxando após o trabalho",
-        scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25, stellapg: 30, brahmazero: 30, coronacero:30, budzero:30 }
+        scores: { brahma: 30, original: 30, bohemia: 25, michelob: 25 }
       }
     ]
   },
@@ -285,18 +376,20 @@ const questions = [
       {
         text: "Sim, prefiro cervejas zero álcool",
         scores: {
-          brahmazero: 150, budzero: 150, coronacero: 150, michelob: 100, stellapg: 100
+          brahmazero: 150, budzero: 150, coronacero: 150, michelob: 55, stellapg: 55
         }
       },
       {
         text: "Não, prefiro cervejas tradicionais",
-        scores: {brahmazero: -30, budzero: -30, coronacero: -30, michelob: -30, stellapg: -30
+        scores: {
+          brahma: 30, skol: 30, bud: 30, stella: 30, spaten: 30, original: 30
         }
       },
       {
         text: "Estou aberto a experimentar opções zero",
         scores: {
-          brahmazero: 35, budzero: 35, coronacero: 35, michelob: 25, stellapg: 25
+          brahmazero: 35, budzero: 35, coronacero: 35, michelob: 25, stellapg: 25,
+          bud: 20, corona: 20, brahma: 20, stella: 20
         }
       }
     ],
@@ -309,19 +402,19 @@ const questions = [
       {
         text: "Mais de 2x por semana",
         scores: {
-          brahma: 30, skol: 30, antarctica: 30, bud: 30
+          brahma: 30, skol: 30, antarctica: 30, bud: 25, stella: 25
         }
       },
       {
         text: "Semanalmente",
         scores: {
-          spaten: 30, michelob: 30, corona: 30, bud: 30
+          spaten: 30, stella: 30, michelob: 30, corona: 25, bud: 25
         }
       },
       {
         text: "Apenas em eventos e ocasiões especiais",
         scores: {
-          patagonia: 30, colorado: 30, corona: 30, stella: 30, becks: 30, patagonia: 30, colorado: 30
+          patagonia: 30, colorado: 30, corona: 30, stella: 25, becks: 25
         }
       },
       {
@@ -559,7 +652,6 @@ function nextQuestion() {
   }
 }
 
-
 // Modificação na função showResults para mostrar TODAS as cervejas com suas compatibilidades
 function showResults() {
   const container = document.getElementById('question-container');
@@ -569,7 +661,7 @@ function showResults() {
   if (progressBar) {
     progressBar.style.display = 'none';
   }
-    const progressContainer = document.querySelector('.progress-container');
+  const progressContainer = document.querySelector('.progress-container');
   if (progressContainer) {
     progressContainer.style.display = 'none';
   }
@@ -599,6 +691,9 @@ function showResults() {
     municipio: selectedMunicipio
   };
 
+  // Salvar dados globalmente para uso no PDF
+  lastDataToSave = dataToSave;
+
   saveDataToFirebase(dataToSave).then(success => {
     if (success) getData();
   });
@@ -607,6 +702,16 @@ function showResults() {
   const promoPageURL = municipioPromoPages[selectedMunicipio] || "promocoes.html";
 
 container.innerHTML = `
+<div class="results-container">
+  <div class="results-header">
+    <h2>Seu Perfil Cervejeiro Completo</h2>
+    <p>Aqui estão as cervejas rankeadas por compatibilidade com o seu perfil!</p>
+  </div>
+
+  <div class="export-section">
+    <h3>Exportar Resultado</h3>
+    <button class="btn-outline" id="btn-exportar-pdf">Exportar para PDF</button>
+  </div>
   <div class="action-buttons">
     <a href="index.html" class="btn-primary">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -619,13 +724,6 @@ container.innerHTML = `
       Conheça as Promoções <span class="btn-indicator">→</span>
     </a>
   </div>
-
-    <div class="results-container">
-      <div class="results-header">
-        <h2>Seu Perfil Cervejeiro Completo</h2>
-        <p>Aqui estão as cervejas rankeadas por compatibilidade com o seu perfil!</p>
-      </div>
-
       <div class="results-section">
         <h3>Ranking Completo de Compatibilidade</h3>
         <div class="beer-list">
@@ -633,9 +731,9 @@ container.innerHTML = `
             <div class="beer-card ${index === 0 ? 'top-match' : ''} ${index < 3 ? 'top-three' : ''}">
               <div class="ranking-position">#${index + 1}</div>
               <div class="beer-image">
-                <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
-                ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
-              </div>
+              <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
+              ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
+            </div>
               <div class="beer-info">
                 <h4>${friendlyNames[beer]}</h4>
                 <p>${beerDescriptions[beer]}</p>
@@ -674,4 +772,13 @@ container.innerHTML = `
     document.querySelector('.whatsapp')?.addEventListener('click', () => window.open('https://wa.me/?text=Confira%20minha%20cerveja%20ideal!', '_blank'));
     document.querySelector('.instagram')?.addEventListener('click', () => window.open('https://www.instagram.com', '_blank'));
   }, 100);
+
+document.getElementById('btn-exportar-pdf').addEventListener('click', () => {
+  if (lastDataToSave) {
+    gerarPDF(lastDataToSave);
+  } else {
+    alert('Dados não disponíveis para exportação.');
+  }
+});
+
 }
