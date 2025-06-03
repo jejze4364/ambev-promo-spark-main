@@ -126,6 +126,34 @@ const municipioPromoPages = {
   "Volta Redonda": "promocoes-volta-redonda.html"
 };
 
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Torna o container visível
+  document.querySelector('.container').style.display = 'flex';
+
+  const container = document.getElementById('question-container');
+  container.innerHTML = "<p>Teste de carregamento</p>";
+
+  console.log("Inicializando aplicação...");
+  
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    allBeers.forEach(beer => {
+      scores[beer] = 0;
+    });
+    
+    console.log("Carregando primeira pergunta...");
+    loadQuestion();
+    updateProgressBar();
+  } catch (error) {
+    console.error("Erro na inicialização:", error);
+    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
+  }
+});
+
 // Função global para gerar PDF - movida para fora de outras funções
 function gerarPDF(data) {
   try {
@@ -214,33 +242,6 @@ function gerarPDF(data) {
     alert("Erro ao gerar PDF. Verifique se todas as bibliotecas estão carregadas.");
   }
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-  // Torna o container visível
-  document.querySelector('.container').style.display = 'flex';
-
-  const container = document.getElementById('question-container');
-  container.innerHTML = "<p>Teste de carregamento</p>";
-
-  console.log("Inicializando aplicação...");
-  
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    
-    allBeers.forEach(beer => {
-      scores[beer] = 0;
-    });
-    
-    console.log("Carregando primeira pergunta...");
-    loadQuestion();
-    updateProgressBar();
-  } catch (error) {
-    console.error("Erro na inicialização:", error);
-    alert("Ocorreu um erro ao carregar o formulário. Por favor, recarregue a página.");
-  }
-});
 
 // Pontuações máximas por pergunta
 const MAX_POINTS_PER_QUESTION = [
