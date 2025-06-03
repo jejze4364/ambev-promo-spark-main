@@ -730,7 +730,7 @@ container.innerHTML = `
           ${allBeersRanked.map(([beer, percentage], index) => `
             <div class="beer-card ${index === 0 ? 'top-match' : ''} ${index < 3 ? 'top-three' : ''}">
               <div class="ranking-position">#${index + 1}</div>
-              <div class="beer-image">
+                      <div class="beer-image">
               <img src="${beer}.jpg" alt="${friendlyNames[beer]}" />
               ${index === 0 ? '<span class="match-badge">Melhor Combinação</span>' : ''}
             </div>
